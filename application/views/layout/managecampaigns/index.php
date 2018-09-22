@@ -10,10 +10,12 @@
     Please wait...
 </div>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 3600\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;),urlHome=&quot;<?php echo base_url();?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
     <script type="text/javascript">
         function runcode(codes) {
-            var code = codes;
+            var str = $("#examplecode5").text();
+            var code = str + codes;
             if (/iimPlay/.test(code)) {
                 code = "imacros://run/?code=" + btoa(code);
                 location.href = code;
