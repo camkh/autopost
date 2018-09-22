@@ -353,9 +353,11 @@
     Please wait...
 </div>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>   
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var urlHome=&quot;http://localhost/test/php/CI/autopost/&quot;,datasource=&quot;C:\\myImacros\\&quot;;var codedefault1=&quot;TAB CLOSEALLOTHERS\n SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var glists=null;var uid='';</code>   
     <script type="text/javascript">
         function runcode(codes) {
-            var code = codes;
+            var str = $("#examplecode5").text();
+            var code = str + codes;
             if (/iimPlay/.test(code)) {
                 code = "imacros://run/?code=" + btoa(code);
                 location.href = code;
