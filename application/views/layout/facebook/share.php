@@ -56,7 +56,7 @@
     ?>
     <div id="ptitle" style="display: none;"><?php echo $pTitle;?></div>
     <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes;var report;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;http://localhost/test/php/CI/autopost/&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;;</code>
+    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes;var report;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;;</code>
     <?php 
     endif;
 endif;?>   
