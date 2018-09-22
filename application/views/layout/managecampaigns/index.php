@@ -1,0 +1,287 @@
+<?php if ($this->session->userdata('user_type') != 4) {?>
+<style>
+    .radio-inline{}
+    .error {color: red}
+    #blockuis{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
+</style>
+<div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
+    <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"/>
+    </div>
+    Please wait...
+</div>
+<code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+    <script type="text/javascript">
+        function runcode(codes) {
+            var code = codes;
+            if (/iimPlay/.test(code)) {
+                code = "imacros://run/?code=" + btoa(code);
+                location.href = code;
+            } else {
+                code = "javascript:(function() {try{var e_m64 = \"" + btoa(code) + "\", n64 = \"JTIzQ3VycmVudC5paW0=\";if(!/^(?:chrome|https?|file)/.test(location)){alert(\"iMacros: Open webpage to run a macro.\");return;}var macro = {};macro.source = atob(e_m64);macro.name = decodeURIComponent(atob(n64));var evt = document.createEvent(\"CustomEvent\");evt.initCustomEvent(\"iMacrosRunMacro\", true, true, macro);window.dispatchEvent(evt);}catch(e){alert(\"iMacros Bookmarklet error: \"+e.toString());}}) ();";
+                location.href = code;
+            }
+        }
+        function load_contents(url){
+            var loading = false; 
+            if(loading == false){
+                loading = true;  //set loading flag on
+                $.ajax({        
+                    url : url + '?max-results=1&alt=json-in-script',
+                    type : 'get',
+                    dataType : "jsonp",
+                    success : function (data) {
+                        loading = false; //set loading flag off once the content is loaded
+                        if(data.feed.openSearch$totalResults.$t == 0){
+                            var message = "No more records!";
+                            return message;
+                        }
+                        for (var i = 0; i < data.feed.entry.length; i++) {
+                            var content = data.feed.entry[i].content.$t;
+                            $("#codeB").html(content);
+                            var str = $("#codeB").text();
+                            runcode(str);
+                        }
+                    }
+                })
+            }
+        }
+    </script> 	
+<?php if(empty($this->session->userdata ( 'fb_user_id' ))):?>  
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoGetFbUserId");
+		});		
+	</script>
+<?php endif;?>
+<div class="page-header">
+	<div class="page-title">
+		<h3>
+                <?php if (!empty($title)): echo $title; endif; ?>
+            </h3>
+	</div>
+	<div class="page-stats">
+		<div class="statbox">
+		<?php if(!empty($this->session->userdata ('fb_user_id'))):?>
+		<div class="visual blue" style="float: left; margin-right: 20px">
+			<img src="https://graph.facebook.com/<?php echo $this->session->userdata ( 'fb_user_id' );?>/picture" style="width: 60px" />
+			<?php if(empty($this->session->userdata ( 'fb_user_name' ))):?>
+				<form method="post" class="form-horizontal row-border">
+					<input type="text" name="fb_user_name" class="form-control" placeholder="ឈ្មោះ / Name">
+				</form>
+			<?php endif;?>
+			<br/><div style="width: 60px;overflow: hidden;height: 15px"><?php echo !empty($this->session->userdata ( 'fb_user_name' )) ? $this->session->userdata ( 'fb_user_name' ) : ''; ?></div>
+		</div>
+		<?php endif;?>
+		<?php
+		 if(!empty($this->session->userdata ( 'gimage' ))):?>
+			<div class="visual red" style="float: left;">
+			<img src="<?php echo $this->session->userdata ( 'gimage' );?>" style="width: 60px" />
+			<br/><div style="width: 60px;overflow: hidden;height: 15px"><?php echo !empty($this->session->userdata ( 'gname' )) ? $this->session->userdata ( 'gname' ) : ''; ?></div>
+		</div>
+		<?php endif;?>
+	</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="widget box">
+			<div class="widget-header">
+				<h4>
+					<i class="icon-reorder"> </i> <a href="#"
+						title="<?php if (!empty($title)): echo $title; endif; ?>"><?php if (!empty($title)): echo $title; endif; ?></a>
+				</h4>
+				<div class="toolbar no-padding">
+					<div class="btn-group">
+						<span class="btn btn-xs widget-collapse"> <i
+							class="icon-angle-down"></i>
+						</span> <span class="btn btn-xs dropdown-toggle"
+							data-toggle="dropdown"> <i class="icon-plus"></i> Add <i
+							class="icon-angle-down"></i>
+						</span>
+						<ul class="dropdown-menu pull-right">
+							<li><a href="<?php echo base_url() . 'managecampaigns/fromyoutube/'; ?>"> <i class="icon-youtube-play"></i> Add from Youtube
+							</a></li>
+							<li><a href="<?php echo base_url() . 'managecampaigns/add/'; ?>"> <i class="icon-plus"></i> Add
+							</a></li>
+							<li><a href="<?php echo base_url() . 'managecampaigns/fromurl/'; ?>"> <i class="icon-plus"></i> Add URL
+							</a></li>	
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="widget-content">
+				<div class="row">
+					<div class="dataTables_header clearfix">
+						<div class="col-md-6">
+							<div id="DataTables_Table_0_length" class="dataTables_length">
+								<label> <select name="DataTables_Table_0_length" size="1"
+									aria-controls="DataTables_Table_0" class="select2-offscreen"
+									tabindex="-1">
+										<option value="5" selected="selected">5</option>
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="-1">All</option>
+								</select> records per page
+								</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="dataTables_filter" id="DataTables_Table_0_filter">
+								<form method="post">
+									<label>
+										<div class="input-group">
+											<span class="input-group-addon"> <i class="icon-search"> </i>
+											</span> <input type="text" aria-controls="DataTables_Table_0"
+												class="form-control" name="filtername" />
+										</div>
+									</label>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<form method="post">
+					<table
+						class="table table-striped table-bordered table-hover table-checkable datatable">
+						<thead>
+							<tr>
+								<th><input type="checkbox" class="uniform" name="allbox"
+									id="checkAll" /></th>
+								<th>Name</th>
+								<th class="hidden-xs">Email</th>
+								<th class="hidden-xs">Type</th>
+								<th class="hidden-xs">Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+    <?php foreach ($socialList as $value) { ?>
+                                    <tr>
+								<td class="checkbox-column"><input type="checkbox" id="itemid"
+									name="itemid[]" class="uniform"
+									value="<?php echo $value->{Tbl_posts::id}; ?>" /></td>
+								<td><a
+									href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><?php echo $value->{Tbl_posts::name}; ?></a>
+								</td>
+								<td class="hidden-xs">
+        <?php echo $value->{Tbl_posts::p_date}; ?>
+                                        </td>
+								<td class="hidden-xs">
+        <?php echo $value->{Tbl_posts::schedule}; ?>
+                                        </td>
+								<td>
+        <?php if ($value->{Tbl_posts::status} == 1) { ?>
+                                                <span
+									class="label label-success"> Active </span>
+        <?php } elseif ($value->{Tbl_posts::status} == 0) { ?>
+                                                <span
+									class="label label-danger"> Inactive </span>
+        <?php  } elseif ($value->{Tbl_posts::status} == 2) { ?>
+                                                <span
+									class="label label-warning"> Draff </span>
+        <?php } ?>
+                                        </td>
+								<td style="width: 80px;">
+									<div class="btn-group">
+										<button class="btn btn-sm dropdown-toggle"
+											data-toggle="dropdown">
+											<i class="icol-cog"></i> <span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu">
+											<li><a
+												href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-pencil"></i> Edit</a></li>
+											<li><a data-modal="true"
+												data-text="Do you want to delete this Blog?"
+												data-type="confirm" data-class="error" data-layout="top"
+												data-action="managecampaigns/delete/deletecampaigns/<?php echo $value->{Tbl_posts::id}; ?>"
+												class="btn-notification"><i class="icon-remove"></i> Remove</a>
+											</li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+    <?php } ?>
+                            </tbody>
+					</table>
+
+					<!-- page -->
+					<div class="row">
+						<div class="dataTables_footer clearfix">
+							<div class="col-md-6">
+								<div class="dataTables_info" id="DataTables_Table_0_info">
+                                        Showing 1 to <?php echo count($results); ?> of <?php echo $total_rows; ?> entries
+                                    </div>
+							</div>
+							<div class="col-md-4">
+								<div class="dataTables_paginate paging_bootstrap">
+									<ul class="pagination">
+                                            <?php echo $links; ?>
+                                        </ul>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<button type="submit" id="multidel" name="submit"
+									class="btn btn-google-plus pull-right">Delete</button>
+							</div>
+						</div>
+					</div>
+				</form>
+				<!-- end page -->
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+        function Confirms(text, layout, id, type) {
+            var n = noty({
+                text: text,
+                type: type,
+                dismissQueue: true,
+                layout: layout,
+                theme: 'defaultTheme',
+                modal: true,
+                buttons: [
+                    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
+                            $noty.close();
+                            window.location = "<?php echo base_url(); ?>user/delete/" + id;
+                        }
+                    },
+                    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+            console.log('html: ' + n.options.id);
+        }
+        function generate(type) {
+            var n = noty({
+                text: type,
+                type: type,
+                dismissQueue: false,
+                layout: 'top',
+                theme: 'defaultTheme'
+            });
+            console.log(type + ' - ' + n.options.id);
+            return n;
+        }
+
+        function generateAll() {
+            generate('alert');
+            generate('information');
+            generate('error');
+            generate('warning');
+            generate('notification');
+            generate('success');
+        }
+
+    </script>   
+<?php
+} else {
+	echo '<div class="alert fade in alert-danger" >
+                            <strong>You have no permission on this page!...</strong> .
+                        </div>';
+}
+?>

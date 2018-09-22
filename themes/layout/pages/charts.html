@@ -1,0 +1,277 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"></head><body><div class="row-fluid">
+	<div class="page-header">
+		<h1>Charts <small> Smart Analysis</small></h1>
+	</div>
+	<div class="row-fluid borBox">
+		<h6>Simple Bubble Chart</h6>
+		<div class="render" id="bubbleChart">
+
+		</div>
+	</div><br>
+	<div class="row-fluid borBox">
+		<h6>Simple Pie Chart</h6>
+		<div class="render" id="pieChart">
+
+		</div>
+	</div><br>
+	<div class="row-fluid borBox">
+		<h6>Simple Bar Chart</h6>
+		<div class="render" id="barChart">
+
+		</div>
+	</div><br>
+	<div class="row-fluid borBox">
+		<h6>Zoom in Chart: Use Mouse to Zoom In</h6>
+		<div class="render" id="timeChart">
+
+		</div>
+	</div><br>
+	<div class="row-fluid borBox">
+		<h6>Mouse Drag Chart: Use Mouse to Drag Data</h6>
+		<div class="render" id="mouseDragChart">
+
+		</div>
+	</div><br>
+	
+
+</div>
+
+<script type="text/javascript" src="charts_files/flotr2.htm"></script>
+<script type="text/javascript">
+(function basic_bars(container, horizontal) {
+
+  var
+    horizontal = (horizontal ? true : false), // Show horizontal bars
+    d1 = [],                                  // First data series
+    d2 = [],                                  // Second data series
+    point,                                    // Data point variable declaration
+    i;
+
+  for (i = 0; i < 4; i++) {
+
+    if (horizontal) { 
+      point = [Math.ceil(Math.random()*10), i];
+    } else {
+      point = [i, Math.ceil(Math.random()*10)];
+    }
+
+    d1.push(point);
+        
+    if (horizontal) { 
+      point = [Math.ceil(Math.random()*10), i+0.5];
+    } else {
+      point = [i+0.5, Math.ceil(Math.random()*10)];
+    }
+
+    d2.push(point);
+  };
+              
+  // Draw the graph
+  Flotr.draw(
+    container,
+    [d1, d2],
+    {
+      bars : {
+        show : true,
+        horizontal : horizontal,
+        shadowSize : 0,
+        barWidth : 0.5
+      },
+      mouse : {
+        track : true,
+        relative : true
+      },
+      yaxis : {
+        min : 0,
+        autoscaleMargin : 1
+      }
+    }
+  );
+})(document.getElementById("barChart"));
+(function basic_pie(container) {
+
+  var
+    d1 = [[0, 4]],
+    d2 = [[0, 3]],
+    d3 = [[0, 1.03]],
+    d4 = [[0, 3.5]],
+    graph;
+  
+  graph = Flotr.draw(container, [
+    { data : d1, label : 'Comedy' },
+    { data : d2, label : 'Action' },
+    { data : d3, label : 'Romance',
+      pie : {
+        explode : 50
+      }
+    },
+    { data : d4, label : 'Drama' }
+  ], {
+    HtmlText : false,
+    grid : {
+      verticalLines : false,
+      horizontalLines : false
+    },
+    xaxis : { showLabels : false },
+    yaxis : { showLabels : false },
+    pie : {
+      show : true, 
+      explode : 6
+    },
+    mouse : { track : true },
+    legend : {
+      position : 'se',
+      backgroundColor : '#D2E8FF'
+    }
+  });
+})(document.getElementById("pieChart"));
+(function basic_bubble(container) {
+
+  var
+    d1 = [],
+    d2 = [],
+    point, graph, i;
+      
+  for (i = 0; i < 10; i++ ){
+    point = [i, Math.ceil(Math.random()*10), Math.ceil(Math.random()*10)];
+    d1.push(point);
+    
+    point = [i, Math.ceil(Math.random()*10), Math.ceil(Math.random()*10)];
+    d2.push(point);
+  }
+  
+  // Draw the graph
+  graph = Flotr.draw(container, [d1, d2], {
+    bubbles : { show : true, baseRadius : 5 },
+    xaxis   : { min : -4, max : 14 },
+    yaxis   : { min : -4, max : 14 }
+  });
+})(document.getElementById("bubbleChart"));
+
+(function basic_time(container) {
+
+  var
+    d1    = [],
+    start = new Date("2009/01/01 01:00").getTime(),
+    options,
+    graph,
+    i, x, o;
+
+  for (i = 0; i < 100; i++) {
+    x = start+(i*1000*3600*24*36.5);
+    d1.push([x, i+Math.random()*30+Math.sin(i/20+Math.random()*2)*20+Math.sin(i/10+Math.random())*10]);
+  }
+        
+  options = {
+    xaxis : {
+      mode : 'time', 
+      labelsAngle : 45
+    },
+    selection : {
+      mode : 'x'
+    },
+    HtmlText : false,
+    title : 'Time'
+  };
+        
+  // Draw graph with default options, overwriting with passed options
+  function drawGraph (opts) {
+
+    // Clone the options, so the 'options' variable always keeps intact.
+    o = Flotr._.extend(Flotr._.clone(options), opts || {});
+
+    // Return a new graph.
+    return Flotr.draw(
+      container,
+      [ d1 ],
+      o
+    );
+  }
+
+  graph = drawGraph();      
+        
+  Flotr.EventAdapter.observe(container, 'flotr:select', function(area){
+    // Draw selected area
+    graph = drawGraph({
+      xaxis : { min : area.x1, max : area.x2, mode : 'time', labelsAngle : 45 },
+      yaxis : { min : area.y1, max : area.y2 }
+    });
+  });
+        
+  // When graph is clicked, draw the graph with default area.
+  Flotr.EventAdapter.observe(container, 'flotr:click', function () { graph = drawGraph(); });
+})(document.getElementById("timeChart"));
+
+
+(function mouse_drag(container) {
+
+  var
+    d1 = [],
+    d2 = [],
+    d3 = [],
+    options,
+    graph,
+    start,
+    i;
+
+  for (i = -40; i < 40; i += 0.5) {
+    d1.push([i, Math.sin(i)+3*Math.cos(i)]);
+    d2.push([i, Math.pow(1.1, i)]);
+    d3.push([i, 40 - i+Math.random()*10]);
+  }
+      
+  options = {
+    xaxis: {min: 0, max: 20},
+      title : 'Mouse Drag'
+  };
+
+  // Draw graph with default options, overwriting with passed options
+  function drawGraph (opts) {
+
+    // Clone the options, so the 'options' variable always keeps intact.
+    var o = Flotr._.extend(Flotr._.clone(options), opts || {});
+
+    // Return a new graph.
+    return Flotr.draw(
+      container,
+      [ d1, d2, d3 ],
+      o
+    );
+  }
+
+  graph = drawGraph();      
+
+  function initializeDrag (e) {
+    start = graph.getEventPosition(e);
+    Flotr.EventAdapter.observe(document, 'mousemove', move);
+    Flotr.EventAdapter.observe(document, 'mouseup', stopDrag);
+  }
+
+  function move (e) {
+    var
+      end     = graph.getEventPosition(e),
+      xaxis   = graph.axes.x,
+      offset  = start.x - end.x;
+
+    graph = drawGraph({
+      xaxis : {
+        min : xaxis.min + offset,
+        max : xaxis.max + offset
+      }
+    });
+    // @todo: refector initEvents in order not to remove other observed events
+    Flotr.EventAdapter.observe(graph.overlay, 'mousedown', initializeDrag);
+  }
+
+  function stopDrag () {
+    Flotr.EventAdapter.stopObserving(document, 'mousemove', move);
+  }
+
+  Flotr.EventAdapter.observe(graph.overlay, 'mousedown', initializeDrag);
+
+})(document.getElementById("mouseDragChart"));
+
+
+
+</script></body></html>

@@ -1,0 +1,44 @@
+	Naming Convention
+-	Variable naming convention (Camel case)
+           Ex: $userName;
+Note: variable name must be “Noun”, readable and understandable.
+-	Function Name (Camel case)
+           Ex: function selectUser()
+              { 
+                    //Coding here
+             }
+Note: Function name must be “Verb”, readable and understandable.
+-	Class Name (FAC_className)
+           Ex. class FAC_QueryStatments {		
+         // code here
+    }
+           Note: class Name must be the same as file name and in a file name have only one class, and must be "Noun".
+	Comment 
+ - use comment	
+  Ex.
+       /**
+        * get all data in database
+        * @param $tableName table name
+        * @param String $tableName
+        * return $result
+        */
+
+
+
+	Form
+- Form name:
+     Ex. formLogin
+- Input Box:		
+     Ex. txtUserName	
+- Textarea:
+     Ex. txtareaDescription
+- Radio Box:
+     Ex. radioSex	
+- Submit Button:
+     Ex. btnSave	
+- Cancel:
+     Ex. btnCancel	
+- Check Box:
+     Ex. checkboxHabit	
+- Select Option:
+     Ex. selectCountry

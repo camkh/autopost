@@ -1,0 +1,109 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"></head><body><div class="row-fluid">
+	<div class="page-header">
+		<h1>Functions <small>Speeding up your Development</small></h1>
+	</div><br>
+	<div class="row-fluid">
+		<div class="span5">
+			<h3>Custom Page Calls</h3>
+			<p>Page Templates are stored in 'pages' subdirectory, This function 
+loads specific pages from that directory whenever you want. A simple 
+funcion, but with extreme usage scenarios in an Admin Theme.</p>
+			<p>The sidebar works using the same technique</p>
+			
+
+		</div>
+		<div class="span7 borBox well">
+			<h6>Usage:</h6>
+			<code>loadContent('pagename');</code>
+			<br><br>
+			<h6>For Example: To Load dummy.html from pages directory</h6>
+			<code>loadContent('dummy');</code>
+			<br><br>
+			<h6>In case of this Theme:</h6>
+			<ul class="unstyled horizontal">
+				<li><code>loadContent('dashboard');</code></li>
+				<li><code>loadContent('projects');</code></li>
+				<li><code>loadContent('messages');</code></li>
+				<li><code>loadContent('tasks');</code></li>
+				<li><code>loadContent('functions');</code></li>
+				<li><code>loadContent('settings');</code></li>
+			</ul>
+			<h3>Try it Out:</h3><br>
+			<div class="form-horizontal">
+				<div class="input-prepend input-append">
+					<span class="add-on">loadContent(</span><input id="loadContentTestText" size="12" placeholder="dashboard" type="text"><span class="add-on">)</span>
+				</div><br><br>
+				<button class="btn btn-primary btn-sharp" id="loadContentTestButton"><i class="icon-white icon-refresh"></i> Go</button>
+			</div>
+		</div>
+
+	</div>
+	<br><hr><br>
+	<div class="row-fluid">
+		<div class="span5">
+			<h3>Dynamically Add Projects</h3>
+			<p>Here's another nifty tool to speed up development.</p>
+			<p>No need to push whole html through php, just parse the values in a json to this function.</p>
+			<p>Advantage: Consider a scenario say, for messages table, when size 
+gets bigger, pushing whole html through php takes more time due to big 
+size of html that has to be transferred, so how about a function where 
+you can just past json and it updates html itself.</p>
+		</div>
+		<div class="span7 borBox well">
+			<h6>Usage: Go to the projects page and in developer console type this -</h6>
+			<code>addProject({id:"4",name:"Brochure 
+Design",client:"Wockhardt",desc:"Make biotechnology theme based brochure
+ for Wockhardt",messages:"2",files:"2",tasks:"3",completion:"75%"});</code>
+
+			<h6>INFO: The '+Add Project' Button in Project Page utilizes this function to add data to tables.</h6>
+		</div>
+	</div>
+	<br><hr><br>
+	<div class="row-fluid">
+		<div class="span5">
+			<h3>Dynamic Tasks Update</h3>
+			<p>Managing Tasks is a very important aspect of Admin Frameworks.</p>
+			<p>Use these functions to update, add or remove tasks dynamically.</p>
+			
+		</div>
+		<div class="span7 borBox well">
+			<h6>Usage: </h6>
+			<code>tasks.add('Buy Beer for this Guy','0') //Add a new Task</code><br>
+			<code>tasks.remove('3'); //Removes the 3rd Task</code><br>
+			<code>tasks.updateState('2','0'); //Updates task with id=2 to completion state 0</code> 
+			<h3>Try it Out:</h3>
+			<h6>Open the Tasks Mini List on Bottom Left</h6>
+			<h6>1.Add a New Task</h6>
+			<div class="form-horizontal">
+				<input id="testTask" placeholder="Enter Task Title" type="text">
+				<input id="testTaskState" placeholder="0 or 1" type="text">
+				<button id="testAddMiniTask" class="btn btn-primary">Add</button>
+			</div>
+			<br>
+			<h6>2.Remove A Task</h6>
+			<div class="form-horizontal">
+				<input id="testTaskRemoveId" placeholder="Enter Task Id" type="text">
+				<button id="testRemoveMiniTask" class="btn btn-primary">Remove</button>
+			</div>
+			<br>
+			<h6>3.Change A Task</h6>
+			<div class="form-horizontal">
+				<input id="testTaskChangeId" placeholder="Enter Task Id" type="text">
+				<input id="testChangeTask" placeholder="New Task" type="text">
+				<button id="testChangeMiniTask" class="btn btn-primary">Change</button>
+			</div>
+			<br>
+			<h6>4.Update Task State</h6>
+			<div class="form-horizontal">
+				<input id="testTaskUpdateId" placeholder="Enter Task Id" type="text">
+				<input id="testUpdateState" placeholder="New State (0 or 1)" type="text">
+				<button id="testUpdateMiniTask" class="btn btn-primary">Update</button>
+			</div>
+		</div>
+	</div>
+	<br><hr><br>
+	
+	<br><br>
+</div>
+</body></html>
