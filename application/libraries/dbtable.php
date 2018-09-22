@@ -4,6 +4,9 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Dbtable {
+    public function __construct()
+    {
+    }
 
     public function dbtable() {
         require_once('tables/tbl_cat_term.php');
