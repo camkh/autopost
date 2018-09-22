@@ -406,7 +406,7 @@ class Facebook extends CI_Controller
                     }, 4000);'
             );
                         redirect('Facebook/getfriendlist?file='.$_FILES['userfile']['name'], 'location');
-                        break;
+                        exit();
                     }
                 }
                 
@@ -974,7 +974,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $csvData = $this->mod_general->insert('faecbook', $data_insert);
                 }
                 redirect('Facebook/checknum', 'location');
-                break;
+                exit();
             }
         }
 
@@ -1046,7 +1046,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             }
             fclose($fp) or die("can't close file");
             redirect('Facebook/checknum', 'location');
-            break;
+            exit();
         }
 
         $this->load->view('facebook/fbstatus', $data);

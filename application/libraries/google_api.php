@@ -6,9 +6,6 @@ if (!defined('BASEPATH'))
 class Google_api {
 	public function __construct()
     {
-    }
-    public function google_api() {
-        require_once('Google/autoload.php');
-
+    	require_once('Google/autoload.php');
     }
 }

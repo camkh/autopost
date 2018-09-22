@@ -6,9 +6,6 @@ if (!defined('BASEPATH'))
 class Dbtable {
     public function __construct()
     {
-    }
-
-    public function dbtable() {
         require_once('tables/tbl_cat_term.php');
         require_once('tables/tbl_cat_term_relationships.php');
         require_once('tables/tbl_cat_term_taxonomy.php');
@@ -20,6 +17,10 @@ class Dbtable {
         require_once('tables/tbl_share_progress.php');
         require_once('tables/share_history.php');
         require_once('tables/networkblogs.php');
+    }
+
+    public function dbtable() {
+        
     }
 
 }

@@ -12,14 +12,6 @@ class Html_dom {
 
 	public function __construct()
     {
+    	require_once('simple_html_dom.php');
     }
-
-    public function html_dom() {
-
-        require_once('simple_html_dom.php');
-
-    }
-
-
-
 }
