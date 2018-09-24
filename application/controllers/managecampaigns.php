@@ -230,7 +230,16 @@ class Managecampaigns extends CI_Controller {
 		);
 		// $backto = base_url() . 'post/blogpassword';
 		// $query_blog = $this->Mod_general->blogcheck(current_url(), $backto);
-		$provider = str_replace ( 'facebook', 'Facebook', $provider );      
+		$provider = str_replace ( 'facebook', 'Facebook', $provider );  
+
+        if ($this->input->post('delete')) {
+            if(!empty($this->input->post('itemid'))) {
+                $id = $this->input->post('itemid');
+                foreach ($id as $key => $value) {
+                    $this->Mod_general->delete('post', array('p_id'=>$value, 'user_id'=>$log_id));
+                }
+            }
+        }    
 
         if(!empty($this->session->userdata ( 'sid' ))) {
             $where_so = array (
@@ -362,6 +371,15 @@ class Managecampaigns extends CI_Controller {
         if(empty($this->session->userdata('access_token'))) {
             redirect(base_url() . 'managecampaigns/account');
             exit();
+        }
+
+        if(!empty($this->session->userdata('access_token'))) {
+            $this->load->library('google_api');
+            $client = new Google_Client();                  
+            $client->setAccessToken($this->session->userdata('access_token'));
+            if($client->isAccessTokenExpired()) {
+                redirect(base_url() . 'managecampaigns/account?renew=1');
+            }
         }
 
         $this->load->theme ( 'layout' );
@@ -1921,6 +1939,17 @@ HTML;
         }        
         /*End Show data Prefix*/
 
+        /*show random Link*/
+        $whereRan = array(
+            'c_name'      => 'randdom_link',
+            'c_key'     => $log_id,
+        );
+        $randdom_link = $this->Mod_general->select('au_config', '*', $whereRan);
+        if(!empty($randdom_link[0])) {
+            $data['randdom_link'] = json_decode($randdom_link[0]->c_value);
+        } 
+        /*End show random Link*/
+
         /*delete blog data*/
         if(!empty($this->input->get('del'))) {
             $detType = $this->input->get('type');
@@ -2078,6 +2107,37 @@ HTML;
             redirect(base_url() . 'managecampaigns/setting?m=add_success');
         }
         /*End add Subfix*/
+
+        /*save data random*/
+        if ($this->input->post('setLink')) {
+            $inputRan = $this->input->post('randomLink');
+            $randomLink = 'randomLink';
+            $whereRan = array(
+                'c_name'      => $randomLink,
+                'c_key'     => $log_id,
+            );
+            $query_ran = $this->Mod_general->select('au_config', '*', $whereRan);
+            /* check before insert */
+            if (empty($query_ran)) {
+                $data_ran = array(
+                    'c_name'      => $randomLink,
+                    'c_value'      => $inputRan,
+                    'c_key'     => $log_id,
+                );
+                $this->Mod_general->insert('au_config', $data_ran);
+            } else {
+                $data_ran = array(
+                    'c_value'      => $inputRan
+                );
+                $whereRan = array(
+                    'c_key'     => $log_id,
+                    'c_name'      => $randomLink
+                );
+                $this->Mod_general->update('au_config', $data_ran,$whereRan);
+            }
+            //redirect(base_url() . 'managecampaigns/setting?m=add_success');
+        }
+        /*End save data random*/
 
         $this->load->view ( 'managecampaigns/setting', $data );
     }

@@ -153,7 +153,7 @@
 									id="checkAll" /></th>
 								<th>Name</th>
 								<th class="hidden-xs">Email</th>
-								<th class="hidden-xs">Type</th>
+								<th class="hidden-xs" style="width:300px;overflow: hidden;">Type</th>
 								<th class="hidden-xs">Status</th>
 								<th>Action</th>
 							</tr>
@@ -170,8 +170,8 @@
 								<td class="hidden-xs">
         <?php echo $value->{Tbl_posts::p_date}; ?>
                                         </td>
-								<td class="hidden-xs">
-        <?php echo $value->{Tbl_posts::schedule}; ?>
+								<td class="hidden-xs" style="width:300px;overflow: hidden;">
+   
                                         </td>
 								<td>
         <?php if ($value->{Tbl_posts::status} == 1) { ?>
@@ -224,8 +224,8 @@
 								</div>
 							</div>
 							<div class="col-md-2">
-								<button type="submit" id="multidel" name="submit"
-									class="btn btn-google-plus pull-right">Delete</button>
+								<button type="submit" id="multidel" name="delete"
+									class="btn btn-google-plus pull-right" value="delete">Delete</button>
 							</div>
 						</div>
 					</div>
@@ -237,6 +237,7 @@
 </div>
 <script type="text/javascript">
         function Confirms(text, layout, id, type) {
+alert(111);
             var n = noty({
                 text: text,
                 type: type,
@@ -247,7 +248,7 @@
                 buttons: [
                     {addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
                             $noty.close();
-                            window.location = "<?php echo base_url(); ?>user/delete/" + id;
+                            //window.location = "<?php echo base_url(); ?>user/delete/" + id;
                         }
                     },
                     {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {

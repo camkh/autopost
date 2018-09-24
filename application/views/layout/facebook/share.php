@@ -16,24 +16,35 @@
     </div>
     <div class="row">        
         <div class="col-md-12">
-           <div class="widget box">
-                <div class="widget-header">
-                    <h4><i class="icon-reorder"></i> Color Pickers</h4>
-                </div>
-                <div class="widget-content">
-                    <form class="form-horizontal row-border" action="#">
-                        <div class="form-group"> <label class="col-md-3 control-label">HEX format:</label>
-                            <div class="col-md-9"> <input type="text" name="regular" class="form-control bs-colorpicker" value="#8fff00" data-color-format="hex" data-colorpicker-guid="1"> </div>
-                        </div>
-                        <div class="form-group"> <label class="col-md-3 control-label">RGBa format:</label>
-                            <div class="col-md-9"> <input type="text" name="regular" class="form-control bs-colorpicker" value="rgb(0,194,255,0.78)" data-color-format="rgba" data-colorpicker-guid="2"> </div>
-                        </div>
-                        <div class="form-group"> <label class="col-md-3 control-label">Using events:</label>
-                            <div class="col-md-9"> <a href="#" class="btn btn-default btn-block" id="colorpicker-event" data-color-format="hex" data-color="#fff" data-colorpicker-guid="3">Change background color</a> </div>
-                        </div>
-                    </form>
-                </div>
-            </div>    
+           <table class="table table-striped table-bordered table-hover table-checkable table-tabletools datatable dataTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="uniform" name="allbox"
+                                    id="checkAll" /></th>
+                                <th>Name</th>
+                                <th class="hidden-xs">Date time</th>
+                                <th class="hidden-xs">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    <?php foreach ($sharePost->posts_list as $value) { ?>
+                                    <tr>
+                                <td class="checkbox-column"><input type="checkbox" id="itemid"
+                                    name="itemid[]" class="uniform"
+                                    value="<?php echo $value->{Tbl_posts::id}; ?>" /></td>
+                                <td><a
+                                    href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><?php echo $value->{Tbl_posts::name}; ?></a>
+                                </td>
+                                <td class="hidden-xs">
+        <?php echo $value->{Tbl_posts::p_date}; ?>
+                                        </td>
+                                <td>
+                                    <div class="progress progress-striped active"> <div class="progress-bar progress-bar-info" style="width: 100%"></div> </div>
+                                </td>
+                            </tr>
+    <?php } ?>
+                            </tbody>
+                    </table>   
         </div>
     </div>
     <link rel="stylesheet" href="<?php echo base_url(); ?>themes/layout/css/jquery.countdown.css">
@@ -84,6 +95,13 @@ endif;?>
                     case 'gwait':
                         $waiting = $sharePost->option->wait_group;
                         $styleA = $waiting * 10;
+                        if($sharePost->randomLink) {
+                            if($sharePost->count_shared > 15) {
+                                $waiting = $sharePost->option->wait_post;
+                                $styleA = $waiting * (60 * 10);
+                                $waiting = $waiting * 60;
+                            }
+                        } 
                         break;
                     
                     case 'nexpost':

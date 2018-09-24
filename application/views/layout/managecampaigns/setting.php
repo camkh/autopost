@@ -196,11 +196,61 @@
                     </div>
                 </div>
                 <!-- End Prefix and Subfix -->
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="widget box">
+                            <div class="widget-header">
+                                <h4><i class="icon-reorder"></i> Random post?</h4>
+                                <div class="toolbar no-padding">
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                </div>
+                            </div>
+                            <div class="widget-content">
+                                <form class="form-horizontal row-border" id="randomLink" method="post">
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="randomLink" checked="checked" />
+                                                    <input type="hidden" name="setLink" value="1"/>
+                                                    <i class="subtopmenu hangmeas">Yes</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="randomLink" />
+                                                    <i class="subtopmenu hangmeas">No</i>
+                                                </label>                                
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 
     </div>
     <script>
+        $( document ).ready(function() {
+            $("input[name=randomLink]").click(function(){
+                var values = $('#randomLink').serialize();
+                $.ajax({
+                    url: "<?php echo base_url();?>managecampaigns/setting",
+                    type: "post",
+                    data: values ,
+                    success: function (response) {
+                       alert('Saved!');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                       console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+
+
         function getattra(e) {
             $("#singerimageFist").val(e);
             $("#imageviewFist").html('<img style="width:100%;height:55px;" src="' + e + '"/>');
