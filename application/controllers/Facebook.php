@@ -1369,6 +1369,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 );
                 if(!empty($dataShare[0])) {
                     $pid = $dataShare[0]->sh_id;
+                    $postId = $dataShare[0]->p_id;
+                    $this->session->set_userdata('pid', $dataShare[0]->p_id);
                     redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid);
                 }
                 break;
@@ -1432,37 +1434,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 if(!empty($dataShare[0])) {
                     $pid = $dataShare[0]->sh_id;
                     $post_id = $dataShare[0]->p_id;
-
-                    /*check post and share count*/
-                    $whereShAll = array (
-                        'uid' => $log_id,
-                        'social_id'=> $sid,
-                        'p_id'=> $post_id,
-                    );
-                    $dataShAll = $this->Mod_general->select (
-                        'share',
-                        '*',
-                        $whereShAll
-                    );
-                    $where_shCo = array (
-                        'uid' => $log_id,
-                        'social_id'=> $sid,
-                        'p_id'=> $post_id,
-                        'sh_status' => 1,
-                    );
-                    $dataShCheck = $this->Mod_general->select (
-                        'share',
-                        '*',
-                        $where_shCo
-                    );
-                    if(count($dataShCheck) == count($dataShAll)) {
-                        $this->Mod_general->delete ( 'post', array (
-                            'p_id' => $post_id,
-                            'user_id' => $log_id,
-                        ));
-                    }
-                    /*End check post and share count*/
-
                     echo '<center>Please wait...</center>';
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'";}, 2000 );</script>';
                     exit();
@@ -1508,7 +1479,37 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         'uid' => $log_id
                     ));
                 }
-                /*End count shred*/                
+                /*End count shred*/
+
+                /*check post and share count*/
+                $whereShAll = array (
+                    'uid' => $log_id,
+                    'social_id'=> $sid,
+                    'p_id'=> $this->session->userdata ( 'pid' ),
+                );
+                $dataShAll = $this->Mod_general->select (
+                    'share',
+                    '*',
+                    $whereShAll
+                );
+                $where_shCo = array (
+                    'uid' => $log_id,
+                    'social_id'=> $sid,
+                    'p_id'=> $this->session->userdata ( 'pid' ),
+                    'sh_status' => 1,
+                );
+                $dataShCheck = $this->Mod_general->select (
+                    'share',
+                    '*',
+                    $where_shCo
+                );
+                if(count($dataShCheck) == count($dataShAll)) {
+                    $this->Mod_general->delete ( 'post', array (
+                        'p_id' => $this->session->userdata ( 'pid' ),
+                        'user_id' => $log_id,
+                    ));
+                }
+                /*End check post and share count*/                
                 break;
             default:
                 # code...
@@ -1524,6 +1525,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         $action = $this->input->get('post');
         $sid = $this->session->userdata ( 'sid' );
         $pid = $this->input->get( 'id' );
+        $postId = $this->input->get( 'pid' );
 
         $data['title'] = 'Share to Facebook';
         $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());

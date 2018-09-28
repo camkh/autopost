@@ -753,6 +753,10 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($vid)) {
                         $imgUrl ='https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
                         $file_title = basename( $imgUrl);
+                        $structure = FCPATH . 'uploads/image/';
+                        if (!mkdir($structure, 0777, true)) {
+                            die('Failed to create folders...');
+                        }
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         copy($imgUrl, $fileName);
                         $image = $this->Mod_general->uploadMedia($fileName);
