@@ -755,7 +755,7 @@ class Managecampaigns extends CI_Controller {
                         $file_title = basename( $imgUrl);
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
-                            mkdir($structure, 0777, true)
+                            mkdir($structure, 0777, true);
                         }
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         copy($imgUrl, $fileName);
