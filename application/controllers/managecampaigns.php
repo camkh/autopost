@@ -754,8 +754,8 @@ class Managecampaigns extends CI_Controller {
                         $imgUrl ='https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
                         $file_title = basename( $imgUrl);
                         $structure = FCPATH . 'uploads/image/';
-                        if (!mkdir($structure, 0777, true)) {
-                            die('Failed to create folders...');
+                        if (!file_exists($structure)) {
+                            mkdir($structure, 0777, true)
                         }
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         copy($imgUrl, $fileName);
