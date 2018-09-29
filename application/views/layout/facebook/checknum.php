@@ -92,7 +92,7 @@
         }
         //runCode();
         <?php if(!empty($_GET['next'])):?>
-            runCode();
+            window.setTimeout( function(){runCode()}, 2000 );
         <?php endif;?>
     </script>
     <div class="row">
