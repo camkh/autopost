@@ -14,7 +14,10 @@
             <div class="progress progress-striped active"> <div id="timer" class="progress-bar progress-bar-danger" style="width: 0%"></div> </div>
         </div>
     </div>
-    <div class="row">        
+    <div class="row">
+        <div class="col-md-12">
+            Group ID: <b><?php echo $sharePost->group_id;?></b>
+        </div>      
         <div class="col-md-12">
            <table class="table table-striped table-bordered table-hover table-checkable table-tabletools datatable dataTable">
                         <thead>

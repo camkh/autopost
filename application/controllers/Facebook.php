@@ -666,9 +666,10 @@ HTML;
                         );
                     }
                 }
-                /*End get from HTML file*/                
+                /*End get from HTML file*/ 
+                @unlink($base_path . 'uploads/groups/' . $_GET['file']);                
             } 
-            @unlink($base_path . 'uploads/groups/' . $_GET['file']);          
+                     
         }
         $upload_path = './uploads/groups/';
         $file_name = 'group_list_'.$this->session->userdata('fb_user_id').'.json';
