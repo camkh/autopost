@@ -3,7 +3,9 @@
     .radio-inline{}
     .error {color: red}
     #blockuis{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
+    .khmer {font-family: 'Hanuman', serif;font-size: 30px}
 </style>
+<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"> 
 <div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
     <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"/>
     </div>
@@ -86,6 +88,14 @@
 	</div>
 </div>
 <div class="row">
+	<div class="col-md-12">
+		<?php if(!empty($this->input->get('m'))):
+		if($this->input->get('m') == 'runout_post'):?>
+			<div class="alert alert-danger fade in khmer"> 
+				 <strong>អស់ហើយ!</strong> អស់ប៉ុស្តិ៍ហើយ សូមដាក់បន្ថែមថ្មីទៀត . </div>
+		<?php endif;
+	endif;?>
+	</div>
 	<div class="col-md-12">
 		<div class="widget box">
 			<div class="widget-header">

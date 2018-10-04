@@ -5,7 +5,9 @@
         .radio-inline{}
         .error {color: red}
         #defaultCountdown { width: 340px; height: 100px; font-size: 20pt;margin-bottom: 20px}
+        .khmer {font-family: 'Koulen', cursive;font-size: 30px}
     </style>
+    
     <div class="page-header">
     </div>
     <div class="ror">

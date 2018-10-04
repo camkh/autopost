@@ -1504,12 +1504,12 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     '*',
                     $where_shCo
                 );
-                if(count($dataShCheck) == count($dataShAll)) {
-                    $this->Mod_general->delete ( 'post', array (
-                        'p_id' => $this->session->userdata ( 'pid' ),
-                        'user_id' => $log_id,
-                    ));
-                }
+                // if(count($dataShCheck) == count($dataShAll)) {
+                //     $this->Mod_general->delete ( 'post', array (
+                //         'p_id' => $this->session->userdata ( 'pid' ),
+                //         'user_id' => $log_id,
+                //     ));
+                // }
                 /*End check post and share count*/                
                 break;
             default:
@@ -1682,6 +1682,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             $whereRan = array(
                 'c_name'      => 'randomLink',
                 'c_key'     => $log_id,
+                'c_value'     => 1,
             );
             $query_ran = $this->Mod_general->select('au_config', '*', $whereRan);
             /* check before insert */
