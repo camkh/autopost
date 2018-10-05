@@ -100,7 +100,7 @@ endif;?>
                     case 'gwait':
                         $waiting = $sharePost->option->wait_group;
                         $styleA = $waiting * 10;
-                        if($sharePost->randomLink) {
+                        if(!empty($sharePost->randomLink)) {
                             if($sharePost->count_shared > 15) {
                                 $waiting = $sharePost->option->wait_post;
                                 $styleA = $waiting * (60 * 10);
