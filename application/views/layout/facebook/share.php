@@ -6,6 +6,8 @@
         .error {color: red}
         #defaultCountdown { width: 340px; height: 100px; font-size: 20pt;margin-bottom: 20px}
         .khmer {font-family: 'Koulen', cursive;font-size: 30px}
+        .table tbody tr.trbackground,tr.trbackground {background:#0000ff!important;}
+        .trbackground a,.trbackground {color:red;}
     </style>
     
     <div class="page-header">
@@ -18,7 +20,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            Group ID: <b><?php echo $sharePost->group_id;?></b>
+            Group ID: <b><?php echo $sharePost->group_id;?></b> || <b>Post ID:</b> <?php echo $sharePost->pid;?> || <b>Share counts:</b> <?php echo $sharePost->count_shared;?>/<?php echo $sharePost->totalGroups;?>
         </div>      
         <div class="col-md-12">
            <table class="table table-striped table-bordered table-hover table-checkable table-tabletools datatable dataTable">
@@ -33,10 +35,10 @@
                         </thead>
                         <tbody>
     <?php foreach ($sharePost->posts_list as $value) { ?>
-                                    <tr>
+                                    <tr class="<?php echo ($sharePost->pid == $value->{Tbl_posts::id}) ? 'trbackground' : '';?>">
                                 <td class="checkbox-column"><input type="checkbox" id="itemid"
                                     name="itemid[]" class="uniform"
-                                    value="<?php echo $value->{Tbl_posts::id}; ?>" /></td>
+                                    value="<?php echo $value->{Tbl_posts::id}; ?>" <?php echo ($sharePost->pid == $value->{Tbl_posts::id}) ? 'checked' : '';?> /></td>
                                 <td><a
                                     href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><?php echo $value->{Tbl_posts::name}; ?></a>
                                 </td>
@@ -100,7 +102,7 @@ endif;?>
                     case 'gwait':
                         $waiting = $sharePost->option->wait_group;
                         $styleA = $waiting * 10;
-                        if(!empty($sharePost->randomLink)) {
+                        if($sharePost->randomLink == 1) {
                             if($sharePost->count_shared > 15) {
                                 $waiting = $sharePost->option->wait_post;
                                 $styleA = $waiting * (60 * 10);

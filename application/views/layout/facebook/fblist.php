@@ -114,6 +114,7 @@
                                 <th class="hidden-xs">Name</th>
                                 <th>User</th>
                                 <th>Password</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -131,7 +132,21 @@
                                 </td>
                                 <td><?php echo $number->f_phone;?></td>
                                 <td>
-                                    <span class="label label-success">Approved</span>
+                                    <div class="btn-group"> 
+                                        <button class="btn btn-xs dropdown-toggle <?php echo ($number->f_status == 4) ? 'btn-success':'btn-warning';?>" data-toggle="dropdown"> <?php echo ($number->f_status == 4) ? 'Used':'Not Use';?>
+                                            <span class="caret"></span> 
+                                        </button> 
+                                        <ul class="dropdown-menu"> 
+                                            <li><a href="<?php echo base_url();?>Facebook/fblist?id=<?php echo $number->id;?>&type=status&status=4"><span class="text-success">Used</span></a></li> 
+                                            <li><a href="#"><span class="text-danger"> Not Use</span></a></li> 
+                                        </ul> 
+                                    </div>
+                                </td>
+                                <td>
+                                     <ul class="table-controls">
+                                        <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
+                                        <li><a href="<?php echo base_url();?>Facebook/fblist?id=<?php echo $number->id;?>&type=del" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
+                                    </ul>
                                 </td>
                             </tr>
                             <?php endforeach;?>

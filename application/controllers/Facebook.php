@@ -1163,13 +1163,13 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         $this->load->library ( 'pagination' );
         $per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 20;
         $config ['base_url'] = base_url () . 'Facebook/fblist';
-        $count_blog = $this->mod_general->select ( $fTable, '*',array('f_date'=>'getNum','user_id' => $log_id,'f_status' => 8));
+        $count_blog = $this->mod_general->select ( $fTable, '*',array('f_date'=>'getNum','user_id' => $log_id, 'f_status = 8 OR f_status ='=>4));
         $config ['total_rows'] = count ( $count_blog );
         $config ['per_page'] = $per_page;
         $config = $this->mod_general->paginations($config);
         $page = ($this->uri->segment ( 3 )) ? $this->uri->segment ( 3 ) : 0;
         
-        $query_blog = $this->mod_general->select($fTable, '*', array('f_date'=>'getNum','user_id' => $log_id,'f_status' => 8), "id DESC", '', $config['per_page'], $page); 
+        $query_blog = $this->mod_general->select($fTable, '*', array('f_date'=>'getNum','user_id' => $log_id,'f_status = 8 OR f_status ='=>4), "id DESC", '', $config['per_page'], $page); 
         $config ["uri_segment"] = 3;
         $this->pagination->initialize ( $config );
         $data ["total_rows"] = count ( $count_blog );
@@ -1187,6 +1187,43 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $message
             );
         }
+
+        /*Delete*/
+        if(!empty($this->input->get('del'))) {
+            
+        }
+        /*End Delete*/
+
+        /*Status*/
+        $this->load->helper('url');
+        if(!empty($this->input->get('id'))) {
+            switch ($this->input->get('type')) {
+                case 'del':
+                    $this->Mod_general->delete ( $fTable, 
+                        array (
+                            'id' => $this->input->get('id'),
+                            'user_id' => $log_id,
+                        )
+                    );
+                    redirect(base_url(uri_string()) . '?m=del_success');
+                    break;
+                case 'status':
+                    $dataSatus = array(
+                        'f_status'      => $this->input->get('status')
+                    );
+                    $whereSatus = array(
+                        'user_id'     => $log_id,
+                        'id' => $this->input->get('id'),
+                    );
+                    $this->Mod_general->update($fTable, $dataSatus,$whereSatus);
+                    redirect(base_url(uri_string()) . '?m=updated');
+                break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        /*End Status*/
         
         $this->load->view('facebook/fblist', $data);
     }
@@ -1348,6 +1385,23 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         $action = $this->input->get('post');
 
         $sid = $this->session->userdata ( 'sid' );
+        $randomLink = $this->session->userdata ( 'randomLink' );
+        /*if random Link*/
+        if(empty($randomLink)) {
+            $whereRan = array(
+                'c_name'      => 'randomLink',
+                'c_key'     => $log_id,
+                'c_value'     => 1,
+            );
+            $query_ran = $this->Mod_general->select('au_config', '*', $whereRan);
+            /* check before insert */
+            if (!empty($query_ran[0])) {
+                $this->session->set_userdata('randomLink', 1);
+            } else {
+                $this->session->set_userdata('randomLink', 2);
+            } 
+        }
+        /*End if random Link*/
         switch ($action) {
             case 'getpost':
                 /*get Post to post*/
@@ -1391,18 +1445,51 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $dataid = $this->Mod_general->update('share', $dataShare, $whereShere);
                 /*End update share group id */
 
-                /*check next post */
-                $randomLink = false;
-                 $whereRan = array(
-                    'c_name'      => 'randomLink',
-                    'c_key'     => $log_id,
+                /*share_history*/
+                $whereCheck = array (
+                    'uid' => $log_id,
+                    'p_id' => $pid,
+                    'sg_page_id'=> $sids
                 );
-                $query_ran = $this->Mod_general->select('au_config', '*', $whereRan);
-                /* check before insert */
-                if (!empty($query_ran[0])) {
-                    $randomLink = true;
+                $ShareCheck = $this->Mod_general->select (
+                    'share',
+                    '*', 
+                    $whereCheck
+                );
+                if(!empty($ShareCheck[0])) {
+                    $whereHi = array(
+                        'sid' => $sid,
+                        'uid' => $log_id,
+                        'sg_id' => $ShareCheck[0]->sg_page_id,
+                        'shp_posted_id' => $pid,
+                    );
+                    $sharedCheck = $this->Mod_general->select('share_history', '*', $whereHi);
+                    if(empty($sharedCheck[0])) {
+                        $ShareCheckHis = array(
+                            'shp_date' => date('Y-m-d H:i:s'),
+                            'sg_id' => $ShareCheck[0]->sg_page_id,
+                            'shp_posted_id' => $ShareCheck[0]->p_id,
+                            'shhare_id' => $ShareCheck[0]->sh_id,
+                            'sid' => $ShareCheck[0]->social_id,
+                            'uid' => $log_id
+                        );
+                        $GroupListID = $this->mod_general->insert('share_history', $ShareCheckHis);
+                    }
+                    /*count shred*/
+                    $whereHis = array(
+                        'sid' => $ShareCheck[0]->social_id,
+                        'shp_posted_id' => $ShareCheck[0]->sg_page_id,
+                        'uid' => $log_id
+                    );
+                    $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
+                    $count_shared = count($shared);
                 }
-                if($randomLink) {
+                /*End count shred*/
+                /*End share_history*/
+
+                /*check next post */
+                /* check before insert */
+                if($randomLink == 1) {
                     $date = new DateTime("now");
                     $curr_date = $date->format('Y-m-d h:i:s');
                     $where_so = array (
@@ -1423,7 +1510,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     );
                     $orderBy = 'c_date desc';
                 }
-                
                 $dataShare = $this->Mod_general->select (
                     'share',
                     '*', 
@@ -1435,6 +1521,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 if(!empty($dataShare[0])) {
                     $pid = $dataShare[0]->sh_id;
                     $post_id = $dataShare[0]->p_id;
+                    $this->session->set_userdata('post_id', $post_id);
                     echo '<center>Please wait...</center>';
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'";}, 2000 );</script>';
                     exit();
@@ -1459,6 +1546,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
                     if(!empty($nextShare[0])) {
                         $pid = $nextShare[0]->p_id;
+                        $this->session->set_userdata('post_id', $pid);
                         echo '<center>Please wait...</center>';
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=nexpost&id='.$pid.'";}, 2000 );</script>';
                         //redirect(base_url() . 'Facebook/share?post=nexpost&id=' . $pid);
@@ -1679,43 +1767,39 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
             /*if random Link*/
             $sharePost->randomLink = false;
-            $whereRan = array(
-                'c_name'      => 'randomLink',
-                'c_key'     => $log_id,
-                'c_value'     => 1,
-            );
-            $query_ran = $this->Mod_general->select('au_config', '*', $whereRan);
+            $randomLink = $this->session->userdata ( 'randomLink' );
             /* check before insert */
-            if (!empty($query_ran[0])) {
-                $sharePost->randomLink = true;
+            if ($randomLink == 1) {
+                $sharePost->randomLink = $randomLink;
             }
-            if($sharePost->randomLink) {
-                $whereHi = array(
-                    'sid' => $sharePost->social_id,
-                    'uid' => $log_id,
+
+            $whereHi = array(
+                'sid' => $sharePost->social_id,
+                'uid' => $log_id,
+                'sg_id' => $sharePost->sid,
+            );
+            $sharedCheck = $this->Mod_general->select('share_history', 'shp_id', $whereHi);
+            if(empty($sharedCheck[0])) {
+                $dataShareHis = array(
+                    'shp_date' => date('Y-m-d H:i:s'),
                     'sg_id' => $sharePost->sid,
-                );
-                $sharedCheck = $this->Mod_general->select('share_history', 'shp_id', $whereHi);
-                if(empty($sharedCheck[0])) {
-                    $dataShareHis = array(
-                        'shp_date' => date('Y-m-d H:i:s'),
-                        'sg_id' => $sharePost->sid,
-                        'shp_posted_id' => $pid,
-                        'shhare_id' => $sharePost->share_id,
-                        'sid' => $sharePost->social_id,
-                        'uid' => $log_id
-                    );
-                    $GroupListID = $this->mod_general->insert('share_history', $dataShareHis);
-                }
-                /*count shred*/
-                $whereHis = array(
+                    'shp_posted_id' => $pid,
+                    'shhare_id' => $sharePost->share_id,
                     'sid' => $sharePost->social_id,
                     'uid' => $log_id
                 );
-                $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
-                $sharePost->count_shared = count($shared);
-                /*End count shred*/
+                $GroupListID = $this->mod_general->insert('share_history', $dataShareHis);
             }
+            /*count shred*/
+            $whereHis = array(
+                'sid' => $sharePost->social_id,
+                'shp_posted_id' => $sharePost->pid,
+                'uid' => $log_id
+            );
+            $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
+            $sharePost->count_shared = count($shared);
+            /*End count shred*/
+
             /*End if random Link*/
 
             /*select post list from user*/
