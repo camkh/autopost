@@ -135,7 +135,7 @@
 										<option value="25">25</option>
 										<option value="50">50</option>
 										<option value="-1">All</option>
-								</select> records per page
+								</select>
 								</label>
 							</div>
 						</div>
@@ -229,8 +229,8 @@
 							<div class="col-md-4">
 								<div class="dataTables_paginate paging_bootstrap">
 									<ul class="pagination">
-                                            <?php echo $links; ?>
-                                        </ul>
+                                        <?php echo $links; ?>
+                                    </ul>
 								</div>
 							</div>
 							<div class="col-md-2">

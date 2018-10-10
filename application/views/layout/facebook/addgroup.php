@@ -321,8 +321,10 @@
                                             <tr>
                                                 <td style="width:10px" class="checkbox-column"><input type="checkbox" id="itemid"
                                                     name="itemid[]" class="uniform"
+                                                    value="<?php echo $value['gid']; ?>||<?php echo $value['title'];?>||<?php echo $value['members'];?>" /><input type="hidden" id="itemid"
+                                                    name="itemidall[]" class="uniform"
                                                     value="<?php echo $value['gid']; ?>||<?php echo $value['title'];?>||<?php echo $value['members'];?>" /></td>
-                                                <td style="width:135px"><?php echo $value['gid']; ?></td>
+                                                <td style="width:135px">fb.com/<?php echo $value['gid']; ?></td>
                                                 <td><?php echo $value['title'];?></td>
                                                 <td style="width:100px"><?php echo $value['members'];?></td> 
                                             </tr>

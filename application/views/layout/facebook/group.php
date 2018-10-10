@@ -53,8 +53,19 @@
                                                 All
                                             </option>
                                         </select>
-                                        records per page
                                     </label>
+
+                                    <label> <select name="Cat" class="select2-offscreen" style="width: 200px"  onChange="top.location.href=this.options[this.selectedIndex].value;">
+                                        <option value="http://localhost/autopost/Facebook/group?cat=none">None</option>
+                                        <?php if(!empty($grouplist)):
+                                            foreach ($grouplist as $groupList):
+                                        ?>
+                                            <option <?php echo ($this->session->userdata ( 'cat' ) ==$groupList->l_id) ? 'selected' : '';?> value="http://localhost/autopost/Facebook/group?cat=<?php echo $groupList->l_id;?>"><?php echo $groupList->lname;?></option>
+                                        <?php
+                                            endforeach;
+                                         endif;?>
+                                </select>
+                                </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -102,7 +113,7 @@
                                             <input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="<?php echo $value->sg_id; ?>" />
                                         </td>
                                         <td>
-                                            <a href="<?php echo base_url(); ?>Facebook/overview/<?php echo $value->sg_id; ?>"><?php echo $value->sg_name; ?></a>
+                                            <a href="<?php echo base_url(); ?>Facebook/overview/<?php echo $value->sg_id; ?>"><?php echo $value->sg_page_id; ?> || <?php echo $value->sg_name; ?></a>
                                         </td> 
                                         <td>
                                             <?php echo $value->sg_type; ?>
@@ -124,7 +135,7 @@
                                                         <a href="<?php echo base_url(); ?>Facebook/csv/<?php echo $value->sg_id; ?>"><i class="icon-file-text"></i> Export as CSV</a>
                                                     </li>
                                                     <li>
-                                                        <a data-modal="true" data-text="Do you want to delete this Blog?" data-type="confirm" data-class="error" data-layout="top" data-action="Facebook/delete/grouplist/<?php echo $value->sg_id; ?>" class="btn-notification"><i class="icon-remove"></i> Remove</a>
+                                                        <a data-modal="true" data-text="Do you want to delete this Blog?" data-type="confirm" data-class="error" data-layout="top" data-action="Facebook/delete/groupid/<?php echo $value->sg_id; ?><?php echo ($this->session->userdata ( 'cat' )) ? '?cat='.$this->session->userdata ( 'cat' ) : '';?>" class="btn-notification"><i class="icon-remove"></i> Remove</a>
                                                     </li>
                                                 </ul>
                                             </div>
