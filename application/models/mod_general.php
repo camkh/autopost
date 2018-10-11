@@ -1405,5 +1405,11 @@ public function get_video_id($param, $videotype = '')
             return false;
         }
         /*End upload*/
+    }
+
+    /* returns the shortened url */
+    function get_bitly_short_url($url, $login, $appkey, $format = 'txt') {
+        $connectURL = 'http://api.bit.ly/v3/shorten?login=' . $login . '&apiKey=' . $appkey . '&uri=' . urlencode ( $url ) . '&format=' . $format;
+        return $this->curl_get_result ( $connectURL );
     }    
 }

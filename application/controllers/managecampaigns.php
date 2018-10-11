@@ -179,6 +179,7 @@ class Managecampaigns extends CI_Controller {
                 $this->mod_general->update(Tbl_user::tblUser, $data_user,$whereU);
             } 
             $this->session->set_userdata('fb_user_id', $fbuid);
+            redirect('managecampaigns', 'location');
         }
 
         /*get fb id*/

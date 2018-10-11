@@ -161,7 +161,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" id="multidel" name="submit" class="btn btn-google-plus pull-right">Delete</button>
+                                    <button type="submit" id="multidel" name="delete"
+                                    class="btn btn-google-plus pull-right" value="delete">Delete</button>
                                 </div>
                             </div>
                         </div>

@@ -1,4 +1,21 @@
-<?php if ($this->session->userdata('user_type') != 4) {?>
+<?php if ($this->session->userdata('user_type') != 4) {
+/* returns the shortened url */
+    function get_bitly_short_url($url, $login, $appkey, $format = 'txt') {
+        $connectURL = 'http://api.bit.ly/v3/shorten?login=' . $login . '&apiKey=' . $appkey . '&uri=' . urlencode ( $url ) . '&format=' . $format;
+        return curl_get_result ( $connectURL );
+    }
+    /* returns a result form url */
+    function curl_get_result($url) {
+        $ch = curl_init ();
+        $timeout = 5;
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+        $data = curl_exec ( $ch );
+        curl_close ( $ch );
+        return $data;
+    }
+	?>
 <style>
     .radio-inline{}
     .error {color: red}
@@ -164,12 +181,14 @@
 								<th>Name</th>
 								<th class="hidden-xs">Email</th>
 								<th class="hidden-xs" style="width:300px;overflow: hidden;">Type</th>
-								<th class="hidden-xs">Status</th>
+								<th class="hidden-xs" style="width:200px;overflow: hidden;">Status</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-    <?php foreach ($socialList as $value) { ?>
+    <?php foreach ($socialList as $value) {
+    	$content = json_decode($value->p_conent);
+     ?>
                                     <tr>
 								<td class="checkbox-column"><input type="checkbox" id="itemid"
 									name="itemid[]" class="uniform"
@@ -184,6 +203,14 @@
    
                                         </td>
 								<td>
+									<?php $glink = $content->link;
+        									$str = time();
+						                    $str = md5($str);
+						                    $uniq_id = substr($str, 0, 9);
+						                    $link = $glink . '?s=' . $uniq_id;
+						                    $link = get_bitly_short_url( $link, BITLY_USERNAME, BITLY_API_KEY );
+        									?>
+        									<input id="copy-text" type="text" name="glink" value="<?php echo $value->{Tbl_posts::name}.' 👉ขอแค่คำว่า ขอบคุณ #กดแชร์ 👉 ';echo $link;?>" class="form-control" onClick="copyText(this);" readonly/>
         <?php if ($value->{Tbl_posts::status} == 1) { ?>
                                                 <span
 									class="label label-success"> Active </span>
@@ -194,6 +221,7 @@
                                                 <span
 									class="label label-warning"> Draff </span>
         <?php } ?>
+        									
                                         </td>
 								<td style="width: 80px;">
 									<div class="btn-group">
@@ -289,7 +317,21 @@ alert(111);
             generate('notification');
             generate('success');
         }
+function copyText(e) {
+  e.select();
+  document.execCommand('copy');
+  	var n = noty({
+	    text: 'copyed',
+	    type: 'success',
+	    dismissQueue: false,
+	    layout: 'top',
+	    theme: 'defaultTheme'
+	});
 
+    setTimeout(function () {
+        $.noty.closeAll();
+    }, 1000);
+}
     </script>   
 <?php
 } else {
