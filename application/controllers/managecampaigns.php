@@ -365,12 +365,12 @@ class Managecampaigns extends CI_Controller {
         $provider = $this->session->userdata ( 'provider' );
 
         $fbUserId = $this->session->userdata ( 'sid' );
-        if(empty($this->session->userdata ( 'sid' ))) {
-            redirect(base_url() . 'managecampaigns');
-            exit();
-        }
         if(empty($this->session->userdata('access_token'))) {
             redirect(base_url() . 'managecampaigns/account');
+            exit();
+        }
+        if(empty($this->session->userdata ( 'sid' ))) {
+            redirect(base_url() . 'managecampaigns');
             exit();
         }
 
