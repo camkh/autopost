@@ -350,7 +350,7 @@
                                                         class="form-control input-width-mini" 
                                                         type="number" 
                                                         style="float:left;margin-right:5px;" 
-                                                        value="60"
+                                                        value="180"
                                                         name="pause"
                                                    /> វិនាទី/seconds [recommended value: 60 seconds]
                                                 </label>
