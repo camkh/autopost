@@ -14,7 +14,7 @@
     </div>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !TIMEOUT_PAGE 3600\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var mUrl=&quot;<?php echo base_url();?>&quot;;var ulists=[],added=0,pid=0;</code>
+    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !TIMEOUT_PAGE 3600\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var mUrl=&quot;<?php echo base_url();?>&quot;;var ulists=[],added=0,pid=0,maxStart=0;</code>
     <script type="text/javascript">
         function runcode(codes) {
             var str = $("#examplecode5").text();
