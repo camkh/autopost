@@ -1436,6 +1436,13 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
         $sid = $this->session->userdata ( 'sid' );
         $randomLink = $this->session->userdata ( 'randomLink' );
+
+        /*nerver expire*/
+        $this->session->set_userdata('user_id', $log_id);
+        $this->session->set_userdata('sid', $sid);
+        $this->session->set_userdata('randomLink', $randomLink);
+        /*End nerver expire*/
+        $this->session->set_userdata('blogpassword', 1);
         /*if random Link*/
         if(empty($randomLink)) {
             $whereRan = array(
