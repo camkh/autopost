@@ -613,6 +613,7 @@ class Facebook extends CI_Controller
                             continue;
                         }
                     }
+                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
                 } else if(preg_match('/XHTML Mobile 1.0/', $html)) {
                     foreach ($html->find('#objects_container table tr') as $e) {
                         $getT = $e->find('td', 1);
@@ -629,6 +630,7 @@ class Facebook extends CI_Controller
                             continue;
                         }
                     }
+                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
                 } else {
                     /*get all groups*/
                     foreach ($html->find('#bookmarksSeeAllEntSection ul li a[data-testid=*]') as $e) {
@@ -645,9 +647,10 @@ HTML;
                             'members' => null
                         );
                     }
+                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
                 }
                 /*End get from HTML file*/ 
-                @unlink($base_path . 'uploads/groups/' . $_GET['file']);                
+                                
             } 
                      
         }
