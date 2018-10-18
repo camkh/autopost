@@ -180,7 +180,7 @@
 									id="checkAll" /></th>
 								<th>Name</th>
 								<th class="hidden-xs">Email</th>
-								<th class="hidden-xs" style="width:300px;overflow: hidden;">Type</th>
+								<th class="hidden-xs" style="overflow: hidden;">Type</th>
 								<th class="hidden-xs" style="width:200px;overflow: hidden;">Status</th>
 								<th>Action</th>
 							</tr>
@@ -194,7 +194,7 @@
 									name="itemid[]" class="uniform"
 									value="<?php echo $value->{Tbl_posts::id}; ?>" /></td>
 								<td><a
-									href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><?php echo $value->{Tbl_posts::name}; ?></a>
+									href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><img src="<?php echo $content->picture; ?>" style="width: 80px;float: left;margin-right: 5px"> <?php echo $value->{Tbl_posts::name}; ?></a>
 								</td>
 								<td class="hidden-xs">
         <?php echo $value->{Tbl_posts::p_date}; ?>

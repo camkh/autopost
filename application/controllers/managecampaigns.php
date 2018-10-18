@@ -197,12 +197,18 @@ class Managecampaigns extends CI_Controller {
         }
         /*End get fb id*/
 
-		$log_id = $this->session->userdata ( 'user_id' );
+        $log_id = $this->session->userdata ( 'user_id' );
+		$sid = $this->session->userdata ( 'sid' );
 		$user = $this->session->userdata ( 'email' );
 		$provider_uid = $this->session->userdata ( 'provider_uid' );
 		$provider = $this->session->userdata ( 'provider' );
 
-
+        if(!empty($sid)) {
+            if(!empty($this->input->get('back'))) {
+                redirect($this->input->get('back'));
+                exit();
+            }
+        }
 		$this->load->theme ( 'layout' );
 		$data ['title'] = 'Admin Area :: Manage Campaigns';
 

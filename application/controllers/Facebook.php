@@ -963,6 +963,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 if(!empty($this->input->get('cat'))) {
                     $this->mod_general->delete('group_user', array('gu_grouplist_id'=>$this->input->get('cat'),'gu_user_id'=>$log_id,'gu_idgroups'=>$id));
                     redirect('Facebook/group', 'location');
+                } else {
+                    $this->mod_general->delete('socail_network_group', array('s_id'=>$sid,'sg_id'=>$id));
+                    redirect('Facebook/group', 'location');
                 }
                 //$this->mod_general->delete('socail_network_group', array('s_id'=>$sid,'sg_id'=>$id));
                 
@@ -1436,6 +1439,10 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
         $sid = $this->session->userdata ( 'sid' );
         $randomLink = $this->session->userdata ( 'randomLink' );
+
+        if(empty($sid)) {
+            redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost'));
+        }
 
         /*nerver expire*/
         $this->session->set_userdata('user_id', $log_id);
