@@ -56,7 +56,7 @@
                                     </label>
 
                                     <label> <select name="Cat" class="select2-offscreen" style="width: 200px"  onChange="top.location.href=this.options[this.selectedIndex].value;">
-                                        <option value="http://localhost/autopost/Facebook/group?cat=none">None</option>
+                                        <option value="<?php echo base_url();?>Facebook/group?cat=none">None</option>
                                         <?php if(!empty($grouplist)):
                                             foreach ($grouplist as $groupList):
                                         ?>
