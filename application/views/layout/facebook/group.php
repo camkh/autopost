@@ -60,7 +60,7 @@
                                         <?php if(!empty($grouplist)):
                                             foreach ($grouplist as $groupList):
                                         ?>
-                                            <option <?php echo ($this->session->userdata ( 'cat' ) ==$groupList->l_id) ? 'selected' : '';?> value="http://localhost/autopost/Facebook/group?cat=<?php echo $groupList->l_id;?>"><?php echo $groupList->lname;?></option>
+                                            <option <?php echo ($this->session->userdata ( 'cat' ) ==$groupList->l_id) ? 'selected' : '';?> value="<?php echo base_url();?>Facebook/group?cat=<?php echo $groupList->l_id;?>"><?php echo $groupList->lname;?></option>
                                         <?php
                                             endforeach;
                                          endif;?>
