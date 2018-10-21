@@ -1365,7 +1365,7 @@ public function get_video_id($param, $videotype = '')
 
         $filetype = mime_content_type($file_path);
         /*resize image*/
-        $maxDim = 1200;
+        $maxDim = 800;
         $file_name = $imgName;
         list($width, $height, $type, $attr) = getimagesize( $file_name );
         if ( $width < $maxDim || $height < $maxDim ) {
@@ -1380,13 +1380,18 @@ public function get_video_id($param, $videotype = '')
             }
 
             $src = imagecreatefromstring( file_get_contents( $file_name ) );
-            $dst = imagecreatetruecolor( $new_width, $new_height );
-            imagecopyresampled( $dst, $src, 0, 0, 0, 0, $new_width, $new_height, $width, $height );
+            $dst = imagecreatetruecolor( $new_width, 415 );
+            imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
             imagedestroy( $src );
             imagejpeg( $dst, $target_filename ); // adjust format as needed
             imagedestroy( $dst );
         }
         /*end resize image*/
+        $this->load->library('ChipVNl');
+        \ChipVN\Loader::registerAutoLoad();
+        $logoPosition = 'lt';
+        $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
+        \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);
         /*upload to imgur.com*/
         $image = file_get_contents($imgName);
         $ch = curl_init();
