@@ -767,14 +767,10 @@ class Managecampaigns extends CI_Controller {
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         copy($imgUrl, $fileName);
 
-                        
                         $image = $this->Mod_general->uploadMedia($fileName);
-
-                        
-                        //@unlink($fileName);
+                        @unlink($fileName);
                         $imgur = true;
                     }
-                    die;
                     /*End upload photo first*/
 
                     $blogData = $this->postToBlogger($bid, $vid, $title,$image);
@@ -815,7 +811,6 @@ class Managecampaigns extends CI_Controller {
                     /*End check next post*/
                 }                
             }
-            die;
         }
         /*End Post to blogger*/
         $this->load->view ( 'managecampaigns/yturl', $data );
