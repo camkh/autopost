@@ -1,0 +1,1 @@
+<?phpif (!defined('BASEPATH'))    exit('No direct script access allowed');class ChipVNl {	public function __construct()    {    	require_once('Images/ChipVN/Loader.php');    }}
