@@ -1683,6 +1683,12 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         $pid = $this->input->get( 'id' );
         $postId = $this->input->get( 'pid' );
 
+        if(empty($this->session->userdata ( 'sid' ))) {
+            redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost'));
+        }
+
+        $this->session->set_userdata('sid', $sid);
+
         $data['title'] = 'Share to Facebook';
         $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
         $this->breadcrumbs->add('Post list', base_url().'managecampaigns');
