@@ -20,12 +20,13 @@
                         <span class="btn btn-xs widget-collapse"> <i
                             class="icon-angle-down"></i>
                         </span> <span class="btn btn-xs dropdown-toggle"
-                            data-toggle="dropdown"> <i class="icon-plus"></i> Add <i
+                            data-toggle="dropdown"> <i class="icon-cog"></i> <i
                             class="icon-angle-down"></i>
                         </span>
                         <ul class="dropdown-menu pull-right">
                             <li><a href="<?php echo base_url() . 'Facebook/addgroup/'; ?>"><i class="fa fa-facebook"></i> Add New Groups</a></li>
-                            <li><a href="<?php echo base_url() . 'Facebook/newlist/'; ?>">Create New List</a></li>                          
+                            <li><a href="<?php echo base_url() . 'Facebook/newlist/'; ?>">Create New List</a></li>
+                            <li><a href="<?php echo base_url() . 'Facebook/requestgroups/'; ?>"><i class="fa fa-facebook"></i> request Groups by ID</a></li>                          
                         </ul>
                     </div>
                 </div>

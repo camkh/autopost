@@ -15,7 +15,7 @@ date_default_timezone_set('Asia/Phnom_Penh');
 |
 */
 //$config['base_url']	= 'http://192.168.1.101/test/php/CI/photo';
-$config['base_url']	= 'http://localhost/autopost/';
+$config['base_url']	= 'http://localhost/test/php/CI/autopost/';
 $config['account_url']	= 'http://poroman.website/accounts';
 $config['website_name']	= 'AutoPost.com';
 //$config['g_user'] = 'kicklogan1@gmail.com';
@@ -28,7 +28,7 @@ $config['g_userId'] = '102852020569424979051';
 
 $config['g_client_id'] = '814595907237-kqk1qe9uc8iggm3m788k8u79056dipfh.apps.googleusercontent.com';
 $config['g_client_secret'] = 'sBKCkX2261txKtwilMcCSsuI';
-$config['g_redirect_uri'] = 'http://localhost/autopost/managecampaigns/account';
+$config['g_redirect_uri'] = 'http://localhost/test/php/CI/autopost/managecampaigns/account';
 
 /*Watermark text*/
 $config['wathermark_type'] = 'logo';

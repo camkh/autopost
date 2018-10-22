@@ -25,6 +25,7 @@
         .removediv + .tooltip > .tooltip-arrow { border-bottom-color:#f00;}
         .help-bloc{color:red;}
         #blockuis{padding:15%;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.88) none repeat scroll 0% 0%;top:0;left: 0;right: 0;bottom: 0;}
+        .fixed {position: fixed; right: 40px; width: 90%;bottom: 0;background: #fff}
     </style>
     <div class="page-header">
     </div>
@@ -185,6 +186,57 @@
                                         </div>
                                             </div>
                                         </div>
+
+
+                                        <div class="widget box">
+                                    <div class="widget-header">
+                                        <h4><i class="icon-reorder"></i> កំណត់នៃការស៊ែរ៍ / Share Option:</h4>
+                                    </div>
+                                    <div class="widget-content">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="shortlink" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Yes</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="shortlink" class="required" required/>
+                                                    <i class="subtopmenu hangmeas">No</i>
+                                                </label>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group BitlySelect" style="display: none;">
+                                            <label class="col-md-4 control-label">ផុសឆ្លាស់លីងគ៍<br/>Random link?:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="randomlink" class="required" />
+                                                    <i class="subtopmenu hangmeas">Yes</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="randomlink" class="required" checked="checked" />
+                                                    <i class="subtopmenu hangmeas">No</i>
+                                                </label>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group shareType" style="display: none;">
+                                            <label class="col-md-4 control-label">លក្ខណៈស៊ែរ៍<br/>Share type:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="image" name="sharetype" class="required" checked="checked" />
+                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែបរូបភាព</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="link" name="sharetype" class="required" disabled />
+                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែប Link</i>
+                                                </label>    
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
 
 
                                         <div class="widget box">
@@ -388,62 +440,12 @@
 
                                     </div>
                                 </div>
-
-
-                                <div class="widget box">
-                                    <div class="widget-header">
-                                        <h4><i class="icon-reorder"></i> កំណត់នៃការស៊ែរ៍ / Share Option:</h4>
-                                    </div>
-                                    <div class="widget-content">
-                                        <div class="form-group">
-                                            <label class="col-md-4 control-label">បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
-                                            <div class="col-md-8">
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="1" name="shortlink" class="required" required />
-                                                    <i class="subtopmenu hangmeas">Yes</i>
-                                                </label> 
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="0" name="shortlink" class="required" required/>
-                                                    <i class="subtopmenu hangmeas">No</i>
-                                                </label>    
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group BitlySelect" style="display: none;">
-                                            <label class="col-md-4 control-label">ផុសឆ្លាស់លីងគ៍<br/>Random link?:</label>
-                                            <div class="col-md-8">
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="1" name="randomlink" class="required" />
-                                                    <i class="subtopmenu hangmeas">Yes</i>
-                                                </label> 
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="0" name="randomlink" class="required" checked="checked" />
-                                                    <i class="subtopmenu hangmeas">No</i>
-                                                </label>    
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group shareType" style="display: none;">
-                                            <label class="col-md-4 control-label">លក្ខណៈស៊ែរ៍<br/>Share type:</label>
-                                            <div class="col-md-8">
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="image" name="sharetype" class="required" checked="checked" />
-                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែបរូបភាព</i>
-                                                </label> 
-                                                <label class="radio-inline">
-                                                    <input type="radio" value="link" name="sharetype" class="required" disabled />
-                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែប Link</i>
-                                                </label>    
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                
                                     
                             </div>                                
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group fixed">
                             <div class="col-md-12">
                                 <input name="submit" type="submit" value="Public Content" class="btn btn-primary pull-right" />
                             </div>

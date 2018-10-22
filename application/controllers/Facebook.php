@@ -1391,6 +1391,25 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             return $data;
         }
     }
+
+    public function requestgroups()
+    {
+        $log_id = $this->session->userdata('user_id');
+        $data['title'] = 'Request group by ID';
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add($data['title'], base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('add', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();
+
+        if(!empty($this->input->post('gids'))) {
+            $data['gids'] = explode(',', $this->input->post('gids'));
+        }  
+
+        $this->load->view('facebook/requestgroups', $data);
+
+    }
     public function randomLink($link='',$image='')
     {
         /*upload photo first*/

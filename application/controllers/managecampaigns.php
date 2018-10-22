@@ -31,6 +31,10 @@ class Managecampaigns extends CI_Controller {
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
 
+        if(!empty($this->input->get('back'))) {
+            $this->session->set_userdata('back', $this->input->get('back'));
+        }
+
         /*google login*/
         $this->load->library('google_api');
         // Store values in variables from project created in Google Developer Console
@@ -137,6 +141,11 @@ class Managecampaigns extends CI_Controller {
         }
         // Load view and send values stored in $data
         /*end google login*/
+
+        if(!empty($this->session->userdata ( 'back' ))) {
+            redirect($this->session->userdata ( 'back' ));
+            exit();
+        }
 
 		$this->load->view ( 'managecampaigns/account', $data );
 	}
@@ -372,7 +381,8 @@ class Managecampaigns extends CI_Controller {
 
         $fbUserId = $this->session->userdata ( 'sid' );
         if(empty($this->session->userdata('access_token'))) {
-            redirect(base_url() . 'managecampaigns/account');
+            $setUrl = base_url() . 'managecampaigns/account' . '?back='. urlencode(current_url());
+            redirect($setUrl);
             exit();
         }
         if(empty($this->session->userdata ( 'sid' ))) {
@@ -887,6 +897,7 @@ class Managecampaigns extends CI_Controller {
 		$actions = $this->uri->segment ( 3 );
 		$id = ! empty ( $_GET ['id'] ) ? $_GET ['id'] : '';
 		$log_id = $this->session->userdata ('user_id');
+        $sid = $this->session->userdata ( 'sid' );
 		$this->Mod_general->checkUser ();
 		$user = $this->session->userdata ( 'email' );
 		$provider_uid = $this->session->userdata ( 'provider_uid' );
@@ -915,6 +926,7 @@ class Managecampaigns extends CI_Controller {
         /* get User groups type */
         $where_gu= array (
                 'l_user_id' => $log_id, 
+                'l_sid' => $sid, 
         );
         $dataAccountg = $this->Mod_general->select ( 'group_list', 'l_id, lname', $where_gu );
         $data ['groups_type'] = $dataAccountg;
@@ -1670,7 +1682,7 @@ HTML;
 					$i = 0;
 					foreach ( $dataGroup as $gvalue ) {
 						$i ++;
-						$data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '"/>' . $i . ' - ' . $gvalue->{
+						$data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '"/>' . $i . ' - ' . $gvalue->sg_page_id . ' | ' . $gvalue->{
                             Tbl_social_group::name} . '</label>';
 					}
 					echo $data;
@@ -1686,7 +1698,7 @@ HTML;
                     $i = 0;
                     foreach ( $dataGroup as $gvalue ) {
                         $i ++;
-                        $data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '"/>' . $i . ' - ' . $gvalue->{
+                        $data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '"/>' . $i . ' - '  . $gvalue->sg_page_id . ' | ' . $gvalue->{
                             Tbl_social_group::name} . '</label>';
                     }
                     echo $data;
