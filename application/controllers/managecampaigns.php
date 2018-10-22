@@ -379,6 +379,7 @@ class Managecampaigns extends CI_Controller {
         $provider_uid = $this->session->userdata ( 'provider_uid' );
         $provider = $this->session->userdata ( 'provider' );
 
+
         $fbUserId = $this->session->userdata ( 'sid' );
         if(empty($this->session->userdata('access_token'))) {
             $setUrl = base_url() . 'managecampaigns/account' . '?back='. urlencode(current_url());
@@ -423,6 +424,7 @@ class Managecampaigns extends CI_Controller {
         /* get User groups type */
         $where_gu= array (
                 'l_user_id' => $log_id, 
+                'l_sid' => $fbUserId, 
         );
         $dataAccountg = $this->Mod_general->select ( 'group_list', 'l_id, lname', $where_gu );
         $data ['groups_type'] = $dataAccountg;
