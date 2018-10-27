@@ -34,7 +34,13 @@
                             </tr>
                         </thead>
                         <tbody>
-    <?php foreach ($sharePost->posts_list as $value) { ?>
+    <?php
+    if(count($sharePost->posts_list)<1):?>
+        <script type="text/javascript">
+        window.location = "<?php echo base_url();?>facebook/shareation?post=getpost"
+        </script>
+    <?php endif;
+     foreach ($sharePost->posts_list as $value) { ?>
                                     <tr class="<?php echo ($sharePost->pid == $value->{Tbl_posts::id}) ? 'trbackground' : '';?>">
                                 <td class="checkbox-column"><input type="checkbox" id="itemid"
                                     name="itemid[]" class="uniform"

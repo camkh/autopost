@@ -711,7 +711,7 @@ HTML;
                             $data_groupList = array(
                                 'lname' => $this->input->post('addlist'),
                                 'l_user_id' => $log_id,
-                                'l_category' => $this->input->post('categorylist'),
+                                'l_category' => (int) $this->input->post('categorylist'),
                                 'l_count' => count($id),
                                 'l_sid' => $sid,
                             );
