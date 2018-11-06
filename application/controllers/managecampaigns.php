@@ -262,42 +262,42 @@ class Managecampaigns extends CI_Controller {
                 'user_id' => $log_id,
                 'u_id' => $fbUserId,
             );
+		
+    		$this->load->library ( 'pagination' );
+    		$per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 10;
+    		$config ['base_url'] = base_url () . 'managecampaigns/index';
+    		$count_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
+    		$config ['total_rows'] = count ( $count_blog );
+    		$config ['per_page'] = $per_page;
+    		$config ['cur_tag_open'] = '<li class="active"><a>';
+    		$config ['cur_tag_close'] = '</a></li>';
+    		$config ['num_tag_open'] = '<li>';
+    		$config ['num_tag_close'] = '</li>';
+    		$config ['next_tag_open'] = '<li>';
+    		$config ['next_tag_close'] = '</li>';
+    		$config ['prev_tag_open'] = '<li>';
+    		$config ['prev_tag_close'] = '</li>';
+    		$page = ($this->uri->segment ( 3 )) ? $this->uri->segment ( 3 ) : 0;
+    		
+    		$query_blog = array ();
+    		if (empty ( $filtername )) {
+    			$query_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so, "p_id DESC", '', $config ['per_page'], $page );
+    		}
+    		$i = 1;
+    		
+    		$data ['socialList'] = $query_blog;
+    		
+    		$config ["uri_segment"] = 3;
+    		$this->pagination->initialize ( $config );
+    		$data ["total_rows"] = count ( $count_blog );
+    		$data ["results"] = $query_blog;
+    		$data ["links"] = $this->pagination->create_links ();
+    		/* end get pagination */
         } else {
-           $where_so = array (
-                'user_id' => $log_id,
-            ); 
+            $data ["results"] = array();
+            $data ["total_rows"] = 0;
+            $data ["links"] = '';
         }
-		
-		$this->load->library ( 'pagination' );
-		$per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 10;
-		$config ['base_url'] = base_url () . 'post/bloglist/';
-		$count_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
-		$config ['total_rows'] = count ( $count_blog );
-		$config ['per_page'] = $per_page;
-		$config ['cur_tag_open'] = '<li class="active"><a>';
-		$config ['cur_tag_close'] = '</a></li>';
-		$config ['num_tag_open'] = '<li>';
-		$config ['num_tag_close'] = '</li>';
-		$config ['next_tag_open'] = '<li>';
-		$config ['next_tag_close'] = '</li>';
-		$config ['prev_tag_open'] = '<li>';
-		$config ['prev_tag_close'] = '</li>';
-		$page = ($this->uri->segment ( 3 )) ? $this->uri->segment ( 3 ) : 0;
-		
-		$query_blog = array ();
-		if (empty ( $filtername )) {
-			$query_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so, "p_id DESC", '', $config ['per_page'], $page );
-		}
-		$i = 1;
-		
-		$data ['socialList'] = $query_blog;
-		
-		$config ["uri_segment"] = 3;
-		$this->pagination->initialize ( $config );
-		$data ["total_rows"] = count ( $count_blog );
-		$data ["results"] = $query_blog;
-		$data ["links"] = $this->pagination->create_links ();
-		/* end get pagination */
 		
 		$log_id = $this->session->userdata ( 'log_id' );
 		$user = $this->session->userdata ( 'username' );
@@ -659,7 +659,7 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $content = array (
-                            'name' => @$title[$i],
+                            'name' => @str_replace(' - YouTube', '', $title[$i]),
                             'message' => @$message[$i],
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
@@ -670,7 +670,7 @@ class Managecampaigns extends CI_Controller {
                     @iconv_set_encoding("output_encoding", "UTF-8");   
                     @ob_start("ob_iconv_handler");
                     $dataPostInstert = array (
-                            Tbl_posts::name => $this->remove_emoji($title[$i]),
+                            Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($title[$i])),
                             Tbl_posts::conent => json_encode ( $content ),
                             Tbl_posts::p_date => date('Y-m-d H:i:s'),
                             Tbl_posts::schedule => json_encode ( $schedule ),
