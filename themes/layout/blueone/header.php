@@ -56,6 +56,32 @@
                 </ul>
             </li>
         </ul>
+        <ul class="nav navbar-nav navbar-left hidden-xs hidden-sm">
+            <li class="dropdown user"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-facebook-sign"></i> <span class="username">Facebook (User agent)</span> <i class="icon-caret-down small"></i> </a>
+                <ul class="dropdown-menu">
+                    <li> <a href="<?php echo base_url() . 'Facebook/group'; ?>"><i class="icon-facebook"></i> Facebook Groups</a> </li>
+                    <li><a href="<?php echo base_url(); ?>"><i class="icon-plus"></i> Remove all Groups</a></li>  
+                    <li><a href="<?php echo base_url(); ?>Facebook/removegroup"><i class="icon-plus"></i> Remove all Groups by ID</a></li>  
+                    <li><a href="<?php echo base_url(); ?>"><i class="icon-plus"></i> Find groups by keyword<li><a href="<?php echo base_url(); ?>"><i class="icon-plus"></i> Facebook Group Transfer</a></li>  
+                    <li><a href="<?php echo base_url(); ?>"><i class="icon-plus"></i> Post on Facebook Groups</a></li>  
+                    <li class="divider"></li>
+                    <li><a href="javascript:;"><i class="icon-off"></i> Invitation tools</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/invitelikepage?action=1'; ?>"><i class="icon-facebook"></i> Invite Your Friends To Like Your Page</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/addfriendgroup?action=1'; ?>"><i class="icon-facebook"></i> Invite Your Friends To Join Your Group</a></li>
+                    <li class="divider"></li> 
+                    <li><a href="javascript:;"><i class="icon-plus"></i> Extraction tools</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/checknum'; ?>"><i class="icon-phone"></i> Get public phone numbers of all Facebook friends</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/friendlist';?>"><i class="icon-th-list"></i> Get Friend list</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/fblist'; ?>"><i class="icon-facebook-sign"></i> Facebook usable</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/fbid'; ?>"><i class="icon-key"></i> Find Facebook ID</a></li>
+                    <li><a href="<?php echo base_url(); ?>"><i class="icon-key"></i>  Accept All Friend Requests At Once</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:;"><i class="icon-plus"></i> Remove Tools</a></li>
+                    <li><a href="<?php echo base_url() . 'Facebook/unfriend'; ?>"><i class="icon-plus"></i> Remove all Friends</a></li>
+                    <li><a href="<?php echo base_url(); ?>"><i class="icon-plus"></i> Remove all Groups</a></li> 
+                </ul>
+            </li>
+        </ul>        
         <ul class="nav navbar-nav">
             <li class="dropdown user"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-th-large"></i> <span class="username">
                          Post</span> <i class="icon-caret-down small"></i> </a>

@@ -26,7 +26,8 @@
                         <ul class="dropdown-menu pull-right">
                             <li><a href="<?php echo base_url() . 'Facebook/addgroup/'; ?>"><i class="fa fa-facebook"></i> Add New Groups</a></li>
                             <li><a href="<?php echo base_url() . 'Facebook/newlist/'; ?>">Create New List</a></li>
-                            <li><a href="<?php echo base_url() . 'Facebook/requestgroups/'; ?>"><i class="fa fa-facebook"></i> request Groups by ID</a></li>                          
+                            <li><a href="<?php echo base_url() . 'Facebook/requestgroups/'; ?>"><i class="fa fa-facebook"></i> request Groups by ID</a></li>
+                            <li><a href="<?php echo base_url() . 'Facebook/trgroups/'; ?>"><i class="fa fa-facebook"></i> Facebook Group Transfer </a></li>                          
                         </ul>
                     </div>
                 </div>

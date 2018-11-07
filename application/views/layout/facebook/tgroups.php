@@ -12,10 +12,10 @@
     </div>
 
     <?php
-    if(!empty($_GET['g'])):
-        $g = $_GET['g'];
-        $u = @$_GET['u'];
-        $t = @$_GET['t'];
+    if(!empty($_GET['g']) || !empty($_POST['g'])):
+        $g = !empty($_POST['g']) ? $_POST['g'] : $_GET['g'];
+        $u = !empty($_POST['u']) ? $_POST['u'] : $_GET['u'];
+        $t = !empty($_POST['t']) ? $_POST['t'] : $_GET['t'];
         $goupsArr = explode(',', $g);
         $tranferGroup = 'code = &quot;&quot;;';
         $i=0;
@@ -39,7 +39,7 @@
                 $tranferGroup .= 'code += &quot;TAG POS=1 TYPE=SPAN ATTR=TXT:Close\n&quot;;';
             }
         }
-        $tranferGroup .= 'code+=&quot;URL GOTO=http://www.autopostsfb.com/home/index?m=transfer&amp;group='.$countGroups.'\n&quot;;';
+        $tranferGroup .= 'code+=&quot;URL GOTO='.base_url().'home/index?m=transfer&amp;group='.$countGroups.'\n&quot;;';
         $tranferGroup .= 'iimPlayCode(codedefault2+code);';
         ?>  
         <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var contents=null,images=null,groups=null,setIdAccout=null,postingOn=0;var codedefault1=&quot;TAB CLOSEALLOTHERS\n SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);<?php echo @$tranferGroup;?>iimPlay('CODE:WAIT SECONDS=0');</code>  

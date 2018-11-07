@@ -159,6 +159,7 @@ class Managecampaigns extends CI_Controller {
             $fbname = $this->input->post('fb_user_name');
         }
         if($fbname) {
+            $fbname = nl2br(trim(strip_tags($fbname))); 
             $this->session->set_userdata('fb_user_name', $fbname);
         }
         if($fbuid) {

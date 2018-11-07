@@ -112,6 +112,7 @@
                             <div class="btn-group">
                                 <button class="btn btn-xs dropdown-toggle" data-toggle="dropdown"> <i class="icon-list-alt"></i> Add <span class="caret"></span> </button>
                                 <ul class="dropdown-menu">
+                                    <li><a href="<?php echo base_url() . 'Facebook/gennum'; ?>"><i class="icon-list-alt"></i> Number Phone generator</a></li>
                                     <li><a href="<?php echo base_url() . 'Facebook/fbstatus'; ?>"><i class="icon-list-alt"></i> Add new Phone number from File</a></li>
                                     <li><a href="<?php echo base_url() . 'Facebook/publicphone'; ?>"><i class="icon-list-alt"></i> Add new Phone number from friend online</a></li>
                             </div>                                    

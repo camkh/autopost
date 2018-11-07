@@ -365,6 +365,19 @@ class Facebook extends CI_Controller
         return $ran[array_rand($ran, 1)];
 
     }
+    public function gennum()
+    {
+        $userId = $this->session->userdata('user_id');
+        $this->mod_general->checkUser();
+        $user = $this->session->userdata('email');
+        $data['title'] = 'Phone number generator';
+        if ($this->input->post('urlid')) {
+
+        }
+        $this->load->view('facebook/gennum', $data);
+    }
+
+
     public function getfriendlist()
     {
         $log_id = $this->session->userdata('user_id');
@@ -882,6 +895,23 @@ HTML;
         $data["links"] = $this->pagination->create_links();
         $data['list'] = $queryList;
         $this->load->view('facebook/group', $data);
+    }
+
+    public function trgroups()
+    {
+        $fb_id = $this->session->userdata ( 'fb_user_id' );
+        $log_id = $this->session->userdata('user_id');
+        $sid = $this->session->userdata ( 'sid' );
+        $user = $this->session->userdata('email');
+        $data['title'] = 'Facebook group Tranfer';
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add($data['title'], base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('add', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();
+
+        $this->load->view('facebook/trgroups', $data);
     }
 
     public function overview() {
