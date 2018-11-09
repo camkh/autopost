@@ -970,17 +970,17 @@ $phonCountry = json_decode($phonCountryCode);
                     <div class="widget-content">
                         <form method="post" id="validate" enctype="multipart/form-data" class="form-horizontal row-border">
                             <div class="form-group">
-                                    <select id="input17" class="select2-select-00 col-md-2 full-width">
-                                        <option value="0">Country code</option>
+                                    <select id="input17" class="select2-select-00 col-md-2 full-width" name="ccode">
+                                        <option value="">Country code</option>
                                         <?php foreach ($phonCountry->countries as $code):?>
                                             <option value="<?php echo $code->code;?>" <?php echo ($code->code == '855' ? 'selected' :'');?>>(<?php echo $code->code;?>) <?php echo $code->name;?></option>
                                         <?php endforeach;?>
                                     </select>
                                 <div class="col-md-8">
-                                    <input type="text" name="friend" class="form-control required" placeholder="Full Number" required/>
+                                    <input type="text" name="phone" class="form-control required" placeholder="Full Number" required/>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="Number" name="friend" class="form-control required" placeholder="How much?" required/>
+                                    <input type="Number" name="max" max="999" class="form-control required" placeholder="How much?" required/>
                                 </div>
                             </div>
                             <div class="form-actions">

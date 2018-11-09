@@ -367,11 +367,44 @@ class Facebook extends CI_Controller
     }
     public function gennum()
     {
-        $userId = $this->session->userdata('user_id');
+        $log_id = $userId = $this->session->userdata('user_id');
         $this->mod_general->checkUser();
         $user = $this->session->userdata('email');
         $data['title'] = 'Phone number generator';
-        if ($this->input->post('urlid')) {
+        if ($this->input->post('phone')) {
+            for ($i=0; $i < $this->input->post('max'); $i++) { 
+                $phone = $this->input->post('phone');
+                $ccode = $this->input->post('ccode');
+                if (substr($phone, 0, 1) == '0') {
+                     $phone = substr($phone, 1);
+                } 
+                if($i<10) {
+                    $nphone = substr($phone, 0, -1);
+                } else if($i<100) {
+                    $nphone = substr($phone, 0, -2);
+                } else if($i<1000) {
+                    $nphone = substr($phone, 0, -3);
+                }
+                $pass = '0' . $nphone . $i;
+                $number = $ccode. $nphone . $i;
+                /*add nunmber*/
+                $dataCheck = $this->mod_general->select('faecbook','*',array('f_phone'=>$number,'user_id'=>$log_id));
+                if(empty($dataCheck)) {
+                    $data_insert = array(
+                        'f_name' => $number,
+                        'f_phone' => $number,
+                        'f_pass' => $pass,
+                        'f_lname' => $ccode,
+                        'user_id' => $log_id,
+                        'f_date' => 'getNum',
+                        'f_status' => 9,
+                    );
+                    $csvData = $this->mod_general->insert('faecbook', $data_insert);
+                }
+                /*End add nunmber*/
+            }
+            redirect(base_url().'Facebook/checknum');
+            exit();
 
         }
         $this->load->view('facebook/gennum', $data);
