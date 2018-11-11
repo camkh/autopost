@@ -26,10 +26,8 @@
         $userName = $resultData->f_name;
         $url = $resultData->f_lname;
         $userId = $resultData->f_pass;
-        $phoneNumber = preg_replace('/^0/','+855',$resultData->f_phone);
-        $phone = str_replace('-', '', $resultData->f_phone);
-        $phone = str_replace('+', '0', $phone);
-        $phone = preg_replace('/^([+])66/','08',$phone);
+        $phoneNumber = $resultData->f_phone;
+        $phone = $resultData->f_pass;
         $id = $resultData->id;
         $t = '300';
         $total = !empty($_GET['total']) ? $_GET['total'] : 1;
@@ -47,13 +45,13 @@
         $tranferGroup .= 'code += &quot;WAIT SECONDS=20\n&quot;;';
         $tranferGroup .= 'code += &quot;TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:login_form ATTR=NAME:login\n&quot;;';
         $tranferGroup .= 'code += &quot;TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:login_form ATTR=NAME:login EXTRACT=TXT\n&quot;;';
-        $tranferGroup .= 'code += &quot;TAG POS=1 TYPE=H3 ATTR=TXT:* EXTRACT=TXT\n&quot;;';
+        $tranferGroup .= 'code += &quot;TAG POS=1 TYPE=H3 ATTR=ID:checkpoint_title EXTRACT=TXT\n&quot;;';
         $tranferGroup .= 'code += &quot;WAIT SECONDS=2\n&quot;;';
         $tranferGroup .= 'iimPlayCode(codedefault2+code);';
         $tranferGroup .= 'var codeEx = iimGetLastExtract(1).replace(/ /g, "<sp>").replace(/\n/g, "<br>");';
         $tranferGroup .= 'var codeEx2 = iimGetLastExtract(2).replace(/ /g, "<sp>").replace(/\n/g, "<br>");';
         $tranferGroup .= 'var QueryString=function(){var query_string={};var query=window.location.search.substring(1);var vars=query.split("&amp;");for(var i=0;i&lt;vars.length;i++){var pair=vars[i].split("=");if(typeof query_string[pair[0]]==="undefined"){query_string[pair[0]]=decodeURIComponent(pair[1]);}else if(typeof query_string[pair[0]]==="string"){var arr=[query_string[pair[0]],decodeURIComponent(pair[1])];query_string[pair[0]]=arr;}else{query_string[pair[0]].push(decodeURIComponent(pair[1]));}}return query_string;}();';
-        $tranferGroup .= 'var fb_status=1; if(codeEx  == &quot;LogIn&quot;) {fb_status=&quot;no&quot;;} if(codeEx2  == &quot;PleaseConfirmYourIdentity&quot;) {fb_status=1;} if(QueryString.login_try_number) {fb_status=&quot;no&quot;;}';
+        $tranferGroup .= 'var fb_status=1; if(codeEx  == &quot;LogIn&quot;) {fb_status=&quot;no&quot;;}; if(codeEx2  == &quot;PleaseConfirmYourIdentity&quot;) {fb_status=1;};if(codeEx2=="YourAccountHasBeenDisabled"){fb_status="no";}; if(QueryString.login_try_number) {fb_status=&quot;no&quot;;}';
         $tranferGroup .= 'code = &quot;&quot;;';
         $tranferGroup .= 'code+=&quot;CLEAR\n&quot;;';
         $tranferGroup .= 'code+=&quot;URL GOTO='.base_url().'Facebook/checknum?status=&quot; + fb_status + &quot;&u='.$log_id . '&e='.$email.'&t='.$type.'&total=&quot; + total + &quot;&checkMy=&quot; + codeEx2 + &quot;\n&quot;;';

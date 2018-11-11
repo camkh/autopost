@@ -130,7 +130,7 @@
                                 <td>
                                     <?php echo $number->f_phone;?>
                                 </td>
-                                <td><?php echo $number->f_phone;?></td>
+                                <td><?php echo $number->f_pass;?></td>
                                 <td>
                                     <div class="btn-group"> 
                                         <button class="btn btn-xs dropdown-toggle <?php echo ($number->f_status == 4) ? 'btn-success':'btn-warning';?>" data-toggle="dropdown"> <?php echo ($number->f_status == 4) ? 'Used':'Not Use';?>
