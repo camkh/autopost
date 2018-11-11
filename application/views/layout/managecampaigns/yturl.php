@@ -87,12 +87,14 @@
                                         <div class="col-md-5">
                                             <div class="input-group">                                                 
                                                 <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_1" />
+                                                <input type="hidden" id="name_link_1" value="" class="form-control post-option" name="name[]" />
                                                 <span class="input-group-btn"> 
                                                     // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id) ? 'disabled':'';?>>
                                                         <i class="icon-remove text-danger"></i>
                                                     </button> 
                                                 </span> 
                                             </div>
+                                            <textarea name="conents[]" id="description_link_1" class="form-control post-option" style="height: 58px"></textarea>
                                         </div>
                                       </div>
                                     </div>
@@ -518,8 +520,7 @@
                         $('#postimacros').html('');
                          $.each(data, function(index, element) {
                             $("#blockuis").hide();
-                            var dataYt = '<div class="form-group morefield"><div class="col-md-12"><div class="form-group"><div class="col-md-4"><input type="text" value="'+element.vid+'" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="link_'+element.vid+'" onchange="getLink(this);" /><p><span class="help-bloc">'+element.viewCount+'</span> Views</p><p><span>published:</span> <span class="help-bloc">'+element.publishedAt+' </span></p></div><div class="col-md-3"><img src="https://i.ytimg.com/vi/'+element.vid+'/hqdefault.jpg" style="width:120px"/><input type="hidden" id="img_'+element.vid+'" value="https://i.ytimg.com/vi/'+element.vid+'/hqdefault.jpg" class="form-control post-option" name="thumb[]" placeholder="Image url" /></div><div class="col-md-5"><div class="input-group"><input type="text" value="'+element.title+'" class="form-control post-option" name="title[]" placeholder="Title" id="title_'+element.title+'" /><span class="input-group-btn"><button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button"><i class="icon-remove text-danger"></i></button></span></div></div></div></div></div>';
-                            console.log(dataYt);
+                            var dataYt = '<div class="form-group morefield"><div class="col-md-12"><div class="form-group"><div class="col-md-4"><input type="text" value="'+element.vid+'" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="link_'+element.vid+'" onchange="getLink(this);" /><p><span class="help-bloc">'+element.viewCount+'</span> Views</p><p><span>published:</span> <span class="help-bloc">'+element.publishedAt+' </span></p></div><div class="col-md-3"><img src="https://i.ytimg.com/vi/'+element.vid+'/hqdefault.jpg" style="width:120px"/><input type="hidden" id="img_'+element.vid+'" value="'+element.picture+'" class="form-control post-option" name="thumb[]" placeholder="Image url" /></div><div class="col-md-5"><div class="input-group"><input type="text" value="'+element.title+'" class="form-control post-option" name="title[]" placeholder="Title" id="title_'+element.title+'" /><span class="input-group-btn"><button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button"><i class="icon-remove text-danger"></i></button></span></div></div></div></div></div>';
                             $('#postimacros').append(dataYt);
                         });
                         $('.bs-tooltip').tooltip();
@@ -534,9 +535,11 @@
                 var code = makeid();
                 var link = 'link_' + code;
                 var title = 'title_link_' + code;
+                var name = 'name_link_' + code;
+                var description = 'description_link_' + code;
                 var image = 'image_link_' + code;
                 var image_show = 'show_link_' + code;
-              $('.morefield:last').after('<div class="form-group morefield"><div class="col-md-12"><div class="form-group"><div class="col-md-4"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div><div class="col-md-3"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:120px"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></div><div class="col-md-5"><div class="input-group"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /><span class="input-group-btn"><button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button"><i class="icon-remove text-danger"></i></button></span></div></div></div></div></div>');
+              $('.morefield:last').after('<div class="form-group morefield"><div class="col-md-12"><div class="form-group"><div class="col-md-4"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div><div class="col-md-3"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:120px"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></div><div class="col-md-5"><div class="input-group"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /><input type="hidden" id="'+name+'" value="" class="form-control post-option" name="name[]" /><span class="input-group-btn"><button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button"><i class="icon-remove text-danger"></i></button></span></div><textarea name="conents[]" id="'+description+'" class="form-control post-option" style="height: 58px"></textarea></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
                 //var count = $(".listofsong").length;
                 //$("#countdiv").text("ចំនួន " + count + " បទ");
@@ -568,6 +571,8 @@
                         $("#blockuis").hide();
                         var obj = JSON.parse(data);
                       $('#title_' + id).val(obj.name);
+                      $('#name_' + id).val(obj.name);
+                      $('#description_' + id).val(obj.description);
                       $('#image_' + id).val(obj.picture);
                       $('#show_' + id).attr("src",obj.picture);
                     }

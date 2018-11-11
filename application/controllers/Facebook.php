@@ -1817,6 +1817,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $link = $this->shorturl($link,$pSchedule->short_link);
                     $sharePost->conent = $pConent;
                     $sharePost->option = $pSchedule;
+                    $sharePost->pTitle = $data['post'][0]->p_name;
 
                     /*time waiting*/
 
@@ -1888,7 +1889,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     }
                 }
                 /*End Show data Prefix*/
-                $sharePost->title = $preRand . '<br/>' . $pConent->name . '<br/>' . $subRand;
+                $sharePost->title = $preRand . '<br/>' . $sharePost->pTitle . '<br/>' . $subRand;
 
                 /*count share posts*/
                 $whereCount = array (

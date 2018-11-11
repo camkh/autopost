@@ -566,6 +566,8 @@ class Managecampaigns extends CI_Controller {
         /* get form */
         if ($this->input->post ( 'submit' )) {
             $title = $this->input->post ( 'title' );
+            $name = $this->input->post ( 'name' );
+            $conents = $this->input->post ( 'conents' );
             $PrefixTitle = $this->input->post ( 'Prefix' );
             $SuffixTitle = $this->input->post ( 'addtxt' );
             $thumb = $this->input->post ( 'thumb' );
@@ -664,7 +666,7 @@ class Managecampaigns extends CI_Controller {
                     /* data content */
                     $content = array (
                             'name' => @str_replace(' - YouTube', '', $title[$i]),
-                            'message' => @$message[$i],
+                            'message' => @$conents[$i],
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'picture' => @$thumb[$i],                            
@@ -674,7 +676,7 @@ class Managecampaigns extends CI_Controller {
                     @iconv_set_encoding("output_encoding", "UTF-8");   
                     @ob_start("ob_iconv_handler");
                     $dataPostInstert = array (
-                            Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($title[$i])),
+                            Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($name[$i])),
                             Tbl_posts::conent => json_encode ( $content ),
                             Tbl_posts::p_date => date('Y-m-d H:i:s'),
                             Tbl_posts::schedule => json_encode ( $schedule ),
@@ -766,6 +768,7 @@ class Managecampaigns extends CI_Controller {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $links = $pConent->link;                    
                     $title = $pConent->name;
+                    $message = $pConent->message;
 
                     /*Post to Blogger first*/
                     $vid = $this->Mod_general->get_video_id($links);
@@ -789,7 +792,7 @@ class Managecampaigns extends CI_Controller {
                     }
                     /*End upload photo first*/
 
-                    $blogData = $this->postToBlogger($bid, $vid, $title,$image);
+                    $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message);
                     $link = $blogData->url;
 
                     /*End Post to Blogger first*/
@@ -832,7 +835,7 @@ class Managecampaigns extends CI_Controller {
         $this->load->view ( 'managecampaigns/yturl', $data );
     }
 
-    public function postToBlogger($bid, $vid, $title,$image)
+    public function postToBlogger($bid, $vid, $title,$image,$conent='')
     {
 
         /*prepare post*/
@@ -844,7 +847,7 @@ class Managecampaigns extends CI_Controller {
         $posts   = new Google_Service_Blogger_Post();
 
         $strTime = strtotime(date("Y-m-d H:i:s"));
-        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><b>'.$title.'</b><br/>'.$conent.'<div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
         $title = (string) $title;
         $dataContent          = new stdClass();
         $dataContent->setdate = false;        
@@ -1553,6 +1556,7 @@ HTML;
             $this->load->library ( 'html_dom' );
             $html = file_get_html ( $url );
             $title = @$html->find ( 'meta[property=og:title]', 0 )->content;
+            $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
             $title1 = @$html->find ( '.post-title', 0 )->innertext;
             if (!$title) {
                 $title = $html->find ( '.post-title a', 0 )->innertext;
@@ -1577,7 +1581,7 @@ HTML;
                     'name' => trim ( $title ),
                     'message' => trim ( $title ),
                     'caption' => trim ( $title ),
-                    'description' => trim ( $title ),
+                    'description' => trim ( $description ),
                     'link' => $url
             );            
             if (! empty ( $data )) {
