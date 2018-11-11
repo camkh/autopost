@@ -138,7 +138,7 @@
                                         </button> 
                                         <ul class="dropdown-menu"> 
                                             <li><a href="<?php echo base_url();?>Facebook/fblist?id=<?php echo $number->id;?>&type=status&status=4"><span class="text-success">Used</span></a></li> 
-                                            <li><a href="#"><span class="text-danger"> Not Use</span></a></li> 
+                                            <li><a href="<?php echo base_url();?>Facebook/fblist?id=<?php echo $number->id;?>&type=status&status=8"><span class="text-danger"> Not Use</span></a></li> 
                                         </ul> 
                                     </div>
                                 </td>

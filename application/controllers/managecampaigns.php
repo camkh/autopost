@@ -462,6 +462,7 @@ class Managecampaigns extends CI_Controller {
                     $('#groupWrapLoading').hide();
                     $(\"#getAllGroups\").html(html);
                     $(\"#groupWrap\").show();
+                    $(\"#checkAll\").prop( \"checked\", true );
                 }
             });
 
@@ -599,6 +600,7 @@ class Managecampaigns extends CI_Controller {
             $random = $this->input->post ( 'random' );
             $random_link = $this->input->post ( 'randomlink' );
             $share_type = $this->input->post ( 'sharetype' );
+            $account_gtype = $this->input->post ( 'groups' );
             
             /* check account type */
             $s_acount = explode ( '|', $accoung );
@@ -649,6 +651,7 @@ class Managecampaigns extends CI_Controller {
                     'random_link' => @$random_link,
                     'share_type' => @$share_type,
                     'share_schedule' => @$post_action,
+                    'account_group_type' => @$account_gtype,
             );
             /* end data schedule */  
             if (!empty($link)) {
@@ -945,21 +948,22 @@ class Managecampaigns extends CI_Controller {
 		$data ['addJsScript'] = array (
 				"
         $(document).ready(function() {
-            var gid = $(\"#Groups\").val();
+            var gid = $(\"#togroup\").val();
             $.ajax
             ({
                 type: \"get\",
-                url: \"$ajax\"+gid+'&p=getgroup',
+                url: \"$ajax\"+gid+'&p=getgrouptype',
                 cache: false,
                 success: function(html)
                 {
                     $('#groupWrapLoading').hide();
                     $(\"#getAllGroups\").html(html);
                     $(\"#groupWrap\").show();
+                    $(\"#checkAll\").prop( \"checked\", true );
                 }
             });
 
-            $(\"#groupWrap\").hide();
+            $(\"#groupWrap\").hide();            
             $('#togroup').change(function () {
                 var gid = $(this).val();
                 if(gid) {
@@ -1093,6 +1097,8 @@ class Managecampaigns extends CI_Controller {
             $random = $this->input->post ( 'random' );
             $random_link = $this->input->post ( 'randomlink' );
 			$share_type = $this->input->post ( 'sharetype' );
+
+            $account_gtype = $this->input->post ( 'groups' );
 			
 			/* check account type */
 			$s_acount = explode ( '|', $accoung );
@@ -1143,6 +1149,7 @@ class Managecampaigns extends CI_Controller {
                     'random_link' => @$random_link,
                     'share_type' => @$share_type,
                     'share_schedule' => @$post_action,
+                    'account_group_type' => @$account_gtype,
 			);
 			/* end data schedule */  
 			if (!empty($link)) {
@@ -1701,7 +1708,7 @@ HTML;
                     $i = 0;
                     foreach ( $dataGroup as $gvalue ) {
                         $i ++;
-                        $data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '"/>' . $i . ' - '  . $gvalue->sg_page_id . ' | ' . $gvalue->{
+                        $data .= '<label class="checkbox"><input type="checkbox" class="tgroup" name="itemid[]" value="' . $gvalue->sg_id . '" checked/>' . $i . ' - '  . $gvalue->sg_page_id . ' | ' . $gvalue->{
                             Tbl_social_group::name} . '</label>';
                     }
                     echo $data;

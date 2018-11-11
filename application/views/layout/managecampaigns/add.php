@@ -3,10 +3,15 @@
         foreach ($data as $value):
             $dataConents = $value->{Tbl_posts::conent};
             $json = json_decode($dataConents, true);
+            $schedule = $value->p_schedule;
+            $pSchedule = json_decode($schedule, true);
             $Thumbnail = @$json['picture'];
             $postTitle = @$json['name'];
             $postLink = @$json['link'];
             $description = @$json['description'];
+            $wait_group = @$pSchedule['wait_group'];
+            $wait_post = @$pSchedule['wait_post'];
+            $account_group_type = @$pSchedule['account_group_type'];
         endforeach;
     endif;
     $post_id = !empty($_GET['id'])?$_GET['id']:'';
@@ -127,10 +132,10 @@
                                         <label class="control-label">
                                             Groups Type:
                                         </label>
-                                        <select name="groups" id="togroup" class="required select2 full-width-fix" required>
+                                        <select name="groups" id="togroup" class="required select2 full-width-fix">
                                             <option value="">Groups Type</option>
                                             <?php foreach ($groups_type as $gtype): ?>
-                                            <option value="<?php echo $gtype->l_id; ?>"><?php echo $gtype->lname; ?></option>
+                                            <option value="<?php echo $gtype->l_id; ?>" <?php if(!empty($data)){ echo (@$account_group_type==$gtype->l_id ? 'selected' : '');}?>><?php echo $gtype->lname; ?></option>
                                             <?php endforeach;?>
                                         </select>
                                     </div> 
@@ -160,11 +165,11 @@
                                             <label class="col-md-4 control-label">បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="1" name="shortlink" class="required" required />
+                                                    <input type="radio" value="1" name="shortlink" class="required" required <?php if(!empty($data)){ echo ($pSchedule['short_link']==1 ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas">Yes</i>
                                                 </label> 
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="0" name="shortlink" class="required" required/>
+                                                    <input type="radio" value="0" name="shortlink" class="required" required <?php if(!empty($data)){ echo ($pSchedule['short_link']!=1 ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas">No</i>
                                                 </label>    
                                             </div>
@@ -174,11 +179,11 @@
                                             <label class="col-md-4 control-label">ផុសឆ្លាស់លីងគ៍<br/>Random link?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="1" name="randomlink" class="required" />
+                                                    <input type="radio" value="1" name="randomlink" class="required" <?php if(!empty($data)){ echo ($pSchedule['randomGroup']==1 ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas">Yes</i>
                                                 </label> 
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="0" name="randomlink" class="required" checked="checked" />
+                                                    <input type="radio" value="0" name="randomlink" class="required" <?php if(!empty($data)){ echo ($pSchedule['randomGroup']!=1 ? 'checked' : '');}?> />
                                                     <i class="subtopmenu hangmeas">No</i>
                                                 </label>    
                                             </div>
@@ -188,7 +193,7 @@
                                             <label class="col-md-4 control-label">លក្ខណៈស៊ែរ៍<br/>Share type:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="image" name="sharetype" class="required" checked="checked" />
+                                                    <input type="radio" value="image" name="sharetype" class="required" <?php if(!empty($data)){ echo ($pSchedule['share_type']=='image' ? 'checked' : '');}?> />
                                                     <i class="subtopmenu hangmeas">ស៊ែរ៍បែបរូបភាព</i>
                                                 </label> 
                                                 <label class="radio-inline">
@@ -210,14 +215,14 @@
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <label>អត្ថបទបន្ថែម ពីមុខ / Prefix</label>
-                                                <textarea rows="1" cols="5" name="Prefix" class="form-control" placeholder="1234|1234|1234"></textarea>
+                                                <textarea rows="1" cols="5" name="Prefix" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['prefix_title'];}?></textarea>
                                                 បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ<br/>Ex: xxxx|xxxx|xxxx|xxxx
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <label>អត្ថបទបន្ថែម ពីក្រោយ / Suffix</label>
-                                                <textarea rows="1" cols="5" name="addtxt" class="form-control" placeholder="1234|1234|1234"></textarea>
+                                                <textarea rows="1" cols="5" name="addtxt" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['suffix_title'];}?></textarea>
                                                 បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ<br/>Ex: xxxx|xxxx|xxxx|xxxx
 
                                             </div>
@@ -365,7 +370,7 @@
                                                         class="form-control input-width-mini" 
                                                         type="number" 
                                                         style="float:left;margin-right:5px;" 
-                                                        value="180"
+                                                        value="<?php echo (!empty($data) ? $wait_group : '60');?>"
                                                         name="pause"
                                                    /> វិនាទី/seconds [recommended value: 60 seconds]
                                                 </label>
@@ -376,12 +381,20 @@
                                             <label class="col-md-4 control-label">ក្នុង១ប៉ុស្តិ៍ត្រូវរង់ចាំ<br/>Next Post waiting: </label>
                                             <div class="col-md-8">
                                                 <label class="radio"> 
+
                                                     <select name="ppause" class="select2" style="width: 60px">
-                                                            <option value="5" >5</option>
-                                                            <option value="10" selected>10</option>
-                                                            <option value="25">25</option>
-                                                            <option value="50">50</option>
-                                                            <option value="60">60</option>
+                                                            <option value="5" <?php echo (@$wait_post==5 ? 'selected' : '');?>>5</option>
+                                                            <option value="10" <?php echo (@$wait_post==10 ? 'selected' : '');?>>10</option>
+                                                            <option value="15" <?php if(!empty($data)) { echo (@$wait_post==15 ? 'selected' : '');} else { echo 'selected';}?>>15</option>
+                                                            <option value="20" <?php echo (@$wait_post==20 ? 'selected' : '');?>>20</option>
+                                                            <option value="25" <?php echo (@$wait_post==25 ? 'selected' : '');?>>25</option>
+                                                            <option value="30" <?php echo (@$wait_post==30 ? 'selected' : '');?>>30</option>
+                                                            <option value="35" <?php echo (@$wait_post==35 ? 'selected' : '');?>>35</option>
+                                                            <option value="40" <?php echo (@$wait_post==40 ? 'selected' : '');?>>40</option>
+                                                            <option value="45" <?php echo (@$wait_post==45 ? 'selected' : '');?>>45</option>
+                                                            <option value="50" <?php echo (@$wait_post==50 ? 'selected' : '');?>>50</option>
+                                                            <option value="55" <?php echo (@$wait_post==55 ? 'selected' : '');?>>55</option>
+                                                            <option value="60" <?php echo (@$wait_post==60 ? 'selected' : '');?>>60</option>
                                                     </select> នាទី/Minutes  [recommended value: 10 Minutes]
                                                 </label>
                                             </div>

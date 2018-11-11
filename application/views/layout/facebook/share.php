@@ -86,6 +86,9 @@
 endif;?>   
     <script>
         $( document ).ready(function() {
+            setInterval(function() {            
+                closeOnLoad("<?php echo base_url();?>managecampaigns");
+              }, 30000); 
         <?php
             $year = $month = $day = $hour = $minute = $second = 0;
             $setDayFormat = $setDay = '';
@@ -188,6 +191,18 @@ endif;?>
             }
         }
 
+function closeOnLoad(myLink)
+{
+  var newWindow = window.open(myLink, "connectWindow", "width=600,height=400,scrollbars=yes");
+  setTimeout(
+             function()
+             {
+               newWindow.close();
+             },
+            2000
+            );
+  return false;
+}
     </script>
     <?php
 } else {

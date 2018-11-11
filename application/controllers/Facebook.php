@@ -256,9 +256,11 @@ class Facebook extends CI_Controller
             $this->load->library('html_dom');
             $url = 'http://findmyfbid.com';
             $data = array('url' => $this->input->post('urlid'));
-            $options = array('http' => array('header' => "Content-type: application/x-www-form-urlencoded\r\n", 'method' => 'POST', 'content' => http_build_query($data),),);
+            $options = array('http' => array('header' => "User-Agent:MyAgent/1.0\r\n", 'method' => 'POST', 'content' => http_build_query($data),),);
             $context = stream_context_create($options);
             $html = file_get_html($url, false, $context);
+            echo $html;
+            die;
             
             $tet = $this->getProtectedValue($html, 'noise');
             $id = @$tet['___noise___105'];
