@@ -34,7 +34,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control required" name="urlid" />
                                     <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-info" name="submit" value="Submit">
+                                        <button type="submit" class="btn btn-info" name="url" value="Submit">
                                             Find numeric ID                        
                                         </button>
                                     </div>

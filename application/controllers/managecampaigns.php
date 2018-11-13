@@ -669,7 +669,7 @@ class Managecampaigns extends CI_Controller {
                     /* data content */
                     $content = array (
                             'name' => @str_replace(' - YouTube', '', $title[$i]),
-                            'message' => @$conents[$i],
+                            'message' => @htmlentities(htmlspecialchars(addslashes($conents[$i]))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'picture' => @$thumb[$i],                            
@@ -774,7 +774,8 @@ class Managecampaigns extends CI_Controller {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $links = $pConent->link;                    
                     $title = $pConent->name;
-                    $message = $pConent->message;
+                    $message = html_entity_decode(htmlspecialchars_decode($pConent->message));
+                    $picture = $pConent->picture;
 
                     /*Post to Blogger first*/
                     $vid = $this->Mod_general->get_video_id($links);
@@ -783,8 +784,8 @@ class Managecampaigns extends CI_Controller {
                     /*upload photo first*/
                     $imgur = false;        
                     if(!empty($vid)) {
-                        $imgUrl ='https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
-                        $file_title = basename( $imgUrl);
+                        $imgUrl = $picture;
+                        $file_title = basename($imgUrl);
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
@@ -820,7 +821,7 @@ class Managecampaigns extends CI_Controller {
                             }
                             $blogRand = $big[mt_rand(0, count($big) - 1)];
 
-                            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
+                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
                             $title = (string) $title;
                             $dataContent          = new stdClass();
                             $dataContent->setdate = false;        

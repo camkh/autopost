@@ -254,17 +254,14 @@ class Facebook extends CI_Controller
         $data['title'] = 'Find Facebook ID';
         if ($this->input->post('urlid')) {
             $this->load->library('html_dom');
-            $url = 'http://findmyfbid.com';
+            $url = 'https://findmyfbid.com/';
             $data = array('url' => $this->input->post('urlid'));
             $options = array('http' => array('header' => "User-Agent:MyAgent/1.0\r\n", 'method' => 'POST', 'content' => http_build_query($data),),);
             $context = stream_context_create($options);
             $html = file_get_html($url, false, $context);
-            echo $html;
-            die;
-            
-            $tet = $this->getProtectedValue($html, 'noise');
-            $id = @$tet['___noise___105'];
-            redirect(base_url() . 'Facebook/fbid?id=' . $id);
+            $html = str_replace('{"id":', '', $html);
+            $html = str_replace('}', '', $html);
+            redirect(base_url() . 'Facebook/fbid?id=' . $html);
         }
         $this->load->view('facebook/fbid', $data);
     }
@@ -1525,11 +1522,14 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             $this->session->set_userdata('sid', $this->input->get('suid'));
         }
 
-        $log_id = $this->session->userdata('user_id');
+        $log_id = !empty($this->input->get('uid')) ? $this->input->get('uid') : $this->session->userdata('user_id');
+        $user = $this->session->userdata('email');
+        $sid = !empty($this->input->get('suid')) ? $this->input->get('suid') : $this->session->userdata ( 'sid' );
+        $pid = $this->input->get( 'id' );
+
         $user = $this->session->userdata('email');        
         $action = $this->input->get('post');
 
-        $sid = $this->session->userdata ( 'sid' );
         $randomLink = $this->session->userdata ( 'randomLink' );
 
         if(empty($sid)) {
@@ -1589,6 +1589,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $sids = $this->input->get('sid');
                 $suid = $this->input->get('suid');
                 $uid = $this->input->get('uid');
+                $shareId = $this->input->get('shareid');
 
                 /*update share group id */
                 $dataShare = array(
@@ -1597,7 +1598,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $whereShere = array(
                     'uid' => $log_id,
                     'p_id'=> $pid,
-                    'sg_page_id' => $sids
+                    'sg_page_id' => $sids,
+                    'sh_id' => $shareId,
                 );
                 $dataid = $this->Mod_general->update('share', $dataShare, $whereShere);
                 /*End update share group id */
@@ -1606,19 +1608,22 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $whereCheck = array (
                     'uid' => $log_id,
                     'p_id' => $pid,
-                    'sg_page_id'=> $sids
+                    'sg_page_id'=> $sids,
+                    'sh_id' => $shareId,
                 );
                 $ShareCheck = $this->Mod_general->select (
                     'share',
                     '*', 
                     $whereCheck
                 );
+                $count_shared = 0;
                 if(!empty($ShareCheck[0])) {
                     $whereHi = array(
                         'sid' => $sid,
                         'uid' => $log_id,
                         'sg_id' => $ShareCheck[0]->sg_page_id,
                         'shp_posted_id' => $pid,
+                        'shhare_id' => $shareId,
                     );
                     $sharedCheck = $this->Mod_general->select('share_history', '*', $whereHi);
                     if(empty($sharedCheck[0])) {
@@ -1635,8 +1640,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     /*count shred*/
                     $whereHis = array(
                         'sid' => $ShareCheck[0]->social_id,
-                        'shp_posted_id' => $ShareCheck[0]->sg_page_id,
-                        'uid' => $log_id
+                        'uid' => $log_id,
+                        'pid' => $pid,
                     );
                     $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
                     $count_shared = count($shared);
@@ -1713,35 +1718,25 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 }                
                 /*End check next post */
                 /*count shred*/
-                $whereHis = array(
-                    'sid' => $sid,
-                    'uid' => $log_id
-                );
-                $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
-                if(count($shared) >= 16) {
-                    $this->Mod_general->delete ('share_history', 
-                    array (
-                        'sid' => $sid,
-                        'uid' => $log_id
-                    ));
-                }
+                // $whereHis = array(
+                //     'sid' => $sid,
+                //     'uid' => $log_id
+                // );
+                // $shared = $this->Mod_general->select('share_history', 'shp_id', $whereHis);
+                // if(count($shared) >= 16) {
+                //     $this->Mod_general->delete ('share_history', 
+                //     array (
+                //         'sid' => $sid,
+                //         'uid' => $log_id
+                //     ));
+                // }
                 /*End count shred*/
 
-                /*check post and share count*/
-                $whereShAll = array (
-                    'uid' => $log_id,
-                    'social_id'=> $sid,
-                    'p_id'=> $this->session->userdata ( 'pid' ),
-                );
-                $dataShAll = $this->Mod_general->select (
-                    'share',
-                    '*',
-                    $whereShAll
-                );
+                /*check post and share count*/               
                 $where_shCo = array (
                     'uid' => $log_id,
                     'social_id'=> $sid,
-                    'p_id'=> $this->session->userdata ( 'pid' ),
+                    'p_id'=> $pid,
                     'sh_status' => 1,
                 );
                 $dataShCheck = $this->Mod_general->select (
@@ -1749,10 +1744,18 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     '*',
                     $where_shCo
                 );
-                if(count($dataShCheck) == count($dataShAll)) {
+                if(count($dataShCheck) == $count_shared) {
                     $this->Mod_general->delete ( 'post', array (
-                        'p_id' => $this->session->userdata ( 'pid' ),
+                        'p_id' => $pid,
                         'user_id' => $log_id,
+                    ));
+                    $this->Mod_general->delete ( 'share', array (
+                        'p_id' => $pid,
+                        'uid' => $log_id,
+                    ));
+                    $this->Mod_general->delete ( 'share_history', array (
+                        'pid' => $pid,
+                        'uid' => $log_id,
                     ));
                 }
                 /*End check post and share count*/                
