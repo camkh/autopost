@@ -196,7 +196,35 @@
                                     </div>
                                     <div class="widget-content">
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label">បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
+                                            <label class="col-md-4 control-label">ប្រើប្លុកលីងគ៍<br/>with Blog link?:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="bloglink" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Yes</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="bloglink" class="required" required checked />
+                                                    <i class="subtopmenu hangmeas">No</i>
+                                                </label>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"><img style="display: inline-block;width: 20px" border="0" src="https://lh3.googleusercontent.com/_WcqkU_bdb6J2kqbx2AKzMpJ0yyHaYZbCC5r2kXy9v8SzouzrNuRoHRpz227m2LeWcGMbeFfoxo2qGxMCIXmT2zDvRdcyGEu47-HahrTL8wrsFgNMgMVBMdqZOaLFzVZl6Mp72DF0tFw0FSmmcupvl-hf_KP9taHLFMrdDd2149ksooaiv-MIg0WC7f7XGkLoCTeOYrBm8y549yZ4d0b0pnNasO-CawKCCykBXJM5Gs_eiVR7xlbzhjr7RwPgETWHxosgBY4wCF6gQQLHVFhgbnmAVymwr27HW1aL_r_v6PFhHHYrMcSUFgywv2uh1hK7MDFWnchwH0hZBLm_v6VtBoYdbzSCcVeLwklkFl2NCxQdJgZh_-08Sh42UTKWpfeZdQlptIMHO7nw02A80BjHXZD1xMfkSUpo5VgW1n4DOeYo-vLbUG4bglGE0wJBrTCo6-GHqeW0qeSEtlHwWWuTKK6h1PT_hZt2L1SfI9kk_oaO-J8a26JyjMVQ9BDtftVRpYKdXby7ZDnM9mNbhD2JqhpGi_W8Y5694o5ZQO5H3KZiA2-PdS7uIgmdPdehYe3u8FC0CG7UAUBdVoU-5Mt7uEZg3D2PekaBtPJgZfqZI-oYIo4JWvmhlZwKTtYw1Z-PxP05VxPnzLgV8dJKTjhom4YsEAhZv1UunRtIFBgiDHEIw=s64-no" width="320" height="320" data-original-width="16" data-original-height="16" /> use User Agent:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="useragent" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Yes</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="useragent" class="required" required checked />
+                                                    <i class="subtopmenu hangmeas">No</i>
+                                                </label>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"><img style="display: inline-block;width: 20px" border="0" src="https://1.bp.blogspot.com/-JdCz7PtuHDQ/W-k3U3fmFrI/AAAAAAAAZ_w/Cw_UCq_WbCEFrrQAEOr6V6jEHDoMXmx9gCLcBGAs/s320/bitly-1-432498.png" width="320" height="320" data-original-width="16" data-original-height="16" /> បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="1" name="shortlink" class="required" required />
@@ -235,7 +263,7 @@
                                                     <i class="subtopmenu hangmeas">ស៊ែរ៍បែប Link</i>
                                                 </label>    
                                             </div>
-                                        </div>
+                                        </div>                                        
 
                                     </div>
                                 </div>

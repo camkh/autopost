@@ -603,6 +603,9 @@ class Managecampaigns extends CI_Controller {
             $random_link = $this->input->post ( 'randomlink' );
             $share_type = $this->input->post ( 'sharetype' );
             $account_gtype = $this->input->post ( 'groups' );
+
+            $blogLink = $this->input->post ( 'bloglink' );
+            $userAgent = $this->input->post ( 'useragent' );
             
             /* check account type */
             $s_acount = explode ( '|', $accoung );
@@ -716,7 +719,10 @@ class Managecampaigns extends CI_Controller {
                             $cPost = $date->format('Y-m-d H:i:s');
                         } else {
                             $cPost = date('Y-m-d H:i:s');
-                        }                        
+                        }
+                        $ShContent = array (
+                            'userAgent' => @$userAgent,                            
+                        );                    
                         foreach($itemGroups as $key => $groups) { 
                             if(!empty($groups)) {       
                                 $dataGoupInstert = array(
@@ -727,11 +733,11 @@ class Managecampaigns extends CI_Controller {
                                     'sh_type' => $postType,
                                     'c_date' => $cPost,
                                     'uid' => $log_id,                                    
+                                    'sh_option' => json_encode($ShContent),                                    
                                 );
                                 $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
                             }
-                        }
-                        
+                        } 
                     }
                     /* end add data to group of post */
                 }
@@ -745,7 +751,7 @@ class Managecampaigns extends CI_Controller {
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
                 if(!empty($nextPost[0])) {
                     $p_id = $nextPost[0]->p_id;
-                    redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $bid . '&action=postblog'); 
+                    redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $bid . '&action=postblog&blink='.$blogLink); 
                 }                              
             }
         }
@@ -797,6 +803,41 @@ class Managecampaigns extends CI_Controller {
 
                     /*End Post to Blogger first*/
 
+                    /*blog link*/
+                    $blink = $this->input->get('blink');
+                    if(!empty($blink)) {
+                        /*show blog link*/
+                        $where_link = array(
+                            'c_name'      => 'blog_linkA',
+                            'c_key'     => $log_id,
+                        );
+                        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                        if (!empty($query_blog_link[0])) {
+                            $data = json_decode($query_blog_link[0]->c_value);
+                            $big = array();
+                            foreach ($data as $key => $blog) {
+                                $big[] = $blog->bid;
+                            }
+                            $blogRand = $big[mt_rand(0, count($big) - 1)];
+
+                            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
+                            $title = (string) $title;
+                            $dataContent          = new stdClass();
+                            $dataContent->setdate = false;        
+                            $dataContent->editpost = false;
+                            $dataContent->pid      = 0;
+                            $dataContent->customcode = '';
+                            $dataContent->bid     = $blogRand;
+                            $dataContent->title    = $title;        
+                            $dataContent->bodytext = $bodytext;
+                            $dataContent->label    = 'default';
+                            $DataBlogLink = $this->postBlogger($dataContent);
+                            $link = $DataBlogLink->url;
+                        } 
+                    }
+                    /*End blog link*/
+
+
                     /*update post*/
                     $whereUp = array('p_id' => $pid);
                     $content = array (
@@ -823,7 +864,7 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($nextPost[0])) {
                         $p_id = $nextPost[0]->p_id;
                         echo '<center>Please wait...</center>';
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog";}, 10 );</script>'; 
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 10 );</script>'; 
                     } else {
                         redirect(base_url() . 'managecampaigns?m=post_success');
                     }
@@ -833,6 +874,17 @@ class Managecampaigns extends CI_Controller {
         }
         /*End Post to blogger*/
         $this->load->view ( 'managecampaigns/yturl', $data );
+    }
+
+    public function postBlogger($dataContent)
+    {
+        /*prepare post*/
+        $this->load->library('google_api');
+        $client = new Google_Client();
+        $client->setAccessToken($this->session->userdata('access_token'));
+        $service = new Google_Service_Blogger($client);
+        $posts   = new Google_Service_Blogger_Post();        
+        return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
     public function postToBlogger($bid, $vid, $title,$image,$conent='')
@@ -847,7 +899,7 @@ class Managecampaigns extends CI_Controller {
         $posts   = new Google_Service_Blogger_Post();
 
         $strTime = strtotime(date("Y-m-d H:i:s"));
-        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><b>'.$title.'</b><br/>'.$conent.'<div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
         $title = (string) $title;
         $dataContent          = new stdClass();
         $dataContent->setdate = false;        
@@ -1102,6 +1154,7 @@ class Managecampaigns extends CI_Controller {
 			$share_type = $this->input->post ( 'sharetype' );
 
             $account_gtype = $this->input->post ( 'groups' );
+            $userAgent = $this->input->post ( 'useragent' );
 			
 			/* check account type */
 			$s_acount = explode ( '|', $accoung );
@@ -1213,7 +1266,10 @@ class Managecampaigns extends CI_Controller {
                             $cPost = $date->format('Y-m-d H:i:s');
                         } else {
                             $cPost = date('Y-m-d H:i:s');
-                        }                        
+                        }     
+                        $ShContent = array (
+                            'userAgent' => @$userAgent,                            
+                        );                   
         				foreach($itemGroups as $key => $groups) { 
                             if(!empty($groups)) {       
                 				$dataGoupInstert = array(
@@ -1223,7 +1279,8 @@ class Managecampaigns extends CI_Controller {
                                     'sh_social_type' => @$s_acount[1],
                                     'sh_type' => $postType,
                                     'c_date' => $cPost,
-                                    'uid' => $log_id,                                    
+                                    'uid' => $log_id,  
+                                    'sh_option' => json_encode($ShContent),                                  
                 				);
                 				$AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
                             }
@@ -1953,6 +2010,18 @@ HTML;
         $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
         if (!empty($query_blog_link[0])) {
             $data['bloglink'] = json_decode($query_blog_link[0]->c_value);
+        }
+        /*End show blog link*/
+
+        /*show blog linkA*/
+        $where_link = array(
+            'c_name'      => 'blog_linkA',
+            'c_key'     => $log_id,
+        );
+        $data['bloglinkA'] = false;
+        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+        if (!empty($query_blog_link[0])) {
+            $data['bloglinkA'] = json_decode($query_blog_link[0]->c_value);
         }
         /*End show blog link*/
 

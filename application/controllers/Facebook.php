@@ -660,8 +660,7 @@ class Facebook extends CI_Controller
                         } else {
                             continue;
                         }
-                    }
-                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
+                    }                    
                 } else if(preg_match('/XHTML Mobile 1.0/', $html)) {
                     foreach ($html->find('#objects_container table tr') as $e) {
                         $getT = $e->find('td', 1);
@@ -677,8 +676,7 @@ class Facebook extends CI_Controller
                         } else {
                             continue;
                         }
-                    }
-                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
+                    }                    
                 } else {
                     /*get all groups*/
                     foreach ($html->find('#bookmarksSeeAllEntSection ul li a[data-testid=*]') as $e) {
@@ -695,10 +693,9 @@ HTML;
                             'members' => null
                         );
                     }
-                    @unlink($base_path . 'uploads/groups/' . $_GET['file']);
                 }
                 /*End get from HTML file*/ 
-                                
+                @unlink($base_path . 'uploads/groups/' . $_GET['file']);                
             } 
                      
         }
@@ -1520,6 +1517,14 @@ WHERE gl.`gu_grouplist_id` = {$id}");
     }
     public function shareation($value=1)
     {
+        /*nerver expire*/
+        if(!empty($this->input->get('uid'))) {
+            $this->session->set_userdata('user_id', $this->input->get('uid'));
+        }
+        if(!empty($this->input->get('suid'))) {
+            $this->session->set_userdata('sid', $this->input->get('suid'));
+        }
+
         $log_id = $this->session->userdata('user_id');
         $user = $this->session->userdata('email');        
         $action = $this->input->get('post');
@@ -1531,9 +1536,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost'));
         }
 
-        /*nerver expire*/
-        $this->session->set_userdata('user_id', $log_id);
-        $this->session->set_userdata('sid', $sid);
+        $UserAgent = @$this->input->get('agent');
         $this->session->set_userdata('randomLink', $randomLink);
         /*End nerver expire*/
         $this->session->set_userdata('blogpassword', 1);
@@ -1574,15 +1577,18 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $limit = 1 
                 );
                 if(!empty($dataShare[0])) {
-                    $pid = $dataShare[0]->sh_id;
+                    $pid = $dataShare[0]->p_id;
                     $postId = $dataShare[0]->p_id;
+                    $shOption = json_decode($dataShare[0]->sh_option);
                     $this->session->set_userdata('pid', $dataShare[0]->p_id);
-                    redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid);
+                    redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent);
                 }
                 break;
              case 'wait':
                 $pid = $this->input->get('id');
                 $sids = $this->input->get('sid');
+                $suid = $this->input->get('suid');
+                $uid = $this->input->get('uid');
 
                 /*update share group id */
                 $dataShare = array(
@@ -1670,11 +1676,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $limit = 1 
                 );
                 if(!empty($dataShare[0])) {
-                    $pid = $dataShare[0]->sh_id;
+                    $pid = $dataShare[0]->p_id;
                     $post_id = $dataShare[0]->p_id;
                     $this->session->set_userdata('post_id', $post_id);
                     echo '<center>Please wait...</center>';
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'";}, 2000 );</script>';
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'";}, 2000 );</script>';
                     exit();
                     //redirect(base_url() . 'Facebook/share?post=gwait&id=' . $pid);
                 } else {
@@ -1699,7 +1705,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         $pid = $nextShare[0]->p_id;
                         $this->session->set_userdata('post_id', $pid);
                         echo '<center>Please wait...</center>';
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=nexpost&id='.$pid.'";}, 2000 );</script>';
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=nexpost&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'";}, 2000 );</script>';
                         //redirect(base_url() . 'Facebook/share?post=nexpost&id=' . $pid);
                     exit();
                     }
@@ -1743,12 +1749,12 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     '*',
                     $where_shCo
                 );
-                // if(count($dataShCheck) == count($dataShAll)) {
-                //     $this->Mod_general->delete ( 'post', array (
-                //         'p_id' => $this->session->userdata ( 'pid' ),
-                //         'user_id' => $log_id,
-                //     ));
-                // }
+                if(count($dataShCheck) == count($dataShAll)) {
+                    $this->Mod_general->delete ( 'post', array (
+                        'p_id' => $this->session->userdata ( 'pid' ),
+                        'user_id' => $log_id,
+                    ));
+                }
                 /*End check post and share count*/                
                 break;
             default:
@@ -1760,17 +1766,26 @@ WHERE gl.`gu_grouplist_id` = {$id}");
     }
     public function share()
     {
-        $log_id = $this->session->userdata('user_id');
+        $log_id = !empty($this->input->get('uid')) ? $this->input->get('uid') : $this->session->userdata('user_id');
         $user = $this->session->userdata('email');
         $action = $this->input->get('post');
-        $sid = $this->session->userdata ( 'sid' );
+        $sid = !empty($this->input->get('suid')) ? $this->input->get('suid') : $this->session->userdata ( 'sid' );
         $pid = $this->input->get( 'id' );
         $postId = $this->input->get( 'pid' );
 
-        if(empty($this->session->userdata ( 'sid' ))) {
-            redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost'));
+        if(!empty($this->input->get('uid'))) {
+            $this->session->set_userdata('user_id', $this->input->get('uid'));
         }
-
+        if(!empty($this->input->get('suid'))) {
+            $this->session->set_userdata('sid', $this->input->get('suid'));
+        }
+        $userAgent = 0;
+        if(!empty($this->input->get('agent'))) {
+           $userAgent = $this->input->get('agent');
+        }
+        if(empty($this->session->userdata ( 'sid' ))) {
+            redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost&agent='.$userAgent));
+        }
         $this->session->set_userdata('sid', $sid);
 
         $data['title'] = 'Share to Facebook';
@@ -1785,7 +1800,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             $date = new DateTime("now");
             $curr_date = $date->format('Y-m-d h:i:s');
             $where_so = array (
-                    'sh_id' => $pid,
+                    'p_id' => $pid,
 
             );
             //'DATE(c_date)' => $curr_date
@@ -1793,7 +1808,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             $data['share'] = $this->Mod_general->select(
                 'share',
                 '*', 
-                $where_so);                
+                $where_so);              
             $sharePost->pcount = 0; 
             if(!empty($data['share'][0])) {
                 $sharePost->pcount = 1;

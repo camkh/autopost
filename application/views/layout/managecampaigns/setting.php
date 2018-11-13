@@ -24,6 +24,7 @@
                                                     <select name="blogtype" class="select2" style="width: 100%" required>
                                                         <option value="" selected>Select Type one</option>
                                                         <option value="blogger_id">Blogs Post</option>
+                                                        <option value="blog_linkA">blog link</option>
                                                         <option value="blog_link">blog random link</option>
                                                     </select>             
                                                 </div>                                   
@@ -92,12 +93,62 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div>                        
+                    </div>
 
+                                        
+                    
+                    <!-- End body -->
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
                         <!-- blog link -->
                         <div class="widget box">
                             <div class="widget-header">
-                                <h4><i class="icon-reorder"></i> Blog post</h4>
+                                <h4><i class="icon-reorder"></i> Blog Link</h4>
+                                <div class="toolbar no-padding">
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                </div>
+                            </div>
+                            <div class="widget-content">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($bloglinkA)):
+                                            foreach ($bloglinkA as $key => $linkA):?>
+                                        <tr>
+                                            <td><?php echo $key;?></td>
+                                            <td><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->bid;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->bid;?></a></td>
+                                            <td style="width: 50%"><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->bid;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->title;?></a></td>
+                                            <td><span class="label label-success"><?php echo $linkA->status;?></span></td>
+                                            <td>
+                                                <ul class="table-controls">
+                                                    <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkA->bid;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; endif;?>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End blog link -->
+                    </div>
+
+                    <div class="col-md-6">
+                        <!-- blog link -->
+                        <div class="widget box">
+                            <div class="widget-header">
+                                <h4><i class="icon-reorder"></i> Blog link (Random Image)</h4>
                                 <div class="toolbar no-padding">
                                     <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
                                 </div>
@@ -135,10 +186,6 @@
                         </div>
                         <!-- End blog link -->
                     </div>
-
-                                        
-                    
-                    <!-- End body -->
                 </div>
 
                 <!-- Prefix and Subfix -->

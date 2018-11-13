@@ -1,5 +1,8 @@
 <?php if ($this->session->userdata('user_type') != 4) {
     $action = $this->input->get('post');
+    $uerAgent = $this->input->get('agent');
+    $log_id = $this->session->userdata('user_id');
+    $suid = $this->session->userdata ( 'sid' );
  ?>
     <style>
         .radio-inline{}
@@ -73,14 +76,18 @@
    <?php if(!empty($action)):
     if(!empty($sharePost->pcount)):
         $pTitle = $sharePost->title;
-        $pLink = urlencode($sharePost->link);
+        if(!empty($uerAgent)) {
+            $pLink = $sharePost->link;
+        } else {
+            $pLink = urlencode($sharePost->link);
+        }
         $group_id = $sharePost->group_id;
         $pid = $sharePost->pid;
         $sid = $sharePost->sid;
     ?>
     <div id="ptitle" style="display: none;"><?php echo $pTitle;?></div>
     <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes;var report;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;;</code>
+    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes,report,uid=&quot;<?php echo $log_id;?>&quot;,suid=&quot;<?php echo $suid;?>&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;;</code>
     <?php 
     endif;
 endif;
@@ -146,7 +153,11 @@ endif;
                   clearInterval(id);
                   //complete here
                   //window.location = "share.php?do=share";
-                  load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
+                  <?php if(!empty($this->input->get('agent'))):?>
+                    load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
+                    <?php else:?>
+                    load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
+                <?php endif;?>
                 } else {
                   width++; 
                   elem.style.width = width + '%'; 
