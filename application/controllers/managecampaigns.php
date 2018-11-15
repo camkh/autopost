@@ -821,7 +821,7 @@ class Managecampaigns extends CI_Controller {
                             }
                             $blogRand = $big[mt_rand(0, count($big) - 1)];
 
-                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
+                            $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;margin-bottom:40px"><span style="color: red; font-size: x-large;"><img border="0" src="https://2.bp.blogspot.com/-kbCjrLef9KQ/W-0Nw4mEV_I/AAAAAAAAaC4/eqN1H2qVzTUgIWD4hfERHEQBGWQWdjHjwCLcBGAs/s200/spinner-icon-0.gif" style="display: inline-block; width: 20px;" width="200" /> กรุณารอสักครู่...</span></div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
                             $title = (string) $title;
                             $dataContent          = new stdClass();
                             $dataContent->setdate = false;        
