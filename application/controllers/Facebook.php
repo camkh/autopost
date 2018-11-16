@@ -1934,13 +1934,13 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 /*End create csv*/
             }
             if(empty($sharePost->link)) {
-                $this->Mod_general->delete (
-                    'post', 
-                    array (
-                        'p_id' => $pid,
-                        'user_id' => $log_id
-                    )
-                );
+                // $this->Mod_general->delete (
+                //     'post', 
+                //     array (
+                //         'p_id' => $pid,
+                //         'user_id' => $log_id
+                //     )
+                // );
                 redirect(base_url() . 'facebook/shareation?post=getpost');
             }
 
