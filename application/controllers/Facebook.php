@@ -581,7 +581,7 @@ class Facebook extends CI_Controller
         );
 
         $gData = array();
-        if (!empty($_FILES['userfile'])) {
+        if (!empty($_FILES['userfile']) && empty($this->input->post('getfile'))) {
             $this->load->helper('path');
             $directory = FCPATH;
             $base_path = set_realpath($directory);
@@ -692,7 +692,7 @@ HTML;
                     }
                 }
                 /*End get from HTML file*/ 
-                @unlink($base_path . 'uploads/groups/' . $_GET['file']);                
+                //@unlink($base_path . 'uploads/groups/' . $_GET['file']);                
             } 
                      
         }
@@ -712,19 +712,16 @@ HTML;
         $data['socailNetwork'] = $socailNetwork;
 
         /*add data list to DB*/
-        if ($this->input->post('submit')) {            
-            if ($this->input->post('submit') =='Add') {                
+        if ($this->input->post('itemid')) {
+            $id = $this->input->post('itemid');   
+            $itemidall = $this->input->post('itemidall');                    
                 $this->load->library('form_validation');
-                $this->form_validation->set_rules('Typelist', 'Typelist', 'required');
-                $id = $this->input->post('itemid');
+                $this->form_validation->set_rules('Typelist', 'Typelist', 'required');                
                 $existGroups = array();
                 $addGroups = array();
                 $arrGroups = array();
                 if ($this->form_validation->run() == TRUE) {
-                    
-
-                    /*save all ID groups to CSV file*/
-                    $itemidall = $this->input->post('itemidall');
+                    /*save all ID groups to CSV file*/                    
                     if(!empty($itemidall)) {
                         $this->load->helper('path');
                         $directory = FCPATH;
@@ -770,9 +767,9 @@ HTML;
                             }
                             /*end update to group list*/
                         }                        
-                        foreach ($id as $key => $value) {
+                        foreach ($id as $key => $gvalue) {
                             /*add to group*/
-                            $ArrayData = explode('||', $value);
+                            $ArrayData = explode('||', $gvalue);
                             $groupID = $ArrayData[0];
                             $groupTitle = $ArrayData[1];
                             $groupMember = $ArrayData[2];
@@ -824,10 +821,10 @@ HTML;
                         }
                     }
                 }
-}           redirect(base_url() . 'Facebook/group?all=' . count($arrGroups) . '&added=' . count($addGroups) . '&ex=' . count($existGroups));
-        }
+        
+            redirect(base_url() . 'Facebook/group?all=' . count($arrGroups) . '&added=' . count($addGroups) . '&ex=' . count($existGroups));
         /*end add data list to DB*/
-
+        }
         $data['gList'] = $gData;
         /*END get id group*/
 

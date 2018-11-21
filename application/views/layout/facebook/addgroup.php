@@ -28,8 +28,7 @@
                         <?php if(!empty($error)):?>
                             <?php var_dump($error);?>
                         <?php endif;?>
-                            <?php if(empty($_GET['file'])):?>
-
+                            <?php if(empty($_GET['file'])):?>                                
                                 <?php if(!empty($filesJson)):?>
                                     <div class="widget box">
                                         <div class="widget-content">
@@ -303,6 +302,7 @@
                                 </div>
                                 <style type="text/css">
                                 </style>
+                                <input type="hidden" name="getfile" value="1">
                                 <table class="table table-striped table-condensed table-hover table-checkable datatable">
                                     <thead>
                                         <tr>

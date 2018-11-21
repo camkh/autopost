@@ -1411,7 +1411,59 @@ public function get_video_id($param, $videotype = '')
         }
         /*End upload*/
     }
+    public function uploadMediaWithText($file_path='')
+       {
+        $imgName = $file_path;
+        $client_id = '51d22a7e4b628e4';
 
+        $filetype = mime_content_type($file_path);
+        /*resize image*/
+        $maxDim = 800;
+        $file_name = $imgName;
+        list($width, $height, $type, $attr) = getimagesize( $file_name );
+        if ( $width < $maxDim || $height < $maxDim ) {
+            $target_filename = $file_name;
+            $ratio = $width/$height;
+            if( $ratio > 1) {
+                $new_width = $maxDim;
+                $new_height = $maxDim/$ratio;
+            } else {
+                $new_width = $maxDim*$ratio;
+                $new_height = $maxDim;
+            }
+
+            $src = imagecreatefromstring( file_get_contents( $file_name ) );
+            $dst = imagecreatetruecolor( $new_width, 415 );
+            imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
+            imagedestroy( $src );
+            imagejpeg( $dst, $target_filename ); // adjust format as needed
+            imagedestroy( $dst );
+        }
+        /*end resize image*/
+        $this->load->library('ChipVNl');
+        \ChipVN\Loader::registerAutoLoad();
+        $logoPosition = 'lt';
+        $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
+        \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);
+        /*upload to imgur.com*/
+        // $image = file_get_contents($imgName);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+        // curl_setopt($ch, CURLOPT_POST, TRUE);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // $reply = curl_exec($ch);
+        // curl_close($ch);
+        // $reply = json_decode($reply);
+        // if(!empty($reply->data->link)) {
+        //     return $reply->data->link;
+        // } else {
+        //     return false;
+        // }
+        /*End upload*/
+    }
     /* returns the shortened url */
     function get_bitly_short_url($url, $login, $appkey, $format = 'txt') {
         $connectURL = 'http://api.bit.ly/v3/shorten?login=' . $login . '&apiKey=' . $appkey . '&uri=' . urlencode ( $url ) . '&format=' . $format;

@@ -785,14 +785,29 @@ class Managecampaigns extends CI_Controller {
                     $imgur = false;        
                     if(!empty($vid)) {
                         $imgUrl = $picture;
-                        $file_title = basename($imgUrl);
+                        
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
                         }
+
+                        /*check url status*/
+                        $handle = curl_init($imgUrl);                        
+                        curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+
+                        /* Get the HTML or whatever is linked in $url. */
+                        $response = curl_exec($handle);
+
+                        /* Check for 404 (file not found). */
+                        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+                        if($httpCode == 404) {
+                            $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
+                        }
+                        curl_close($handle);
+                        /*check url status*/
+                        $file_title = basename($imgUrl);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         copy($imgUrl, $fileName);
-
                         $image = $this->Mod_general->uploadMedia($fileName);
                         @unlink($fileName);
                         $imgur = true;
@@ -877,6 +892,16 @@ class Managecampaigns extends CI_Controller {
         $this->load->view ( 'managecampaigns/yturl', $data );
     }
 
+public function testimage()
+{
+
+    $imgUrl = 'https://i.ytimg.com/vi/5nHYH4O27Jw/hqdefault.jpg';
+    $file_title = basename($imgUrl);
+    $fileName = FCPATH . 'uploads/image/'.$file_title;
+    copy($imgUrl, $fileName);
+    $image = $this->Mod_general->uploadMediaWithText($fileName);
+    die;
+}
     public function postBlogger($dataContent)
     {
         /*prepare post*/
@@ -900,7 +925,7 @@ class Managecampaigns extends CI_Controller {
         $posts   = new Google_Service_Blogger_Post();
 
         $strTime = strtotime(date("Y-m-d H:i:s"));
-        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><br/><b>Another News:</b><br/><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
         $title = (string) $title;
         $dataContent          = new stdClass();
         $dataContent->setdate = false;        
