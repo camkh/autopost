@@ -1858,11 +1858,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     if($pSchedule->share_schedule == 1) {
                         $date = DateTime::createFromFormat('m-d-Y H:i:s',$pSchedule->start_date . ' ' . $pSchedule->start_time);
                         $cPost = $date->format('Y-m-d H:i:s');
-
                         $start  = date_create($cPost);
-                        $end    = date_create(); // Current time and date
+                        $end    = date_create(date('Y-m-d H:i:s')); // Current time and date
                         $diff   = date_diff( $start, $end );
                         $sharePost->diff = $diff;                
+                        $sharePost->timeStart = $cPost;                
                         $sharePost->waiting = $this->startEndTime($diff);                
                     }
                 }

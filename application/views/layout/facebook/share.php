@@ -95,7 +95,7 @@
     endif;
     elseif($action == 'checkpost'):?>
         <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-        <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
+        <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var limit = 40,clear = 0,timedelay= 10,homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
     <?php endif;?>   
     <script>
         $( document ).ready(function() {
@@ -130,25 +130,29 @@
                         $styleA = $waiting = 0;
                         break;                        
                 }
-                if($sharePost->option->share_schedule ==1) {          
-                    if ($sharePost->diff->invert == 1) {
-                        $year = $sharePost->diff->y;
-                        $month = $sharePost->diff->m;
-                        $day = $sharePost->diff->d;
-                        $hour = $sharePost->diff->h;
-                        $minute = $sharePost->diff->i;
-                        $second = $sharePost->diff->s;
+                if($sharePost->option->share_schedule ==1) {
+                    $d1 = new DateTime($sharePost->timeStart);
+                    $d2 = new DateTime(date('Y-m-d H:i:s'));
+                    if($d1 > $d2) {          
+                        if ($sharePost->diff->invert == 1) {
+                            $year = $sharePost->diff->y;
+                            $month = $sharePost->diff->m;
+                            $day = $sharePost->diff->d;
+                            $hour = $sharePost->diff->h;
+                            $minute = $sharePost->diff->i;
+                            $second = $sharePost->diff->s;
 
-                        $seconds =  (int) 10 * $second;
-                        $minutes =  (int) 10 * 60 * $minute;
-                        $hours =  (int) 10 * 60 * 60 * $hour;
-                        $days =  (int) 10 * 60 * 60 * $hour * 24;
-                        $styleA = $seconds + $minutes + $hours + $days;
-                        $waiting = $second;
-                    }
-                    if($day>0) {
-                        $setDay = '+' . $day . 'd '; 
-                        $setDayFormat = '%m days'; 
+                            $seconds =  (int) 10 * $second;
+                            $minutes =  (int) 10 * 60 * $minute;
+                            $hours =  (int) 10 * 60 * 60 * $hour;
+                            $days =  (int) 10 * 60 * 60 * $hour * 24;
+                            $styleA = $seconds + $minutes + $hours + $days;
+                            $waiting = $second;
+                        }
+                        if($day>0) {
+                            $setDay = '+' . $day . 'd '; 
+                            $setDayFormat = '%m days'; 
+                        }
                     }
                 }
             endif;
