@@ -259,6 +259,14 @@ class Managecampaigns extends CI_Controller {
         }    
 
         if(!empty($this->session->userdata ( 'sid' ))) {
+            if(empty($fbUserId)) {
+                $this->session->unset_userdata ( 'sid' );
+                $this->session->unset_userdata ( 'fbuid' );
+                $this->session->unset_userdata ( 'fbname' );
+                $this->session->unset_userdata ( 'fb_user_name' );
+                $this->session->unset_userdata ( 'fb_user_id' );
+                redirect('managecampaigns', 'location');
+            }
             $where_so = array (
                 'user_id' => $log_id,
                 'u_id' => $fbUserId,
@@ -2105,34 +2113,59 @@ HTML;
 
         /*delete blog data*/
         if(!empty($this->input->get('del'))) {
+            $delId = $this->input->get('del');
             $detType = $this->input->get('type');
-            $where_del = array(
-                'c_key'     => $log_id,
-                'c_name'      => $detType
-            );
-            $query_blog_del = $this->Mod_general->select('au_config', '*', $where_del);
-            $bdata = json_decode($query_blog_del[0]->c_value);
-            $jsondata = array();
-            
-            foreach ($bdata as $key => $bvalue) {
-                $pos = strpos($bvalue->bid, $this->input->get('del'));
-                if ($pos === false) {
-                    $jsondata[] = array(
-                        'bid' => $bvalue->bid,
-                        'title' => $bvalue->title,
-                        'status' => $bvalue->status,
+            switch ($detType) {
+                case 'fb':
+                    $this->mod_general->delete(
+                        'users', 
+                        array(
+                            'u_id'=>$delId,
+                            'user_id'=>$log_id,
+                        )
                     );
-                }
+                    $this->mod_general->delete(
+                        'post', 
+                        array(
+                            'u_id'=>$delId,
+                            'user_id'=>$log_id,
+                        )
+                    );
+                    /*clean from post*/
+                    /*End clean from post*/
+                    redirect(base_url() . 'managecampaigns/setting?m=del_success');
+                    break;
+                
+                default:
+                    $where_del = array(
+                        'c_key'     => $log_id,
+                        'c_name'      => $detType
+                    );
+                    $query_blog_del = $this->Mod_general->select('au_config', '*', $where_del);
+                    $bdata = json_decode($query_blog_del[0]->c_value);
+                    $jsondata = array();
+                    
+                    foreach ($bdata as $key => $bvalue) {
+                        $pos = strpos($bvalue->bid, $this->input->get('del'));
+                        if ($pos === false) {
+                            $jsondata[] = array(
+                                'bid' => $bvalue->bid,
+                                'title' => $bvalue->title,
+                                'status' => $bvalue->status,
+                            );
+                        }
+                    }
+                    $data_blog = array(
+                        'c_value'      => json_encode($jsondata),
+                    );
+                    $where = array(
+                        'c_key'     => $log_id,
+                        'c_name'      => $detType
+                    );
+                    $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
+                    redirect(base_url() . 'managecampaigns/setting?m=del_success');
+                    break;
             }
-            $data_blog = array(
-                'c_value'      => json_encode($jsondata),
-            );
-            $where = array(
-                'c_key'     => $log_id,
-                'c_name'      => $detType
-            );
-            $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
-            redirect(base_url() . 'managecampaigns/setting?m=del_success');
         }
         /*End delete blog data*/
 
@@ -2291,6 +2324,14 @@ HTML;
             //redirect(base_url() . 'managecampaigns/setting?m=add_success');
         }
         /*End save data random*/
+
+        /*facebook accounts*/
+        $whereFb = array (
+                'user_id' => $log_id,
+                'u_type' => 'Facebook',
+            );
+        $data['facebook'] = $this->Mod_general->select('users','*', $whereFb);
+        /*End facebook accounts*/
 
         $this->load->view ( 'managecampaigns/setting', $data );
     }

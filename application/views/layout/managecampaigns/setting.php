@@ -274,6 +274,45 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-9">
+                        <div class="widget box">
+                            <div class="widget-header">
+                                <h4><i class="icon-reorder"></i> Facebook Accounts</h4>
+                                <div class="toolbar no-padding">
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                </div>
+                            </div>
+                            <div class="widget-content">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($facebook)):
+                                            foreach ($facebook as $key => $fb):?>
+                                        <tr>
+                                            <td><?php echo $key;?></td>
+                                            <td><a href="https://mobile.facebook.com/<?php echo $fb->u_id;?>" target="_blank"><?php echo $fb->u_provider_uid;?></a></td>
+                                            <td style="width: 50%"><a href="https://mobile.facebook.com/<?php echo $fb->u_id;?>" target="_blank"><?php echo $fb->u_name;?></a></td>
+                                            <td>
+                                                <ul class="table-controls">
+                                                    <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $fb->u_id;?>&type=fb" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; endif;?>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
         </div>
     </div>
