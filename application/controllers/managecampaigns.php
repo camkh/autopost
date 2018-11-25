@@ -667,9 +667,10 @@ class Managecampaigns extends CI_Controller {
                                      
 
                     /* data content */
+                    $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]); 
                     $content = array (
                             'name' => @str_replace(' - YouTube', '', $title[$i]),
-                            'message' => @htmlentities(htmlspecialchars(addslashes($conents[$i]))),
+                            'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'picture' => @$thumb[$i],                            
@@ -774,7 +775,7 @@ class Managecampaigns extends CI_Controller {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $links = $pConent->link;                    
                     $title = $pConent->name;
-                    $message = html_entity_decode(htmlspecialchars_decode($pConent->message));
+                    $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));
                     $picture = $pConent->picture;
 
                     /*Post to Blogger first*/
@@ -813,14 +814,14 @@ class Managecampaigns extends CI_Controller {
                         $imgur = true;
                     }
                     /*End upload photo first*/
-
-                    $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message);
+                    $blink = $this->input->get('blink');
+                    $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
                     $link = $blogData->url;
 
                     /*End Post to Blogger first*/
 
                     /*blog link*/
-                    $blink = $this->input->get('blink');
+                    
                     if(!empty($blink)) {
                         /*show blog link*/
                         $where_link = array(
@@ -832,11 +833,15 @@ class Managecampaigns extends CI_Controller {
                             $data = json_decode($query_blog_link[0]->c_value);
                             $big = array();
                             foreach ($data as $key => $blog) {
-                                $big[] = $blog->bid;
+                                $big[] = $blog->bid;                                
                             }
-                            $blogRand = $big[mt_rand(0, count($big) - 1)];
-
-                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener = null; window.setTimeout( function(){document.getElementById("myCheck").click();}, 2000 );</script>';
+                            $brand = mt_rand(0, count($big) - 1);
+                            $blogRand = $big[$brand];
+                            // if($blink == 2) {
+                            //     $blogRand = $bid;
+                            // }
+                            
+                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><a id="myCheck" href="'.$link.'"></a><script>window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
                             $title = (string) $title;
                             $dataContent          = new stdClass();
                             $dataContent->setdate = false;        
@@ -844,9 +849,9 @@ class Managecampaigns extends CI_Controller {
                             $dataContent->pid      = 0;
                             $dataContent->customcode = '';
                             $dataContent->bid     = $blogRand;
-                            $dataContent->title    = $title;        
+                            $dataContent->title    = $bid . $title;        
                             $dataContent->bodytext = $bodytext;
-                            $dataContent->label    = 'default';
+                            $dataContent->label    = 'blink';
                             $DataBlogLink = $this->postBlogger($dataContent);
                             $link = $DataBlogLink->url;
                         } 
@@ -892,16 +897,16 @@ class Managecampaigns extends CI_Controller {
         $this->load->view ( 'managecampaigns/yturl', $data );
     }
 
-public function testimage()
-{
+    public function testimage()
+    {
 
-    $imgUrl = 'https://i.ytimg.com/vi/5nHYH4O27Jw/hqdefault.jpg';
-    $file_title = basename($imgUrl);
-    $fileName = FCPATH . 'uploads/image/'.$file_title;
-    copy($imgUrl, $fileName);
-    $image = $this->Mod_general->uploadMediaWithText($fileName);
-    die;
-}
+        $imgUrl = 'https://i.ytimg.com/vi/5nHYH4O27Jw/hqdefault.jpg';
+        $file_title = basename($imgUrl);
+        $fileName = FCPATH . 'uploads/image/'.$file_title;
+        copy($imgUrl, $fileName);
+        $image = $this->Mod_general->uploadMediaWithText($fileName);
+        die;
+    }
     public function postBlogger($dataContent)
     {
         /*prepare post*/
@@ -913,7 +918,7 @@ public function testimage()
         return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
-    public function postToBlogger($bid, $vid, $title,$image,$conent='')
+    public function postToBlogger($bid, $vid, $title,$image,$conent='',$blink)
     {
 
         /*prepare post*/
@@ -925,13 +930,28 @@ public function testimage()
         $posts   = new Google_Service_Blogger_Post();
 
         $strTime = strtotime(date("Y-m-d H:i:s"));
-        $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><br/><b>Another News:</b><br/><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
-        $title = (string) $title;
         $dataContent          = new stdClass();
+
+
+        if($blink == 2) {
+            $dataMeta = array(
+                'titleEn' => $title,
+                'image' => $image,
+                'videoID' => $vid
+            );
+            $customcode = json_encode($dataMeta);
+            $bodytext = '<div id="ishow"></div>'.$conent.'<div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
+        } else {
+            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><br/><b>Another News:</b><br/><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+            $customcode = '';
+        }
+        $bodytext = str_replace("<br />", "\n", $bodytext);
+        $title = (string) $title;
+        
         $dataContent->setdate = false;        
         $dataContent->editpost = false;
         $dataContent->pid      = 0;
-        $dataContent->customcode = '';
+        $dataContent->customcode = $customcode;
         $dataContent->bid     = $bid;
         $dataContent->title    = $title;        
         $dataContent->bodytext = $bodytext;

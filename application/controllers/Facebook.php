@@ -1526,6 +1526,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
         $user = $this->session->userdata('email');        
         $action = $this->input->get('post');
+        $wait = $this->input->get('wait');
 
         $randomLink = $this->session->userdata ( 'randomLink' );
         $shareId = $this->input->get('shareid');
@@ -1570,7 +1571,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     'share',
                     '*', 
                     $where_so,
-                    $order = 'c_date desc', 
+                    $order = 'c_date', 
                     $group = 0, 
                     $limit = 1 
                 );
@@ -1580,6 +1581,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $shareid = $dataShare[0]->sh_id;
                     $shOption = json_decode($dataShare[0]->sh_option);
                     $this->session->set_userdata('pid', $dataShare[0]->p_id);
+                    if(!empty($wait)) {
+                        $value = 'nexpost';
+                    }
                     redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                 }
                 break;
@@ -1702,6 +1706,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         'shp_posted_id' => $pid,
                         'uid' => $log_id,
                     ));
+                    /*go to check post*/
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=checkpost";}, 2000 );</script>';
+                    exit();
                 }
                 /*End check post and share count*/ 
 
@@ -1797,7 +1804,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         $data['breadcrumb'] = $this->breadcrumbs->output();
 
         $sharePost = new ArrayObject();
-        if(!empty($action)) {
+        if(!empty($action) && $action != 'checkpost') {
             /*get Post to post*/
             $date = new DateTime("now");
             $curr_date = $date->format('Y-m-d h:i:s');
@@ -1988,6 +1995,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             /*End select post list from user*/
             $data['sharePost'] = $sharePost;
             /*End get Post to post*/
+        } else {
         }  
         $this->load->view('facebook/share', $data);
     }

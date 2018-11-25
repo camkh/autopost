@@ -2,7 +2,7 @@
     $action = $this->input->get('post');
     $uerAgent = $this->input->get('agent');
     $log_id = $this->session->userdata('user_id');
-    $suid = $this->session->userdata ( 'sid' );
+    $suid = $this->session->userdata ( 'sid' );  
  ?>
     <style>
         .radio-inline{}
@@ -21,6 +21,7 @@
             <div class="progress progress-striped active"> <div id="timer" class="progress-bar progress-bar-danger" style="width: 0%"></div> </div>
         </div>
     </div>
+    <?php if(!empty($action) && $action != 'checkpost'):?>
     <div class="row">
         <div class="col-md-12">
             Group ID: <b><?php echo $sharePost->group_id;?></b> || <b>Post ID:</b> <?php echo $sharePost->pid;?> || <b>Share counts:</b> <?php echo $sharePost->count_shared;?>/<?php echo $sharePost->totalGroups;?>
@@ -63,6 +64,7 @@
                     </table>   
         </div>
     </div>
+<?php endif;?>
     <link rel="stylesheet" href="<?php echo base_url(); ?>themes/layout/css/jquery.countdown.css">
     <link href="<?php echo base_url(); ?>themes/layout/blueone/plugins/nestable/nestable.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url(); ?>themes/layout/blueone/assets/css/plugins/bootstrap-switch.css" rel="stylesheet" type="text/css" />
@@ -73,7 +75,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/nprogress/nprogress.js"></script>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>    
     <?php //var_dump($sharePost);?>     
-   <?php if(!empty($action)):
+   <?php if(!empty($action) && $action != 'checkpost'):
     if(!empty($sharePost->pcount)):
         $pTitle = $sharePost->title;
         if(!empty($uerAgent)) {
@@ -91,30 +93,20 @@
     <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes,report,uid=&quot;<?php echo $log_id;?>&quot;,suid=&quot;<?php echo $suid;?>&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;,shareid=&quot;<?php echo $sharePost->share_id;?>&quot;;</code>
     <?php 
     endif;
-endif;
-?>   
+    elseif($action == 'checkpost'):?>
+        <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
+        <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
+    <?php endif;?>   
     <script>
         $( document ).ready(function() {
             setInterval(function() {            
                 //closeOnLoad("<?php echo base_url();?>managecampaigns");
               }, 30000); 
+        <?php if(!empty($action) && $action != 'checkpost'):?>    
         <?php
             $year = $month = $day = $hour = $minute = $second = 0;
             $setDayFormat = $setDay = '';
-            if($sharePost->option->share_schedule ==1) {            
-                if ($sharePost->diff->invert == 1) {
-                    $year = $sharePost->diff->y;
-                    $month = $sharePost->diff->m;
-                    $day = $sharePost->diff->d;
-                    $hour = $sharePost->diff->h;
-                    $minute = $sharePost->diff->i;
-                    $second = $sharePost->diff->s;
-                }
-                if($day>0) {
-                    $setDay = '+' . $day . 'd '; 
-                    $setDayFormat = '%m days'; 
-                }
-            }
+            
             if(!empty($action)):
                 switch ($action) {
                     case 'gwait':
@@ -138,9 +130,31 @@ endif;
                         $styleA = $waiting = 0;
                         break;                        
                 }
-            endif;?>
+                if($sharePost->option->share_schedule ==1) {          
+                    if ($sharePost->diff->invert == 1) {
+                        $year = $sharePost->diff->y;
+                        $month = $sharePost->diff->m;
+                        $day = $sharePost->diff->d;
+                        $hour = $sharePost->diff->h;
+                        $minute = $sharePost->diff->i;
+                        $second = $sharePost->diff->s;
+
+                        $seconds =  (int) 10 * $second;
+                        $minutes =  (int) 10 * 60 * $minute;
+                        $hours =  (int) 10 * 60 * 60 * $hour;
+                        $days =  (int) 10 * 60 * 60 * $hour * 24;
+                        $styleA = $seconds + $minutes + $hours + $days;
+                        $waiting = $second;
+                    }
+                    if($day>0) {
+                        $setDay = '+' . $day . 'd '; 
+                        $setDayFormat = '%m days'; 
+                    }
+                }
+            endif;
+            ?>
             <?php if(!empty($action)):?>
-            $('#defaultCountdown').countdown({until: '+0h +0m +<?php echo $waiting;?>s', format: '<?php echo $setDayFormat;?>%H:%M:%S'});
+            $('#defaultCountdown').countdown({until: '+<?php echo $hour;?>h +<?php echo $minute;?>m +<?php echo $waiting;?>s', format: '<?php echo $setDayFormat;?>%H:%M:%S'});
             <?php endif;?>             
 
             /*timer progress*/
@@ -165,7 +179,10 @@ endif;
                   elem.innerHTML = width + '%'; 
                 }
               };
-            /*End timer progress*/            
+            /*End timer progress*/
+            <?php else:?>
+              load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/AproveRequestViewPost");
+            <?php endif;?>          
         });
 
        function runcode(codes) {

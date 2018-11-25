@@ -205,6 +205,10 @@
                                                 <label class="radio-inline">
                                                     <input type="radio" value="0" name="bloglink" class="required" required checked />
                                                     <i class="subtopmenu hangmeas">No</i>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="2" name="bloglink" class="required" required />
+                                                    <i class="subtopmenu hangmeas">None content</i>
                                                 </label>    
                                             </div>
                                         </div>

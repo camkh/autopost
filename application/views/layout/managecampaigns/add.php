@@ -197,7 +197,7 @@
                                                     <i class="subtopmenu hangmeas">Yes</i>
                                                 </label> 
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="0" name="randomlink" class="required" <?php if(!empty($data)){ echo ($pSchedule['randomGroup']!=1 ? 'checked' : '');}?> />
+                                                    <input type="radio" value="0" name="randomlink" class="required" checked />
                                                     <i class="subtopmenu hangmeas">No</i>
                                                 </label>    
                                             </div>
