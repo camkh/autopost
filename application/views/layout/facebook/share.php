@@ -186,6 +186,7 @@
             /*End timer progress*/
             <?php else:?>
               load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/AproveRequestViewPost");
+              <meta http-equiv="Refresh" content="2; url=<?php echo base_url();?>">
             <?php endif;?>          
         });
 
