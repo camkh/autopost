@@ -299,7 +299,7 @@
                                         <tr>
                                             <td><?php echo $key;?></td>
                                             <td><a href="https://mobile.facebook.com/<?php echo $fb->u_id;?>" target="_blank"><?php echo $fb->u_provider_uid;?></a></td>
-                                            <td style="width: 50%"><a href="https://mobile.facebook.com/<?php echo $fb->u_id;?>" target="_blank"><?php echo $fb->u_name;?></a></td>
+                                            <td style="width: 50%"><img src="https://graph.facebook.com/<?php echo $fb->u_provider_uid;?>/picture" style="width: 60px;float: left" /><a href="https://mobile.facebook.com/<?php echo $fb->u_id;?>" target="_blank"><?php echo $fb->u_name;?></a></td>
                                             <td>
                                                 <ul class="table-controls">
                                                     <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
