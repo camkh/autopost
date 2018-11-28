@@ -1,7 +1,5 @@
-﻿!/application/config/config.php
-!/application/config/constants.php
-/application/config/!config.php
-/application/config/!constants.php
+﻿/application/config/config.php
+/application/config/constants.php
 application/cache/*
 */config/development
 */logs/log-*.php
