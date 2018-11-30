@@ -1588,17 +1588,17 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 }
                 break;
              case 'wait':
-                $pid = $this->input->get('id');
-                $sids = $this->input->get('sid');
-                $suid = $this->input->get('suid');
-                $uid = $this->input->get('uid');                
+                $pid = (int) $this->input->get('id');
+                $sids = (int) $this->input->get('sid');
+                $suid = (int) $this->input->get('suid');
+                $uid = (int) $this->input->get('uid');                
 
                 /*update share group id */
                 $dataShare = array(
                     'sh_status' => 1
                 );
                 $whereShere = array(
-                    'uid' => $log_id,
+                    'uid' => (int) $log_id,
                     'p_id'=> $pid,
                     'sh_id' => $shareId,
                 );

@@ -186,7 +186,9 @@
 							</tr>
 						</thead>
 						<tbody>
-    <?php foreach ($socialList as $value) {
+    <?php
+    if(!empty($socialList)):
+     foreach ($socialList as $value):
     	$content = json_decode($value->p_conent);
      ?>
                                     <tr>
@@ -242,7 +244,7 @@
 									</div>
 								</td>
 							</tr>
-    <?php } ?>
+    <?php endforeach;endif; ?>
                             </tbody>
 					</table>
 
