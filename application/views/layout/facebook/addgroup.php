@@ -105,21 +105,6 @@
                                                                 <input type="text" name="addlist" class="form-control"/>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group" id="categorylist" style="display:none">
-                                                            <label class="col-md-2 control-label">Category:</label> 
-                                                            <div class="col-md-10">
-                                                                <select name="categorylist" class="col-md-12 select2 full-width-fix">
-                                                                    <option value=""></option>
-                                                                    <?php if(!empty($getCatelist)):
-                                                                        foreach ($getCatelist as $cList):
-                                                                    ?>
-                                                                        <option value="<?php echo $cList->country_name;?>"><?php echo $cList->country_name;?></option>
-                                                                    <?php
-                                                                        endforeach;
-                                                                     endif;?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>                                        
                                             </div>
@@ -148,6 +133,15 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group" id="iMacrosGroupsWrap">
+                                            <div class="col-md-11">
+                                                <textarea class="form-control" name="iMacrosGroups" cols="5" rows="3" placeholder="Groups ID: 123,456,789" id="iMacrosGroups"></textarea>
+                                            </div>
+                                            <div class="col-md-1"><input type="button" class="uniform" name="allbox" id="getImacrosID" value="Get ID" /></div>
+                                        </div>
+
+
                                         <style type="text/css">
                                         </style>
                                         <table class="table table-striped table-condensed table-hover table-checkable datatable">
@@ -169,7 +163,7 @@
                                         <div class="form-actions">
                                             <span> Total group: <span id="gtotal"></span></span> 
                                             <input type="submit" name="submit" value="Add" class="btn btn-primary pull-right"/>
-                                        </div>  
+                                        </div> 
                                     </div>
                                     <!-- end get from facebook by imacors -->
 
@@ -336,7 +330,7 @@
                                     <input type="submit" name="submit" value="Add" class="btn btn-primary pull-right"/>
                                 </div> 
                             <?php endif;?>
-
+                        <div style="clear: both;"></div>
                     </div>
                 </div>
             </div>
@@ -355,7 +349,7 @@
     Please wait...
 </div>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>   
-<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var urlHome=&quot;<?php echo base_url();?>&quot;,datasource=&quot;C:\\myImacros\\&quot;;var codedefault1=&quot;TAB CLOSEALLOTHERS\n SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var glists=null;var uid='';</code>   
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var urlHome=&quot;<?php echo base_url();?>&quot;,datasource=&quot;C:\\myImacros\\&quot;;var codedefault1=&quot;TAB CLOSEALLOTHERS\n SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 10\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 180\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var glists=null;var uid='';</code>   
     <script type="text/javascript">
         function runcode(codes) {
             var str = $("#examplecode5").text();
@@ -392,4 +386,22 @@
                 })
             }
         }
+        $(document).ready(function() {
+            $("#getImacrosID").click(function() {
+                var iMGroups = $('#iMacrosGroups').val();
+                var obj = JSON.parse(iMGroups);
+                var dataUser = "";
+                for (i = 0; i < obj.length; i++) { 
+                    dataUser += '<tr>';
+                    dataUser += '<td style="width:10px" class="checkbox-column">';
+                    dataUser += '<input type="hidden" id="itemid" name="itemidall[]" class="uniform" value="' + obj[i].gid + '||' + obj[i].gname + '||" /><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="' + obj[i].gid + '||' + obj[i].gname + '||" /></td>';
+                    dataUser += '<td style="width:135px"><a href="www.fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gid + '</a></td>';
+                    dataUser += '<td><a href="www.fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gname + '</a></td>';
+                    dataUser += '<td style="width:100px">0</td>';
+                    dataUser += '</tr>';
+                }
+                $("#group_from_imacros").html(dataUser);
+                $("#iMacrosGroupsWrap").fadeOut();
+            });
+        });
     </script>  
