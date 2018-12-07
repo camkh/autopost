@@ -677,7 +677,7 @@ class Managecampaigns extends CI_Controller {
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]); 
                     $content = array (
-                            'name' => @str_replace(' - YouTube', '', $title[$i]),
+                            'name' => @htmlentities(htmlspecialchars(addslashes(str_replace(' - YouTube', '', $title[$i])))),
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
@@ -782,8 +782,9 @@ class Managecampaigns extends CI_Controller {
                 /*End get post from post id*/
                     $pConent = json_decode($getPost[0]->p_conent);
                     $links = $pConent->link;                    
-                    $title = $pConent->name;
+                    $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
                     $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));
+                    $message = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9 ]/', ' ', urldecode(html_entity_decode(strip_tags($message))))));
                     $picture = $pConent->picture;
 
                     /*Post to Blogger first*/
@@ -816,72 +817,78 @@ class Managecampaigns extends CI_Controller {
                         /*check url status*/
                         $file_title = basename($imgUrl);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
-                        copy($imgUrl, $fileName);
-                        $image = $this->Mod_general->uploadMedia($fileName);
+                        copy($imgUrl, $fileName);                        
+                        $image = $this->mod_general->uploadMedia($fileName);
                         @unlink($fileName);
                         $imgur = true;
-                    }
-                    /*End upload photo first*/
-                    $blink = $this->input->get('blink');
-                    $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                    $link = $blogData->url;
 
-                    /*End Post to Blogger first*/
 
-                    /*blog link*/
+                        /*End upload photo first*/
+                        $blink = $this->input->get('blink');
+                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                        $link = $blogData->url;
+
+                        /*End Post to Blogger first*/
+
+                        /*blog link*/
+                        
+                        if(!empty($blink) && $blink != 2) {
+                            /*show blog link*/
+                            $where_link = array(
+                                'c_name'      => 'blog_linkA',
+                                'c_key'     => $log_id,
+                            );
+                            $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                            if (!empty($query_blog_link[0])) {
+                                $data = json_decode($query_blog_link[0]->c_value);
+                                $big = array();
+                                foreach ($data as $key => $blog) {
+                                    $big[] = $blog->bid;                                
+                                }
+                                $brand = mt_rand(0, count($big) - 1);
+                                $blogRand = $big[$brand];
+                                // if($blink == 2) {
+                                //     $blogRand = $bid;
+                                // }
+                                
+                                $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;"><a href="'.$link.'" rel="nofollow"><span style="color: red;"><span style="font-size: 20px;">👇👇👇กด Link ข้างล่างได้เลย👇👇👇</span></span><div style="font-size: 25px;">'.$getPost[0]->p_name.'</div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/></a></div><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
+                                $title = (string) $title;
+                                $dataContent          = new stdClass();
+                                $dataContent->setdate = false;        
+                                $dataContent->editpost = false;
+                                $dataContent->pid      = 0;
+                                $dataContent->customcode = '';
+                                $dataContent->bid     = $blogRand;
+                                $dataContent->title    = $bid . $title;        
+                                $dataContent->bodytext = $bodytext;
+                                $dataContent->label    = 'blink';
+                                $DataBlogLink = $this->postBlogger($dataContent);
+                                $link = $DataBlogLink->url;
+                            } 
+                        }
+                        /*End blog link*/
+
+                        /*update post*/
+                        if(!empty($link)) {
+                            $whereUp = array('p_id' => $pid);
+                            $content = array (
+                                'name' => $pConent->name,
+                                'message' => $pConent->message,
+                                'caption' => $pConent->caption,
+                                'link' => @$link,
+                                'picture' => @$image,                            
+                            );
+                            $dataPostInstert = array (
+                                Tbl_posts::conent => json_encode ( $content ),
+                                'p_post_to' => 0,
+                            );
+                            $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                        }
+                        /*End update post*/
+                    }                    
+
+
                     
-                    if(!empty($blink)) {
-                        /*show blog link*/
-                        $where_link = array(
-                            'c_name'      => 'blog_linkA',
-                            'c_key'     => $log_id,
-                        );
-                        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                        if (!empty($query_blog_link[0])) {
-                            $data = json_decode($query_blog_link[0]->c_value);
-                            $big = array();
-                            foreach ($data as $key => $blog) {
-                                $big[] = $blog->bid;                                
-                            }
-                            $brand = mt_rand(0, count($big) - 1);
-                            $blogRand = $big[$brand];
-                            // if($blink == 2) {
-                            //     $blogRand = $bid;
-                            // }
-                            
-                            $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;"><a href="'.$link.'" rel="nofollow"><span style="color: red;"><span style="font-size: 20px;">👇👇👇กด Link ข้างล่างได้เลย👇👇👇</span></span><div style="font-size: 25px;">'.$getPost[0]->p_name.'</div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/></a></div><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
-                            $title = (string) $title;
-                            $dataContent          = new stdClass();
-                            $dataContent->setdate = false;        
-                            $dataContent->editpost = false;
-                            $dataContent->pid      = 0;
-                            $dataContent->customcode = '';
-                            $dataContent->bid     = $blogRand;
-                            $dataContent->title    = $bid . $title;        
-                            $dataContent->bodytext = $bodytext;
-                            $dataContent->label    = 'blink';
-                            $DataBlogLink = $this->postBlogger($dataContent);
-                            $link = $DataBlogLink->url;
-                        } 
-                    }
-                    /*End blog link*/
-
-
-                    /*update post*/
-                    $whereUp = array('p_id' => $pid);
-                    $content = array (
-                        'name' => $pConent->name,
-                        'message' => $pConent->message,
-                        'caption' => $pConent->caption,
-                        'link' => @$link,
-                        'picture' => @$image,                            
-                    );
-                    $dataPostInstert = array (
-                        Tbl_posts::conent => json_encode ( $content ),
-                        'p_post_to' => 0,
-                    );
-                    $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                    /*End update post*/
 
                     /*check next post*/
                     $whereNext = array (
@@ -893,7 +900,7 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($nextPost[0])) {
                         $p_id = $nextPost[0]->p_id;
                         echo '<center>Please wait...</center>';
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 10 );</script>'; 
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 15 );</script>'; 
                     } else {
                         redirect(base_url() . 'managecampaigns?m=post_success');
                     }

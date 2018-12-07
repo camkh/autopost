@@ -44,12 +44,12 @@ class Remote_Picasa extends Remote
     /**
      * Override parent to get real account
      */
-    public function login($username, $password)
+    public function login($username, $password,$tokenSessionKey)
     {
         // $username = preg_replace('#@.*?$#', '', $username);
         // return parent::login($username, $password);
         $this->_username = $username;
-        $authObj = json_decode($_SESSION['tokenSessionKey']);
+        $authObj = json_decode($tokenSessionKey);
             $expiresIn = $authObj->expires_in;
             //return $authObj->access_token;
         return $this->set('cookieLogin', $authObj->access_token);
