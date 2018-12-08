@@ -677,7 +677,7 @@ class Managecampaigns extends CI_Controller {
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]); 
                     $content = array (
-                            'name' => @htmlentities(htmlspecialchars(addslashes(str_replace(' - YouTube', '', $title[$i])))),
+                            'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $title[$i]))),
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
@@ -781,10 +781,9 @@ class Managecampaigns extends CI_Controller {
                 if(!empty($getPost[0])) {
                 /*End get post from post id*/
                     $pConent = json_decode($getPost[0]->p_conent);
-                    $links = $pConent->link;                    
+                    $links = $pConent->link;
                     $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
-                    $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));
-                    $message = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9 ]/', ' ', urldecode(html_entity_decode(strip_tags($message))))));
+                    $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                    
                     $picture = $pConent->picture;
 
                     /*Post to Blogger first*/
