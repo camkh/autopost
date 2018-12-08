@@ -19,7 +19,6 @@ class Facebook extends CI_Controller
         $this->load->theme('layout');
         $this->mod_general = new Mod_general();
         TIME_ZONE;
-        $this->mod_general->checkUser();
         $this->load->library('Breadcrumbs');
     }
     public function index() {

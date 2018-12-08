@@ -90,7 +90,7 @@
     ?>
     <div id="ptitle" style="display: none;"><?php echo $pTitle;?></div>
     <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes,report,uid=&quot;<?php echo $log_id;?>&quot;,suid=&quot;<?php echo $suid;?>&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;,shareid=&quot;<?php echo $sharePost->share_id;?>&quot;;</code>
+    <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var i, retcode,retcodes,report,uid=&quot;<?php echo $log_id;?>&quot;,suid=&quot;<?php echo $suid;?>&quot;;var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var setLink = &quot;<?php echo $pLink;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, gid = &quot;<?php echo $group_id;?>&quot;, pid = &quot;<?php echo $pid;?>&quot;,sid=&quot;<?php echo $sid;?>&quot;,shareid=&quot;<?php echo $sharePost->share_id;?>&quot;,sharechount=&quot;<?php echo $sharePost->count_shared;?>&quot;;</code>
     <?php 
     endif;
     elseif($action == 'checkpost'):?>
@@ -172,7 +172,7 @@
                   clearInterval(id);
                   //complete here
                   //window.location = "share.php?do=share";
-                  <?php if(!empty($this->input->get('agent'))):?>
+                    <?php if(!empty($this->input->get('agent'))):?>
                     load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
                     <?php else:?>
                     load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
@@ -185,7 +185,9 @@
               };
             /*End timer progress*/
             <?php else:?>
-              load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/AproveRequestViewPost");
+                window.setTimeout( function(){
+                    load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/AproveRequestViewPost");
+                }, 200);
             <?php endif;?>          
         });
 
@@ -236,6 +238,9 @@ function closeOnLoad(myLink)
             2000
             );
   return false;
+}
+function checkPostBeforeShare() {
+    // body...
 }
     </script>
     <?php
