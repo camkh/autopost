@@ -69,7 +69,7 @@
                                     <div class="col-md-6">តំណ / URL</div>
                                     <div class="col-md-5">ចំណងជើង / Title</div>                                    
                                   <div class="col-md-1">
-                                    <span id="addfield" class="addfield btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                                    <span id="addfield" class="addfield btn btn-success  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
                                   </div>
                                 </div>
                                 <div class="optionBox"  id="postimacros">
@@ -131,7 +131,7 @@
                                     <div class="col-md-6"></div>
                                     <div class="col-md-5"></div>                                    
                                   <div class="col-md-1">
-                                    <span id="addfield1" class="addfield btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                                    <span id="addfield1" class="addfield btn btn-success  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
                                   </div>
                                 </div>
                             </div>
