@@ -69,7 +69,7 @@
                                     <div class="col-md-6">តំណ / URL</div>
                                     <div class="col-md-5">ចំណងជើង / Title</div>                                    
                                   <div class="col-md-1">
-                                    <span id="addfield" class="btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                                    <span id="addfield" class="addfield btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
                                   </div>
                                 </div>
                                 <div class="optionBox"  id="postimacros">
@@ -126,6 +126,14 @@
                                     </div>
                                 </div> 
                                 <!-- End post in api -->
+
+                                <div class="form-group">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-5"></div>                                    
+                                  <div class="col-md-1">
+                                    <span id="addfield1" class="addfield btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                                  </div>
+                                </div>
                             </div>
 
                             <div class="col-md-4">
@@ -567,7 +575,7 @@
             /*End Youtube channel*/
 
             /*add field*/
-             $("#addfield").click(function() {
+             $(".addfield").click(function() {
                 var code = makeid();
                 var link = 'link_' + code;
                 var title = 'title_link_' + code;
