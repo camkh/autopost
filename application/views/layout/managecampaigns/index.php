@@ -146,9 +146,9 @@
 							<div id="DataTables_Table_0_length" class="dataTables_length">
 								<label> <select name="DataTables_Table_0_length" size="1"
 									aria-controls="DataTables_Table_0" class="select2-offscreen"
-									tabindex="-1">
-										<option value="5" selected="selected">5</option>
-										<option value="10">10</option>
+									tabindex="-1" onchange="getComboA(this)">
+										<option value="5">5</option>
+										<option value="10" selected="selected">10</option>
 										<option value="25">25</option>
 										<option value="50">50</option>
 										<option value="-1">All</option>
@@ -263,9 +263,11 @@
                                     </ul>
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2">								
 								<button type="submit" id="multidel" name="delete"
 									class="btn btn-google-plus pull-right" value="delete">Delete</button>
+								<button type="submit" id="multiedit" name="edit"
+									class="btn btn-primary pull-right" value="edit" style="margin-right: 3px">Edit</button>
 							</div>
 						</div>
 					</div>
@@ -276,8 +278,13 @@
 	</div>
 </div>
 <script type="text/javascript">
+		function getComboA(selectObject) {
+		    var value = selectObject.value;
+		    if(value) {
+		    	window.location = "<?php echo base_url();?>managecampaigns/index?result=" + value;
+		    }
+		}
         function Confirms(text, layout, id, type) {
-alert(111);
             var n = noty({
                 text: text,
                 type: type,

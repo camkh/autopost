@@ -95,7 +95,7 @@
     endif;
     elseif($action == 'checkpost'):?>
         <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-        <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var limit = 40,clear = 0,timedelay= 10,homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
+        <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var limit = 40,clear = 0,timedelay= 5,homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
     <?php endif;?>   
     <script>
         $( document ).ready(function() {

@@ -1,20 +1,4 @@
 <?php if ($this->session->userdata('user_type') != 4):
-    if(!empty($data)):
-        foreach ($data as $value):
-            $dataConents = $value->{Tbl_posts::conent};
-            $json = json_decode($dataConents, true);
-            $schedule = $value->p_schedule;
-            $pSchedule = json_decode($schedule, true);
-            $Thumbnail = @$json['picture'];
-            $postTitle = @$value->p_name;
-            $postLink = @$json['link'];
-            $description = @$json['description'];
-            $wait_group = @$pSchedule['wait_group'];
-            $wait_post = @$pSchedule['wait_post'];
-            $account_group_type = @$pSchedule['account_group_type'];
-        endforeach;
-    endif;
-    $post_id = !empty($_GET['id'])?$_GET['id']:'';
     ?>
     <style>
         .radio-inline{}
@@ -54,23 +38,37 @@
                                     <div class="col-md-6">តំណ / URL</div>
                                     <div class="col-md-5">ចំណងជៈង / Title</div>                                    
                                   <div class="col-md-1">
-                                    <span id="addfield" class="btn btn-sm  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                                    <span id="addfield" class="btn btn-sm  pull-right bs-tooltip 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
                                   </div>
                                 </div>
                                 <div class="optionBox"  id="postimacros">
                                   <div class="form-group morefield">
                                     <div class="col-md-12">
+                                    <?php if(!empty($data)):
+                                        foreach ($data as $value):
+                                            $dataConents = $value->{Tbl_posts::conent};
+                                            $json = json_decode($dataConents, true);
+                                            $schedule = $value->p_schedule;
+                                            $post_id = $value->p_id;
+                                            $pSchedule = json_decode($schedule, true);
+                                            $Thumbnail = @$json['picture'];
+                                            $postTitle = @$value->p_name;
+                                            $postLink = @$json['link'];
+                                            $description = @$json['description'];
+                                            $wait_group = @$pSchedule['wait_group'];
+                                            $wait_post = @$pSchedule['wait_post'];
+                                            $account_group_type = @$pSchedule['account_group_type'];?>
                                       <div class="form-group"> 
                                         <div class="col-md-4">
-                                            <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
-                                            <input type="hidden" value="<?php echo @$post_id; ?>" name="postid" id="postID"/>
+                                            <input type="text" id="link_<?php echo @$post_id; ?>" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
+                                            <input type="hidden" value="<?php echo @$post_id; ?>" name="postid[]" id="postID"/>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" id="image_link_1" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
+                                            <input type="text" id="image_link_<?php echo @$post_id; ?>" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
                                         </div>
                                         <div class="col-md-5">
                                             <div class="input-group">                                                 
-                                                <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_1" />
+                                                <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_<?php echo @$post_id; ?>" />
                                                 <span class="input-group-btn"> 
                                                     // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id) ? 'disabled':'';?>>
                                                         <i class="icon-remove text-danger"></i>
@@ -79,6 +77,7 @@
                                             </div>
                                         </div>
                                       </div>
+                                      <?php endforeach;endif;?>
                                     </div>
                                   </div>
                                 </div>

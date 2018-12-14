@@ -243,12 +243,21 @@ class Managecampaigns extends CI_Controller {
     } else {
             return confirm('Do you want to delete all?');
     }
+ });
+ $('#multiedit').click(function () {
+     if (!$('#itemid:checked').val()) {
+            alert('please select one');
+            return false;
+    } else {
+            return confirm('Do you want to Edit all?');
+    }
  });" 
 		);
 		// $backto = base_url() . 'post/blogpassword';
 		// $query_blog = $this->Mod_general->blogcheck(current_url(), $backto);
 		$provider = str_replace ( 'facebook', 'Facebook', $provider );  
 
+        /*Delete all Post*/
         if ($this->input->post('delete')) {
             if(!empty($this->input->post('itemid'))) {
                 $id = $this->input->post('itemid');
@@ -256,7 +265,20 @@ class Managecampaigns extends CI_Controller {
                     $this->Mod_general->delete('post', array('p_id'=>$value, 'user_id'=>$log_id));
                 }
             }
-        }    
+        } 
+        /*End Delete all Post*/   
+        /*Edit all post*/
+        if ($this->input->post('edit')) {
+            if(!empty($this->input->post('itemid'))) {
+                $id = $this->input->post('itemid');
+                $ids = implode(',', $id);
+                redirect(base_url().'managecampaigns/add?id='.$ids);
+                // foreach ($id as $key => $value) {
+                //     var_dump($value);
+                // }
+            }
+        } 
+        /*End Edit all post*/
 
         if(!empty($this->session->userdata ( 'sid' ))) {
             if(empty($fbUserId)) {
@@ -954,9 +976,9 @@ class Managecampaigns extends CI_Controller {
                 'videoID' => $vid
             );
             $customcode = json_encode($dataMeta);
-            $bodytext = '<div id="ishow"></div>'.$conent.'<div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
+            $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
         } else {
-            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><br/>'.$conent.'<div id="someAdsA"></div><br/><b>Another News:</b><br/><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
             $customcode = '';
         }
         $bodytext = str_replace("<br />", "\n", $bodytext);
@@ -1027,10 +1049,8 @@ class Managecampaigns extends CI_Controller {
 		$data ['title'] = 'Admin Area :: Manage Campaigns';
 		
 		/* get post for each user */
-		$where_so = array (
-				'user_id' => $log_id,
-				Tbl_posts::id => $id 
-		);
+        $id = explode(',', $id);
+        $where_so['where_in'] = array('user_id' => $log_id,Tbl_posts::id => $id);
 		$dataPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
 		$data ['data'] = $dataPost;
 		/* end get post for each user */
@@ -1185,7 +1205,6 @@ class Managecampaigns extends CI_Controller {
 			$caption = $this->input->post ( 'caption' );
 
             $link = $this->input->post ( 'link' );
-            var_dump($link);
 			$short_link = $this->input->post ( 'shortlink' );
 
 			$accoung = $this->input->post ( 'accoung' );
@@ -1299,9 +1318,9 @@ class Managecampaigns extends CI_Controller {
     				);
                     @ob_end_flush();
     				if (! empty ( $postId )) {
-    					$AddToPost = $postId;
+    					$AddToPost = $postId[$i];
     					$this->Mod_general->update ( Tbl_posts::tblName, $dataPostInstert, array (
-    							Tbl_posts::id => $postId 
+    							Tbl_posts::id => $postId[$i]
     					) );
     				} else {
     					$AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
