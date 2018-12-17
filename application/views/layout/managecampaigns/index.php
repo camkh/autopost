@@ -210,7 +210,7 @@
 						                    $str = md5($str);
 						                    $uniq_id = substr($str, 0, 9);
 						                    $link = $glink . '?s=' . $uniq_id;
-						                    $link = get_bitly_short_url( $link, BITLY_USERNAME, BITLY_API_KEY );
+						                    //$link = get_bitly_short_url( $link, BITLY_USERNAME, BITLY_API_KEY );
         									?>
         									<input id="copy-text" type="text" name="glink" value="<?php echo $value->{Tbl_posts::name}.' 👉ขอแค่คำว่า ขอบคุณ #กดแชร์ 👉 ';echo $link;?>" class="form-control" onClick="copyText(this);" readonly/>
         <?php if ($value->{Tbl_posts::status} == 1) { ?>
