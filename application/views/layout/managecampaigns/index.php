@@ -17,6 +17,7 @@
     }
 	?>
 <style>
+	.butt,.butt:hover {color: #fff}
     .radio-inline{}
     .error {color: red}
     #blockuis{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
@@ -122,20 +123,21 @@
 				</h4>
 				<div class="toolbar no-padding">
 					<div class="btn-group">
+						<span class="btn btn-xs btn-danger">
+							<a class="butt" href="<?php echo base_url() . 'managecampaigns/yturl/'; ?>"> <i class="icon-youtube"></i> <span class="hidden-xs">Youtube</span>
+							</a>
+						</span>
+						<span class="btn btn-xs btn-inverse">
+							<a class="butt" href="<?php echo base_url() . 'managecampaigns/add/'; ?>"> <i class="icon-unlink"></i> <span class="hidden-xs">URL</span>
+							</a>
+						</span>
+						<span class="btn btn-xs btn-success">
+							<a class="butt" href="<?php echo base_url() . 'facebook/shareation?post=getpost'; ?>"> <i class="icon-share"></i> <span class="hidden-xs">Share</span>
+							</a>
+						</span>
 						<span class="btn btn-xs widget-collapse"> <i
 							class="icon-angle-down"></i>
-						</span> <span class="btn btn-xs dropdown-toggle"
-							data-toggle="dropdown"> <i class="icon-plus"></i> Add <i
-							class="icon-angle-down"></i>
-						</span>
-						<ul class="dropdown-menu pull-right">
-							<li><a href="<?php echo base_url() . 'managecampaigns/fromyoutube/'; ?>"> <i class="icon-youtube-play"></i> Add from Youtube
-							</a></li>
-							<li><a href="<?php echo base_url() . 'managecampaigns/add/'; ?>"> <i class="icon-plus"></i> Add
-							</a></li>
-							<li><a href="<?php echo base_url() . 'managecampaigns/fromurl/'; ?>"> <i class="icon-plus"></i> Add URL
-							</a></li>	
-						</ul>
+						</span> 
 					</div>
 				</div>
 			</div>
@@ -251,7 +253,7 @@
 					<!-- page -->
 					<div class="row">
 						<div class="dataTables_footer clearfix">
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="dataTables_info" id="DataTables_Table_0_info">
                                         Showing 1 to <?php echo count($results); ?> of <?php echo $total_rows; ?> entries
                                     </div>
@@ -263,11 +265,12 @@
                                     </ul>
 								</div>
 							</div>
-							<div class="col-md-2">								
+							<div class="col-md-4">								
 								<button type="submit" id="multidel" name="delete"
-									class="btn btn-google-plus pull-right" value="delete">Delete</button>
+									class="btn btn-google-plus pull-right" value="delete"><i class="icon-trash"></i> Delete</button>
 								<button type="submit" id="multiedit" name="edit"
-									class="btn btn-primary pull-right" value="edit" style="margin-right: 3px">Edit</button>
+									class="btn btn-primary pull-right" value="edit" style="margin-right: 3px"><i class="icon-edit"></i> Edit</button>
+								<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class=" icon-copy"></i> Copy to</button>
 							</div>
 						</div>
 					</div>
@@ -278,6 +281,16 @@
 	</div>
 </div>
 <script type="text/javascript">
+	$( document ).ready(function(){
+		$('#multiecopy').click(function () {
+		     if (!$('#itemid:checked').val()) {
+		            alert('please select one');
+		            return false;
+		    } else {
+		            return confirm('Do you want to Copy These posts?');
+		    }
+		 });
+	});
 		function getComboA(selectObject) {
 		    var value = selectObject.value;
 		    if(value) {
@@ -342,6 +355,32 @@ function copyText(e) {
     }, 1000);
 }
     </script>   
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
 <?php
 } else {
 	echo '<div class="alert fade in alert-danger" >

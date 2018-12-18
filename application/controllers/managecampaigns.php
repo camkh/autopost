@@ -280,6 +280,19 @@ class Managecampaigns extends CI_Controller {
         } 
         /*End Edit all post*/
 
+        /*copy post*/
+        if ($this->input->post('copyto')) {
+            if(!empty($this->input->post('itemid'))) {
+                $id = $this->input->post('itemid');
+                $ids = implode(',', $id);
+                redirect(base_url().'managecampaigns/add?copy=1&id='.$ids);
+                // foreach ($id as $key => $value) {
+                //     var_dump($value);
+                // }
+            }
+        }
+        /*End copy post*/
+
         if(!empty($this->session->userdata ( 'sid' ))) {
             if(empty($fbUserId)) {
                 $this->session->unset_userdata ( 'sid' );
@@ -1084,6 +1097,7 @@ class Managecampaigns extends CI_Controller {
 				"
         $(document).ready(function() {
             var gid = $(\"#togroup\").val();
+            if(gid) {
             $.ajax
             ({
                 type: \"get\",
@@ -1097,7 +1111,7 @@ class Managecampaigns extends CI_Controller {
                     $(\"#checkAll\").prop( \"checked\", true );
                 }
             });
-
+        }
             $(\"#groupWrap\").hide();            
             $('#togroup').change(function () {
                 var gid = $(this).val();
@@ -1821,6 +1835,14 @@ HTML;
 		$data = '';
 		if ($log_id) {
 			switch ($page) {
+                case 'grouplist':
+                    $where_gu= array (
+                        'l_user_id' => $log_id, 
+                        'l_sid' => $id, 
+                    );
+                    $dataAccountg = $this->Mod_general->select ( 'group_list', 'l_id, lname', $where_gu );
+                    echo json_encode($dataAccountg);
+                    break;
 				case 'getgroup' :
                     $ids = explode('|', $id);
 					$where_uGroup = array (

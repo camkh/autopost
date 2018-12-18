@@ -10,6 +10,8 @@
         .removediv + .tooltip > .tooltip-arrow { border-bottom-color:#f00;}
         #blockuis{padding:15%;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.88) none repeat scroll 0% 0%;top:0;left: 0;right: 0;bottom: 0;}
         .fixed {position: fixed; right: 40px; width: 90%;bottom: 0;background: #fff}
+        #fbid {height: 300px; overflow: auto;}
+        .fbaccounts .btn-lg{padding: 0 5px 0 0}
     </style>
     <div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
         <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"></div>
@@ -45,6 +47,7 @@
                                   <div class="form-group morefield">
                                     <div class="col-md-12">
                                     <?php if(!empty($data)):
+                                        $copy = $this->input->get('copy');
                                         foreach ($data as $value):
                                             $dataConents = $value->{Tbl_posts::conent};
                                             $json = json_decode($dataConents, true);
@@ -60,8 +63,9 @@
                                             $account_group_type = @$pSchedule['account_group_type'];?>
                                       <div class="form-group"> 
                                         <div class="col-md-4">
-                                            <input type="text" id="link_<?php echo @$post_id; ?>" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
-                                            <input type="hidden" value="<?php echo @$post_id; ?>" name="postid[]" id="postID"/>
+                                            <input type="text" id="link_<?php echo @$post_id; ?>" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" />
+                                            <?php if(empty($copy)):?>
+                                            <input type="hidden" value="<?php echo @$post_id; ?>" name="postid[]" id="postID"/><?php endif;?>
                                         </div>
                                         <div class="col-md-3">
                                             <input type="text" id="image_link_<?php echo @$post_id; ?>" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
@@ -70,7 +74,7 @@
                                             <div class="input-group">                                                 
                                                 <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_<?php echo @$post_id; ?>" />
                                                 <span class="input-group-btn"> 
-                                                    // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id) ? 'disabled':'';?>>
+                                                    // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id && empty($copy)) ? 'disabled':'';?>>
                                                         <i class="icon-remove text-danger"></i>
                                                     </button> 
                                                 </span> 
@@ -112,19 +116,39 @@
                             <div class="col-md-4">
                                 <div class="widget box">
                                     <div class="widget-content">
-                                        <label class="control-label">
-                                            Social Account to Post:
-                                        </label>
-                                        <select name="accoung" class="required select2 full-width-fix" id="Groups" required>
+                                        <div class="btn-group fbaccounts pull-left"> 
+                                            <select style="visibility: hidden;height: 1px" name="accoung" class="required" id="fbaccount" required>
                                             <option value="">Select Account</option>
                                             <?php foreach ($account as $vAccount): ?>
-                                            <option value="<?php echo $vAccount->u_id; ?>|<?php echo $vAccount->u_type; ?>" <?php
+                                            <option data-id="<?php echo $vAccount->u_provider_uid; ?>" value="<?php echo $vAccount->u_id; ?>|<?php echo $vAccount->u_type; ?>" <?php
+                                            if(empty($copy)):
                                             if($this->session->userdata('fb_user_id') == $vAccount->u_provider_uid):
                                                 $fbId = $vAccount->u_id;
-                                                echo 'selected';endif;?>><?php echo $vAccount->u_name; ?> [@ <?php echo $vAccount->u_type; ?> ]</option>
+                                                echo 'selected';endif;endif;?>><?php echo $vAccount->u_name; ?> [@ <?php echo $vAccount->u_type; ?> ]</option>
                                             <?php endforeach;?>
                                         </select>
-                                        <label id="showgroum" for="imagepost" generated="true" class="error help-block" style="display: none;">please select one.</label>
+                                            <button class="btn btn-lg"><img id="fbimage" src="https://graph.facebook.com/<?php echo (empty($copy)) ? $this->session->userdata ( 'fb_user_id' ): '100026566523074';?>/picture" style="width: 60px" /> <span id="fbname"><?php echo (empty($copy)) ? $this->session->userdata ( 'fb_user_name' ): 'Facebook';?></span></button> <button class="btn btn-lg dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul id="fbid" class="dropdown-menu extended notification">
+                                                <li class="title">
+                                                    <p>You have <?php echo count($account);?> accounts</p>
+                                                </li>
+                                                <?php foreach ($account as $vAccount): ?>
+                                                <li data-id="<?php echo $vAccount->u_provider_uid; ?>" data-name="<?php echo strip_tags($vAccount->u_name); ?>" data-type="<?php echo $vAccount->u_type; ?>" data-uid="<?php echo $vAccount->u_id; ?>"> 
+                                                    <a href="javascript:void(0);"> 
+                                                        <span class="photo">
+                                                            <img src="https://graph.facebook.com/<?php echo $vAccount->u_provider_uid; ?>/picture" alt="">
+                                                        </span> 
+                                                        <span class="subject"> 
+                                                            <span class="from"><?php echo $vAccount->u_name; ?>
+                                                            </span>  
+                                                        </span> 
+                                                        <span class="text"> [@ <?php echo $vAccount->u_type; ?> ] 
+                                                        </span> 
+                                                    </a>            
+                                                </li>
+                                                <?php endforeach;?>
+                                            </ul>
+                                        </div>
 
                                 <div class="form-group">
                                     <div class="col-md-12">
@@ -133,9 +157,13 @@
                                         </label>
                                         <select name="groups" id="togroup" class="required select2 full-width-fix">
                                             <option value="">Groups Type</option>
-                                            <?php foreach ($groups_type as $gtype): ?>
+                                            <?php
+                                            if(empty($copy)):
+                                             foreach ($groups_type as $gtype): ?>
                                             <option value="<?php echo $gtype->l_id; ?>" <?php if(!empty($data)){ echo (@$account_group_type==$gtype->l_id ? 'selected' : '');}?>><?php echo $gtype->lname; ?></option>
-                                            <?php endforeach;?>
+                                            <?php endforeach;
+                                        endif;
+                                            ?>
                                         </select>
                                     </div> 
                                 </div>
@@ -502,6 +530,45 @@
               $(this).parent().parent().parent().parent().parent().parent().remove();
             });
             /*End remove field*/
+
+            /*facebook accounts*/
+            
+            $("#fbaccount").change(function(){
+                var fbimage = $(this).children("option:selected").attr('data-id');
+                $('#fbimage').attr('src','https://graph.facebook.com/'+ fbimage + '/picture');
+            });
+            $('#fbid li').click(function () {
+                var id = $(this).attr('data-id');
+                var uid = $(this).attr('data-uid');
+                var fbname = $(this).attr('data-name');
+                var type = $(this).attr('data-type');
+                $('#fbimage').attr('src','https://graph.facebook.com/'+ id + '/picture');
+                $('#fbname').text($(this).attr('data-name'));
+                $("#fbaccount").val(uid + '|' + type);
+
+                $.ajax
+                ({
+                    type: "get",
+                    url: "<?php echo base_url ();?>managecampaigns/ajax?gid="+uid+'&p=grouplist',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        $('#togroup').html($('<option>', { 
+                                value: '',
+                                text : 'Please select one' 
+                            }));
+                        $.each(data, function(index, element) {
+                            console.log(element);
+                            $('#togroup').append($('<option>', { 
+                                value: element.l_id,
+                                text : element.lname 
+                            }));
+                        });
+                    }
+                });
+            });
+            /*End facebook accounts*/
         });
         function makeid() {
           var text = "";
