@@ -250,4 +250,4 @@ function checkPostBeforeShare() {
                         </div>';
 }
 ?>
-<?php if(!empty($action) && $action == 'checkpost'):?><meta http-equiv="Refresh" content="2; url=<?php echo base_url();?>"><?php endif;?> 
+<?php if(!empty($action) && $action == 'checkpost'):?><meta http-equiv="Refresh" content="2; url=<?php echo base_url();?>Facebook/share?post=checkpost"><?php endif;?> 
