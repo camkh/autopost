@@ -1,3 +1,6 @@
+<script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/wysihtml5.min.js"></script> 
+<script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Battambang" rel="stylesheet">
 <?php if ($this->session->userdata('user_type') != 4):
     if(!empty($data)):
         foreach ($data as $value):
@@ -26,6 +29,13 @@
         .help-bloc{color:red;}
         #blockuis{padding:15%;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.88) none repeat scroll 0% 0%;top:0;left: 0;right: 0;bottom: 0;}
         .fixed {position: fixed; right: 40px; width: 90%;bottom: 0;background: #fff}
+        .wysihtml5-action-active{color: #1e88e5!important}
+        .btn.wysihtml5-action-active {background-color:#fff!important;}
+        .btn.disabled {color: #D1D1D1!important;}
+        .wysihtml5-toolbar {margin-top: 3px!important}
+        ul.wysihtml5-toolbar > li{margin:0px 5px -1px 0px!important}
+        .khmer {font-family: 'Battambang';font-size: 14px!important;font-weight: 400!important;}
+        .counts{color:#ff0000;}
     </style>
     <div class="page-header">
     </div>
@@ -45,62 +55,95 @@
                     <div class="widget-content">
                         <div class="row" style="margin-bottom:10px;">
                             <div class="col-md-8">
-                                <div class="form-group">
-                                    <div class="col-md-9">
-                                        <input type="text" name="ytid" class="form-control" placeholder="Get from Youtube Channel ID">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="input-group ytid">               
-                                            <select name="ytmax" class="select2" style="width: 60px">
-                                                    <option value="5" >5</option>
-                                                    <option value="10" selected>10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="60">60</option>
-                                            </select> 
-                                            <span class="input-group-btn"> 
-                                                <button class="btn btn-default" id="getyt" type="button">Get!</button> 
-                                            </span> 
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- post by iMacros -->
-                                <div class="form-group">
-                                    <div class="col-md-6">តំណ / URL</div>
-                                    <div class="col-md-5">ចំណងជើង / Title</div>                                    
-                                  <div class="col-md-1">
-                                    <span id="addfield" class="addfield btn btn-success  pull-right bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
-                                  </div>
-                                </div>
-                                <div class="optionBox"  id="postimacros">
-                                  <div class="form-group morefield">
-                                    <div class="col-md-12">
-                                      <div class="form-group"> 
-                                        <div class="col-md-4">
-                                            <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
-                                            <input type="hidden" value="<?php echo @$post_id; ?>" name="postid" id="postID"/>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <img id="show_link_1" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:120px"/>
-                                            <input type="hidden" id="image_link_1" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="input-group">                                                 
-                                                <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_1" />
-                                                <input type="hidden" id="name_link_1" value="" class="form-control post-option" name="name[]" />
-                                                <span class="input-group-btn"> 
-                                                    // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id) ? 'disabled':'';?>>
-                                                        <i class="icon-remove text-danger"></i>
-                                                    </button> 
-                                                </span> 
+                                <div class="widget box">
+                                    <div class="widget-content"> 
+                                        <div class="row-border">
+                                            <div class="form-group">
+                                                <div class="col-md-9">
+                                                    <input type="text" name="ytid" class="form-control" placeholder="Get from Youtube Channel ID">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group ytid">               
+                                                        <select name="ytmax" class="select2" style="width: 60px">
+                                                                <option value="5" >5</option>
+                                                                <option value="10" selected>10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="60">60</option>
+                                                        </select> 
+                                                        <span class="input-group-btn"> 
+                                                            <button class="btn btn-default" id="getyt" type="button">Get!</button> 
+                                                        </span> 
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <textarea name="conents[]" id="description_link_1" class="form-control post-option" style="height: 58px"></textarea>
                                         </div>
-                                      </div>
-                                    </div>
-                                  </div>
+                                    </div> 
                                 </div>
-                                <!-- End post by iMacros -->
+
+                                <div id="postimacros"​ class="morefield">
+                                    <div class="widget box optionBox" id="post_1">
+                                        <div class="widget-header">                                             
+                                            <h4><i class="icon-reorder"></i> Post <span class="counts">1</span></h4>
+                                            <div class="toolbar no-padding"> 
+                                                <div class="btn-group">
+                                                    <span class="btn btn-xs btn-inverse" onclick="getcontent('1');"><i class="icon-refresh"></i></span> 
+                                                    <button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" onclick="removediv('1');" <?php echo ($post_id) ? 'disabled':'';?>>
+                                                                            <i class="icon-remove text-danger"></i>
+                                                                        </button>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        <div class="widget-content"> 
+                                            <div class="row-border">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                      <div class="form-group"> 
+                                                        <div class="col-md-12">
+                                                            <table style="width: 100%;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="form-group" style="margin-bottom: 3px">
+                                                                                <div class="col-md-12"> 
+                                                                                <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
+                                                                                <input type="hidden" value="<?php echo @$post_id; ?>" name="postid" id="postID"/>
+                                                                                </div>
+                                                                            </div>                                                   
+                                                                            <div class="form-group" style="border: none;margin-bottom: 3px">
+                                                                                <label class="col-md-3 khmer">ចំណងជើងប្លុក</label>
+                                                                                <div class="col-md-9">
+                                                                                    <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_1" />
+                                                                                </div>   
+                                                                            </div>
+                                                                            <div class="form-group" style="border: none">
+                                                                                <label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label>
+                                                                                <div class="col-md-9">
+                                                                                    <input type="text" id="name_link_1" value="" class="form-control post-option" name="name[]" />
+                                                                                </div>   
+                                                                            </div>
+                                                                        </td>
+                                                                        <td style="width: 150px;">
+                                                                            <img id="show_link_1" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/>
+                                                                            <input type="hidden" id="image_link_1" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            
+                                                        </div>
+                                                      </div>
+                                                      <div class="form-group" style="border: none">
+                                                        <div class="col-md-12">
+                                                          <textarea name="conents[]" id="description_link_1" class="form-control post-option wysiwygs" style="height: 58px"></textarea>
+                                                      </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
 
                                 <!-- post in api -->
                                 <div class="row" id="postapi" style="display: none;">
@@ -500,6 +543,7 @@
 
                         <div class="form-group fixed">
                             <div class="col-md-12">
+                                <span id="addfield1" class="addfield btn btn-success bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
                                 <input name="submit" type="submit" value="Public Content" class="btn btn-primary pull-right" />
                             </div>
                         </div> 
@@ -508,8 +552,19 @@
             </div>
         </form>
     </div>
-    <script>
+    <script>      
         $(document).ready(function () {
+            $(".wysiwygs").wysihtml5({
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true                
+                "link": true, //Button to insert a link. Default true
+                "image": true, //Button to insert an image. Default true,
+                "color": false, //Button to change color of font  
+                "blockquote": false,
+                "html": true, //Button which allows you to edit the generated HTML. Default false
+            });
+
             $('input[name=paction]').click(function () {
                 if($(this).val() == 0) {
                     $('#postSchedule').slideUp();
@@ -583,18 +638,29 @@
                 var description = 'description_link_' + code;
                 var image = 'image_link_' + code;
                 var image_show = 'show_link_' + code;
-              $('.morefield:last').after('<div class="form-group morefield"><div class="col-md-12"><div class="form-group"><div class="col-md-4"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div><div class="col-md-3"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:120px"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></div><div class="col-md-5"><div class="input-group"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /><input type="hidden" id="'+name+'" value="" class="form-control post-option" name="name[]" /><span class="input-group-btn"><button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button"><i class="icon-remove text-danger"></i></button></span></div><textarea name="conents[]" id="'+description+'" class="form-control post-option" style="height: 58px"></textarea></div></div></div></div>');
+                var n = $( ".optionBox" ).length;
+              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widget-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
+                getEditor(code);
+                updateCount();
+                window.location.hash = 'post_'+code;
                 //var count = $(".listofsong").length;
                 //$("#countdiv").text("ចំនួន " + count + " បទ");
-            })           
+            });        
             /*End add field*/
 
-            /*remove field*/
-             $('.optionBox').on('click','.removediv',function() {
-              $(this).parent().parent().parent().parent().parent().parent().remove();
+            $(".widget .toolbar .widget-refresh").click(function () {
+                var a = $(this).parents(".widget");
+                App.blockUI(a);
+                window.setTimeout(function () {
+                    App.unblockUI(a);
+                    noty({
+                        text: "<strong>Widget updated.</strong>",
+                        type: "success",
+                        timeout: 1000
+                    })
+                }, 1000)
             });
-            /*End remove field*/
         });
         function makeid() {
           var text = "";
@@ -604,6 +670,35 @@
             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
           return text;
+        }
+
+        function removediv(id){
+             $("#post_" + id).remove();
+             updateCount();
+        }
+
+        function getcontent(id) {
+            if(id!='') {
+                //$("#blockuis").show();
+                var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+                  .done(function(data) {
+                    if ( data ) {                        
+                        //$("#blockuis").hide();
+                        var obj = JSON.parse(data);
+                        if(!obj.error) {
+                            //console.log(obj.content[0].content);
+                           $('#title_link_' + id).val(obj.content[0].title);
+                           $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
+                        }
+                    }
+                  })
+                  .fail(function() {
+                    alert( "error" );
+                  })
+                  .always(function() {
+                    //alert( "complete" );
+                  }); 
+            }
         }
         function getLink(e) {
             $("#blockuis").show();
@@ -633,6 +728,28 @@
             $("#singerimageFist").val(e);
             $("#imageviewFist").html('<img style="width:100%;height:55px;" src="' + e + '"/>');
         }
+
+        function updateCount() {
+            $(".optionBox .counts").each(function (index, value) {
+                index = (index + 1);
+                var id = $(this).parent().parent().parent().attr('id'); 
+               $("#" + id + ' .counts').html(index);
+            });
+        }
+
+        function getEditor (id) {  
+            $("#description_link_" + id).wysihtml5({
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true                
+                "link": true, //Button to insert a link. Default true
+                "image": true, //Button to insert an image. Default true,
+                "color": false, //Button to change color of font  
+                "blockquote": false,
+                "html": true, //Button which allows you to edit the generated HTML. Default false
+            });
+        }
+
     </script>
 
     <?php
