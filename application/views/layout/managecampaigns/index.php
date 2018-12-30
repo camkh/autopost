@@ -214,7 +214,7 @@
 						                    $link = $glink . '?s=' . $uniq_id;
 						                    //$link = get_bitly_short_url( $link, BITLY_USERNAME, BITLY_API_KEY );
         									?>
-        									<input id="copy-text" type="text" name="glink" value="<?php echo $value->{Tbl_posts::name}.' 👉ขอแค่คำว่า ขอบคุณ #กดแชร์ 👉 ';echo $link;?>" class="form-control" onClick="copyText(this);" readonly/>
+        									<input id="copy-text" type="text" name="glink" value="<?php echo $value->{Tbl_posts::name}.' 👉เม้นคำว่า ขอบคุณ แล้วกดเข้าไปดูเลขได้เลย #กดแชร์ 👉 ';echo $link;?>" class="form-control" onClick="copyText(this);" readonly/>
         <?php if ($value->{Tbl_posts::status} == 1) { ?>
                                                 <span
 									class="label label-success"> Active </span>

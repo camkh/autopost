@@ -1,5 +1,6 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/wysihtml5.min.js"></script> 
 <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/blockui/jquery.blockUI.min.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Battambang" rel="stylesheet">
 <?php if ($this->session->userdata('user_type') != 4):
     if(!empty($data)):
@@ -87,7 +88,7 @@
                                             <h4><i class="icon-reorder"></i> Post <span class="counts">1</span></h4>
                                             <div class="toolbar no-padding"> 
                                                 <div class="btn-group">
-                                                    <span class="btn btn-xs btn-inverse" onclick="getcontent('1');"><i class="icon-refresh"></i></span> 
+                                                    <span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent('1');"><i class="icon-refresh"></i></span> 
                                                     <button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" onclick="removediv('1');" <?php echo ($post_id) ? 'disabled':'';?>>
                                                                             <i class="icon-remove text-danger"></i>
                                                                         </button>
@@ -552,7 +553,58 @@
             </div>
         </form>
     </div>
-    <script>      
+    <script>  
+        var Apps = function () {
+            return {
+                init: function () {
+                    v();
+                    t();
+                    u();
+                    f();
+                    d();
+                    h();
+                    e();
+                    i();
+                    k();
+                    j();
+                    a();
+                    p()
+                },
+                getLayoutColorCode: function (x) {
+                    if (m[x]) {
+                        return m[x]
+                    } else {
+                        return ""
+                    }
+                },
+                blockUI: function (x, y) {
+                    var x = $(x);
+                    x.block({
+                        message: '<img src="<?php echo base_url(); ?>themes/layout/blueone/assets/img/ajax-loading.gif" alt="">',
+                        centerY: y != undefined ? y : true,
+                        css: {
+                            top: "10%",
+                            border: "none",
+                            padding: "2px",
+                            backgroundColor: "none"
+                        },
+                        overlayCSS: {
+                            backgroundColor: "#000",
+                            opacity: 0.05,
+                            cursor: "wait"
+                        }
+                    })
+                },
+                unblockUI: function (x) {
+                    $(x).unblock({
+                        onUnblock: function () {
+                            $(x).removeAttr("style")
+                        }
+                    })
+                }
+            }
+        }();   
+
         $(document).ready(function () {
             $(".wysiwygs").wysihtml5({
                 "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
@@ -649,17 +701,50 @@
             });        
             /*End add field*/
 
-            $(".widget .toolbar .widget-refresh").click(function () {
-                var a = $(this).parents(".widget");
-                App.blockUI(a);
-                window.setTimeout(function () {
-                    App.unblockUI(a);
-                    noty({
-                        text: "<strong>Widget updated.</strong>",
-                        type: "success",
-                        timeout: 1000
-                    })
-                }, 1000)
+            $(".widget .toolbar .widgets-refresh").click(function () {
+                var a = $(this).parents(".optionBox");
+                var ids = $(this).parents(".widget").attr('id');                
+                Apps.blockUI(a);
+                if(ids!='') {
+                    var id = ids.split("post_");
+                    id = id[1];
+                    console.log(id);
+                    var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+                      .done(function(data) {
+                        console.log(data);
+                        if ( data ) {                            
+                            var obj = JSON.parse(data);                            
+                            if(!obj.error) {
+                               $('#title_link_' + id).val(obj.content[0].title);
+                               $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
+                                window.setTimeout(function () {
+                                    Apps.unblockUI(a);
+                                    noty({
+                                        text: "<strong>Success!</strong>",
+                                        type: "success",
+                                        timeout: 1000
+                                    })
+                                }, 1000)
+                            }
+                        }
+                        if ( !data ) {
+                            window.setTimeout(function () {
+                                Apps.unblockUI(a);
+                                noty({
+                                    text: "<strong>No data</strong>",
+                                    type: "error",
+                                    timeout: 1000
+                                })
+                            }, 1000)
+                        }
+                      })
+                      .fail(function() {
+                        alert( "error" );
+                      })
+                      .always(function() {
+                        //alert( "complete" );
+                      }); 
+                }
             });
         });
         function makeid() {
@@ -678,27 +763,27 @@
         }
 
         function getcontent(id) {
-            if(id!='') {
-                //$("#blockuis").show();
-                var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
-                  .done(function(data) {
-                    if ( data ) {                        
-                        //$("#blockuis").hide();
-                        var obj = JSON.parse(data);
-                        if(!obj.error) {
-                            //console.log(obj.content[0].content);
-                           $('#title_link_' + id).val(obj.content[0].title);
-                           $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
-                        }
-                    }
-                  })
-                  .fail(function() {
-                    alert( "error" );
-                  })
-                  .always(function() {
-                    //alert( "complete" );
-                  }); 
-            }
+            // if(id!='') {
+            //     //$("#blockuis").show();
+            //     var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+            //       .done(function(data) {
+            //         if ( data ) {                        
+            //             //$("#blockuis").hide();
+            //             var obj = JSON.parse(data);
+            //             if(!obj.error) {
+            //                 //console.log(obj.content[0].content);
+            //                $('#title_link_' + id).val(obj.content[0].title);
+            //                $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
+            //             }
+            //         }
+            //       })
+            //       .fail(function() {
+            //         alert( "error" );
+            //       })
+            //       .always(function() {
+            //         //alert( "complete" );
+            //       }); 
+            // }
         }
         function getLink(e) {
             $("#blockuis").show();
