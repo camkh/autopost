@@ -260,8 +260,12 @@
                                                 </label>
                                                 <label class="radio-inline">
                                                     <input type="radio" value="2" name="bloglink" class="required" required />
-                                                    <i class="subtopmenu hangmeas">None content</i>
-                                                </label>    
+                                                    <i class="subtopmenu hangmeas">With Player</i>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="link" name="bloglink" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Link</i>
+                                                </label>   
                                             </div>
                                         </div>
 
