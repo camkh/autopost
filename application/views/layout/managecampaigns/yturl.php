@@ -691,7 +691,7 @@
                 var image = 'image_link_' + code;
                 var image_show = 'show_link_' + code;
                 var n = $( ".optionBox" ).length;
-              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widget-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
+              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
                 getEditor(code);
                 updateCount();
@@ -702,16 +702,70 @@
             /*End add field*/
 
             $(".widget .toolbar .widgets-refresh").click(function () {
-                var a = $(this).parents(".optionBox");
-                var ids = $(this).parents(".widget").attr('id');                
+                // var a = $(this).parents(".optionBox");
+                // var ids = $(this).parents(".widget").attr('id');                
+                // Apps.blockUI(a);
+                // if(ids!='') {
+                //     var id = ids.split("post_");
+                //     id = id[1];
+                //     var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+                //       .done(function(data) {
+                //         if ( data ) {                            
+                //             var obj = JSON.parse(data);                            
+                //             if(!obj.error) {
+                //                $('#title_link_' + id).val(obj.content[0].title);
+                //                $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
+                //                 window.setTimeout(function () {
+                //                     Apps.unblockUI(a);
+                //                     noty({
+                //                         text: "<strong>Success!</strong>",
+                //                         type: "success",
+                //                         timeout: 1000
+                //                     })
+                //                 }, 1000)
+                //             }
+                //         }
+                //         if ( !data ) {
+                //             window.setTimeout(function () {
+                //                 Apps.unblockUI(a);
+                //                 noty({
+                //                     text: "<strong>No data</strong>",
+                //                     type: "error",
+                //                     timeout: 1000
+                //                 })
+                //             }, 1000)
+                //         }
+                //       })
+                //       .fail(function() {
+                //         alert( "error" );
+                //       })
+                //       .always(function() {
+                //         //alert( "complete" );
+                //       }); 
+                // }
+            });
+        });
+        function makeid() {
+          var text = "";
+          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+          return text;
+        }
+
+        function removediv(id){
+             $("#post_" + id).remove();
+             updateCount();
+        }
+
+        function getcontent(id) {
+            var a = $("#post_"+id);             
                 Apps.blockUI(a);
-                if(ids!='') {
-                    var id = ids.split("post_");
-                    id = id[1];
-                    console.log(id);
+                if(id!='') {
                     var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
                       .done(function(data) {
-                        console.log(data);
                         if ( data ) {                            
                             var obj = JSON.parse(data);                            
                             if(!obj.error) {
@@ -745,45 +799,48 @@
                         //alert( "complete" );
                       }); 
                 }
-            });
-        });
-        function makeid() {
-          var text = "";
-          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-          return text;
-        }
-
-        function removediv(id){
-             $("#post_" + id).remove();
-             updateCount();
-        }
-
-        function getcontent(id) {
-            // if(id!='') {
-            //     //$("#blockuis").show();
-            //     var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
-            //       .done(function(data) {
-            //         if ( data ) {                        
-            //             //$("#blockuis").hide();
-            //             var obj = JSON.parse(data);
-            //             if(!obj.error) {
-            //                 //console.log(obj.content[0].content);
-            //                $('#title_link_' + id).val(obj.content[0].title);
-            //                $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
-            //             }
-            //         }
-            //       })
-            //       .fail(function() {
-            //         alert( "error" );
-            //       })
-            //       .always(function() {
-            //         //alert( "complete" );
-            //       }); 
-            // }
+            // var a = $(this).parents(".optionBox");
+                // var ids = $(this).parents(".widget").attr('id');                
+                // Apps.blockUI(a);
+                // if(ids!='') {
+                //     var id = ids.split("post_");
+                //     id = id[1];
+                //     var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+                //       .done(function(data) {
+                //         if ( data ) {                            
+                //             var obj = JSON.parse(data);                            
+                //             if(!obj.error) {
+                //                $('#title_link_' + id).val(obj.content[0].title);
+                //                $('#description_link_' + id).data("wysihtml5").editor.setValue(obj.content[0].content);
+                //                 window.setTimeout(function () {
+                //                     Apps.unblockUI(a);
+                //                     noty({
+                //                         text: "<strong>Success!</strong>",
+                //                         type: "success",
+                //                         timeout: 1000
+                //                     })
+                //                 }, 1000)
+                //             }
+                //         }
+                //         if ( !data ) {
+                //             window.setTimeout(function () {
+                //                 Apps.unblockUI(a);
+                //                 noty({
+                //                     text: "<strong>No data</strong>",
+                //                     type: "error",
+                //                     timeout: 1000
+                //                 })
+                //             }, 1000)
+                //         }
+                //       })
+                //       .fail(function() {
+                //         alert( "error" );
+                //       })
+                //       .always(function() {
+                //         //alert( "complete" );
+                //       }); 
+                // }
         }
         function getLink(e) {
             $("#blockuis").show();
