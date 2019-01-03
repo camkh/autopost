@@ -981,18 +981,25 @@ class Managecampaigns extends CI_Controller {
         $strTime = strtotime(date("Y-m-d H:i:s"));
         $dataContent          = new stdClass();
 
-
-        if($blink == 2) {
-            $dataMeta = array(
-                'titleEn' => $title,
-                'image' => $image,
-                'videoID' => $vid
-            );
-            $customcode = json_encode($dataMeta);
-            $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
-        } else {
-            $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
-            $customcode = '';
+        switch ($blink) {
+            case '2':
+                $dataMeta = array(
+                    'titleEn' => $title,
+                    'image' => $image,
+                    'videoID' => $vid
+                );
+                $customcode = json_encode($dataMeta);
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
+                break;
+            case 'link':
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div>VDO===>>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div id="someAds"></div>';
+                $label = 'link';
+                $customcode = '';
+                break;
+            default:
+                $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+                $customcode = '';
+                break;
         }
         $bodytext = str_replace("<br />", "\n", $bodytext);
         $title = (string) $title;
