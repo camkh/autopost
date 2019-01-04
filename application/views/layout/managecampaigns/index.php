@@ -143,9 +143,9 @@
                             class="icon-angle-down"></i>
                         </span>
                         <ul class="dropdown-menu pull-right" style="text-align: left;">
-                            <li><button style="width: 100%" type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button></li>
-                            <li><button style="width: 100%" type="submit" id="multiedit" name="edit"
-									class="btn btn-primary pull-right" value="edit"><i class="icon-edit"></i> Edit</button></li>                         
+                            <li><button style="width: 100%" type="submit" id="multiecopy1" name="copyto" class="btn btn-inverse pull-right multiecopy" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button></li>
+                            <li><button style="width: 100%" type="submit" id="multiedit1" name="edit"
+									class="btn btn-primary pull-right multiedit" value="edit"><i class="icon-edit"></i> Edit</button></li>                         
                         </ul> 
 					</div>
 				</div>
@@ -278,8 +278,8 @@
 								<button type="submit" id="multidel" name="delete"
 									class="btn btn-google-plus pull-right" value="delete"><i class="icon-trash"></i> Delete</button>
 								<button type="submit" id="multiedit" name="edit"
-									class="btn btn-primary pull-right" value="edit" style="margin-right: 3px"><i class="icon-edit"></i> Edit</button>
-								<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button>
+									class="btn btn-primary pull-right multiedit" value="edit" style="margin-right: 3px"><i class="icon-edit"></i> Edit</button>
+								<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right multiecopy" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button>
 							</div>
 						</div>
 					</div>
@@ -291,7 +291,7 @@
 </div>
 <script type="text/javascript">
 	$( document ).ready(function(){
-		$('#multiecopy').click(function () {
+		$('.multiecopy').click(function () {
 		     if (!$('#itemid:checked').val()) {
 		            alert('please select one');
 		            return false;
