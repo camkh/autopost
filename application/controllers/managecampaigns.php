@@ -74,7 +74,10 @@ class Managecampaigns extends CI_Controller {
         }
         // Set Access Token to make Request
         if ($this->session->userdata('access_token')) {
-        	$this->session->set_userdata('access_token_time', time());
+            $access_token = $this->session->userdata('access_token');
+            $access_token_arr = json_decode($access_token);
+        	$this->session->set_userdata('access_token_time', time() + $access_token_arr->expires_in);
+            //$_SESSION['access_token_expiry'] = time() + $access_token_arr->expires_in;
         	$client->setAccessToken($this->session->userdata('access_token'));
         }
         
@@ -414,6 +417,9 @@ class Managecampaigns extends CI_Controller {
 	}
 
     public function yturl() {
+        $access_token = $this->session->userdata('access_token');
+        $data['access_token_time'] = $this->session->userdata('access_token_time');
+
         $this->Mod_general->checkUser ();
         $actions = $this->uri->segment ( 3 );
         $id = ! empty ( $_GET ['id'] ) ? $_GET ['id'] : '';
@@ -425,7 +431,7 @@ class Managecampaigns extends CI_Controller {
 
 
         $fbUserId = $this->session->userdata ( 'sid' );
-        if(empty($this->session->userdata('access_token'))) {
+        if(empty($access_token)) {
             $setUrl = base_url() . 'managecampaigns/account' . '?back='. urlencode(current_url());
             redirect($setUrl);
             exit();

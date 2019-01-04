@@ -610,6 +610,15 @@
         }();   
 
         $(document).ready(function () {
+            var access_token_time = "<?php echo date("F j, Y G:i:s",$access_token_time);?>";
+            var token_time = new Date(access_token_time).getTime();
+            var myVar = setInterval(function() { 
+                var timeNow = new Date().getTime();
+                if(timeNow > token_time) { 
+                    $('#cropModal').modal('show');
+                }    
+                //closeOnLoad("<?php echo base_url();?>managecampaigns");
+            }, 500);
             $(".wysiwygs").wysihtml5({
                 "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
                 "emphasis": true, //Italics, bold, etc. Default true
@@ -838,9 +847,29 @@
                 "html": true, //Button which allows you to edit the generated HTML. Default false
             });
         }
-
+        function myStopFunction() {
+            alert(11);
+          clearInterval(myVar);
+        }
     </script>
-
+<!-- crop Modal -->
+<div class="modal fade khmer" id="cropModal" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="cropModalLabel">Please Login again</h4>
+      </div>
+      <div class="modal-body bbody">
+            <center><p class="khmer" style="color: red;font-size: 18px !important;">សូមមេត្តាចុចប៉ូតុង login ខាងក្រោម ចូលម្ដងទៀត មុននឹងធ្វើការប៉ុស្ដិ៍<br/>
+ព្រោះផុតកំណត់ម៉ោងនៃការប្រើគណនីរបស់ google ហើយ</p>
+<a href="<?php echo base_url();?>managecampaigns/account" target="_blank"><img src="<?php echo base_url();?>themes/layout/img/google.png"/></a><p class="khmer">ដើម្បីកុំឲ្យបាត់ទិន្នន័យដែលអ្នកបានបញ្ចូលហើយ<br/>
+សូមចុច login រួចហើយ សឹមចុចបិទ</p></center>
+      </div>
+      <div class="modal-footer"><button onclick="myStopFunction()" data-dismiss="modal" class="btn btn-default" type="button">Close</button></div>
+    </div>
+  </div>
+</div> 
     <?php
  else:
     echo '<div class="alert fade in alert-danger" >
