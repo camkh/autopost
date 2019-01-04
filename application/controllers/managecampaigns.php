@@ -992,7 +992,7 @@ class Managecampaigns extends CI_Controller {
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
                 break;
             case 'link':
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div>VDO===>>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div id="someAds"></div>';
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div>คลิปดูวีดีโอ==>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div id="someAds"></div>';
                 $label = 'link';
                 $customcode = '';
                 break;
