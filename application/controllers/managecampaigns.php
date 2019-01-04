@@ -247,7 +247,7 @@ class Managecampaigns extends CI_Controller {
             return confirm('Do you want to delete all?');
     }
  });
- $('#multiedit').click(function () {
+ $('.multiedit').click(function () {
      if (!$('#itemid:checked').val()) {
             alert('please select one');
             return false;
