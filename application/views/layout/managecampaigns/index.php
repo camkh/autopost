@@ -137,7 +137,16 @@
 						</span>
 						<span class="btn btn-xs widget-collapse"> <i
 							class="icon-angle-down"></i>
-						</span> 
+						</span>
+						<span class="btn btn-xs dropdown-toggle"
+                            data-toggle="dropdown"> <i class="icon-cog"></i> <i
+                            class="icon-angle-down"></i>
+                        </span>
+                        <ul class="dropdown-menu pull-right" style="text-align: left;">
+                            <li><button style="width: 100%" type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button></li>
+                            <li><button style="width: 100%" type="submit" id="multiedit" name="edit"
+									class="btn btn-primary pull-right" value="edit"><i class="icon-edit"></i> Edit</button></li>                         
+                        </ul> 
 					</div>
 				</div>
 			</div>
@@ -270,7 +279,7 @@
 									class="btn btn-google-plus pull-right" value="delete"><i class="icon-trash"></i> Delete</button>
 								<button type="submit" id="multiedit" name="edit"
 									class="btn btn-primary pull-right" value="edit" style="margin-right: 3px"><i class="icon-edit"></i> Edit</button>
-								<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class=" icon-copy"></i> Copy to</button>
+								<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button>
 							</div>
 						</div>
 					</div>
