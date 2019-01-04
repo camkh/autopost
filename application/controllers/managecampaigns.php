@@ -866,7 +866,7 @@ class Managecampaigns extends CI_Controller {
 
                         /*blog link*/
                         
-                        if(!empty($blink) && $blink != 2) {
+                        if(!empty($blink) && $blink == 1) {
                             /*show blog link*/
                             $where_link = array(
                                 'c_name'      => 'blog_linkA',
