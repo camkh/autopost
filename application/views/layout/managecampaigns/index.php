@@ -135,18 +135,6 @@
 							<a class="butt" href="<?php echo base_url() . 'facebook/shareation?post=getpost'; ?>"> <i class="icon-share"></i> <span class="hidden-xs">Share</span>
 							</a>
 						</span>
-						<span class="btn btn-xs widget-collapse"> <i
-							class="icon-angle-down"></i>
-						</span>
-						<span class="btn btn-xs dropdown-toggle"
-                            data-toggle="dropdown"> <i class="icon-cog"></i> <i
-                            class="icon-angle-down"></i>
-                        </span>
-                        <ul class="dropdown-menu pull-right" style="text-align: left;">
-                            <li><button style="width: 100%" type="submit" id="multiecopy1" name="copyto" class="btn btn-inverse pull-right multiecopy" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button></li>
-                            <li><button style="width: 100%" type="submit" id="multiedit1" name="edit"
-									class="btn btn-primary pull-right multiedit" value="edit"><i class="icon-edit"></i> Edit</button></li>                         
-                        </ul> 
 					</div>
 				</div>
 			</div>
@@ -183,6 +171,13 @@
 					</div>
 				</div>
 				<form method="post">
+					<div class="btn-group pull-right">
+						<button type="submit" id="multidel" name="delete"
+							class="btn btn-google-plus pull-right" value="delete"><i class="icon-trash"></i> Delete</button>
+						<button type="submit" id="multiedit" name="edit"
+							class="btn btn-primary pull-right multiedit" value="edit" style="margin-right: 3px"><i class="icon-edit"></i> Edit</button>
+						<button type="submit" id="multiecopy" name="copyto" class="btn btn-inverse pull-right multiecopy" value="copyto" style="margin-right: 3px"><i class="icon-copy"></i> Copy to</button>
+					</div>
 					<table
 						class="table table-striped table-bordered table-hover table-checkable datatable">
 						<thead>
