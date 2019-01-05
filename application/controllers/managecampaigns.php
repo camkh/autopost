@@ -856,7 +856,7 @@ class Managecampaigns extends CI_Controller {
                         curl_close($handle);
                         /*check url status*/
                         $file_title = basename($imgUrl);
-                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
                         copy($imgUrl, $fileName);                        
                         $image = $this->mod_general->uploadMedia($fileName);
                         @unlink($fileName);
