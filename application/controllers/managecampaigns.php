@@ -868,7 +868,7 @@ class Managecampaigns extends CI_Controller {
                         /*End upload photo first*/
                         $blink = $this->input->get('blink');
                         $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                        $link = $blogData->url;
+                        $link = @$blogData->url;
 
                         /*End Post to Blogger first*/
 
