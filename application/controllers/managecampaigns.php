@@ -859,74 +859,73 @@ class Managecampaigns extends CI_Controller {
                         $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
                         @copy($imgUrl, $fileName);                        
                         $image = $this->mod_general->uploadMedia($fileName);
-                        if($image) {
+                        if(!empty($image)) {
                             @unlink($fileName);
-                        }
-                        $imgur = true;
+                            $imgur = true;
+                            /*End upload photo first*/
+                            $blink = $this->input->get('blink');
+                            $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                            $link = @$blogData->url;
 
+                            /*End Post to Blogger first*/
 
-                        /*End upload photo first*/
-                        $blink = $this->input->get('blink');
-                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                        $link = @$blogData->url;
-
-                        /*End Post to Blogger first*/
-
-                        /*blog link*/
-                        
-                        if(!empty($blink) && $blink == 1) {
-                            /*show blog link*/
-                            $where_link = array(
-                                'c_name'      => 'blog_linkA',
-                                'c_key'     => $log_id,
-                            );
-                            $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                            if (!empty($query_blog_link[0])) {
-                                $data = json_decode($query_blog_link[0]->c_value);
-                                $big = array();
-                                foreach ($data as $key => $blog) {
-                                    $big[] = $blog->bid;                                
+                            /*blog link*/
+                            if(!empty($link)) {
+                                if(!empty($blink) && $blink == 1) {
+                                    /*show blog link*/
+                                    $where_link = array(
+                                        'c_name'      => 'blog_linkA',
+                                        'c_key'     => $log_id,
+                                    );
+                                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                                    if (!empty($query_blog_link[0])) {
+                                        $data = json_decode($query_blog_link[0]->c_value);
+                                        $big = array();
+                                        foreach ($data as $key => $blog) {
+                                            $big[] = $blog->bid;                                
+                                        }
+                                        $brand = mt_rand(0, count($big) - 1);
+                                        $blogRand = $big[$brand];
+                                        // if($blink == 2) {
+                                        //     $blogRand = $bid;
+                                        // }
+                                        
+                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;"><a href="'.$link.'" rel="nofollow"><span style="color: red;"><span style="font-size: 20px;">👇👇👇กด Link ข้างล่างได้เลย👇👇👇</span></span><div style="font-size: 25px;">'.$getPost[0]->p_name.'</div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/></a></div><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
+                                        $title = (string) $title;
+                                        $dataContent          = new stdClass();
+                                        $dataContent->setdate = false;        
+                                        $dataContent->editpost = false;
+                                        $dataContent->pid      = 0;
+                                        $dataContent->customcode = '';
+                                        $dataContent->bid     = $blogRand;
+                                        $dataContent->title    = $bid . $title;        
+                                        $dataContent->bodytext = $bodytext;
+                                        $dataContent->label    = 'blink';
+                                        $DataBlogLink = $this->postBlogger($dataContent);
+                                        $link = $DataBlogLink->url;
+                                    } 
                                 }
-                                $brand = mt_rand(0, count($big) - 1);
-                                $blogRand = $big[$brand];
-                                // if($blink == 2) {
-                                //     $blogRand = $bid;
-                                // }
-                                
-                                $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;"><a href="'.$link.'" rel="nofollow"><span style="color: red;"><span style="font-size: 20px;">👇👇👇กด Link ข้างล่างได้เลย👇👇👇</span></span><div style="font-size: 25px;">'.$getPost[0]->p_name.'</div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/></a></div><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
-                                $title = (string) $title;
-                                $dataContent          = new stdClass();
-                                $dataContent->setdate = false;        
-                                $dataContent->editpost = false;
-                                $dataContent->pid      = 0;
-                                $dataContent->customcode = '';
-                                $dataContent->bid     = $blogRand;
-                                $dataContent->title    = $bid . $title;        
-                                $dataContent->bodytext = $bodytext;
-                                $dataContent->label    = 'blink';
-                                $DataBlogLink = $this->postBlogger($dataContent);
-                                $link = $DataBlogLink->url;
-                            } 
-                        }
-                        /*End blog link*/
+                                /*End blog link*/
 
-                        /*update post*/
-                        if(!empty($link)) {
-                            $whereUp = array('p_id' => $pid);
-                            $content = array (
-                                'name' => $pConent->name,
-                                'message' => $pConent->message,
-                                'caption' => $pConent->caption,
-                                'link' => @$link,
-                                'picture' => @$image,                            
-                            );
-                            $dataPostInstert = array (
-                                Tbl_posts::conent => json_encode ( $content ),
-                                'p_post_to' => 0,
-                            );
-                            $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                                /*update post*/
+                                if(!empty($link)) {
+                                    $whereUp = array('p_id' => $pid);
+                                    $content = array (
+                                        'name' => $pConent->name,
+                                        'message' => $pConent->message,
+                                        'caption' => $pConent->caption,
+                                        'link' => @$link,
+                                        'picture' => @$image,                            
+                                    );
+                                    $dataPostInstert = array (
+                                        Tbl_posts::conent => json_encode ( $content ),
+                                        'p_post_to' => 0,
+                                    );
+                                    $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                                }
+                                /*End update post*/
+                            }
                         }
-                        /*End update post*/
                     }                    
 
 
