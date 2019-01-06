@@ -1425,7 +1425,11 @@ public function get_video_id($param, $videotype = '')
                 //     return false;
                 // }
                 /*End upload*/
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
     }
     public function uploadMediaWithText($file_path='')

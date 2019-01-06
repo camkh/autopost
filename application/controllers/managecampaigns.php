@@ -859,7 +859,9 @@ class Managecampaigns extends CI_Controller {
                         $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
                         @copy($imgUrl, $fileName);                        
                         $image = $this->mod_general->uploadMedia($fileName);
-                        @unlink($fileName);
+                        if($image) {
+                            @unlink($fileName);
+                        }
                         $imgur = true;
 
 
