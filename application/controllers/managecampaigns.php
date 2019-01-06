@@ -830,6 +830,7 @@ class Managecampaigns extends CI_Controller {
                     /*Post to Blogger first*/
                     $vid = $this->Mod_general->get_video_id($links);
                     $vid = $vid['vid'];
+                    $blink = $this->input->get('blink');
 
                     /*upload photo first*/
                     $imgur = false;        
@@ -863,7 +864,7 @@ class Managecampaigns extends CI_Controller {
                             @unlink($fileName);
                             $imgur = true;
                             /*End upload photo first*/
-                            $blink = $this->input->get('blink');
+                            
                             $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
                             $link = @$blogData->url;
 
