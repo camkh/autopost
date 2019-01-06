@@ -1361,7 +1361,7 @@ public function get_video_id($param, $videotype = '')
     public function uploadMedia($file_path='')
        {
         if(!empty($file_path)) {
-             if (!file_exists($file_path)) {
+             if (file_exists($file_path)) {
                 $imgName = $file_path;
                 $client_id = '51d22a7e4b628e4';
 
