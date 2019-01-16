@@ -841,25 +841,21 @@ class Managecampaigns extends CI_Controller {
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
                         }
-
-                        /*check url status*/
-                        $handle = curl_init($imgUrl);                        
-                        curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
-
-                        /* Get the HTML or whatever is linked in $url. */
-                        $response = curl_exec($handle);
-
-                        /* Check for 404 (file not found). */
-                        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-                        if($httpCode == 404) {
-                            $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
-                        }
-                        curl_close($handle);
-                        /*check url status*/
+                        $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
                         $file_title = basename($imgUrl);
                         $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
-                        @copy($imgUrl, $fileName);                        
-                        $image = $this->mod_general->uploadMedia($fileName);
+
+                        if (!preg_match('/ytimg.com/', $fileName)) {
+                            $imgUrl = $picture;
+                        }    
+
+                        if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
+                            copy($imgUrl, $fileName);                
+                            $image = $this->mod_general->uploadMedia($fileName);
+                        } else {
+                            $image = $picture;
+                        }
+
                         if(!empty($image)) {
                             @unlink($fileName);
                             $imgur = true;

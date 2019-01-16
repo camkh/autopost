@@ -1557,15 +1557,25 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         switch ($action) {
             case 'getpost':
                 /*get Post to post*/
+                $pid = @$this->input->get('pid');
                 $date = new DateTime("now");
                 $curr_date = $date->format('Y-m-d h:i:s');
-                $where_so = array (
+                if(!empty($pid)) {
+                    $where_so = array (
+                        'uid' => $log_id,
+                        'sh_status' => 0,
+                        'sh_type' => 'imacros',
+                        'p_id' => $pid,
+                        'social_id'=> $sid
+                    );
+                } else {
+                    $where_so = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
                         'sh_type' => 'imacros',
                         'social_id'=> $sid
-
-                );
+                    );
+                }
                 $dataShare = $this->Mod_general->select (
                     'share',
                     '*', 

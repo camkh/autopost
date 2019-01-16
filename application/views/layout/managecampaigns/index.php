@@ -239,6 +239,8 @@
 										</button>
 										<ul class="dropdown-menu">
 											<li><a
+												href="<?php echo base_url(); ?>facebook/shareation?post=getpost&pid=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-share"></i> Share now</a></li>
+											<li><a
 												href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-pencil"></i> Edit</a></li>
 											<li><a data-modal="true"
 												data-text="Do you want to delete this Blog?"
