@@ -273,6 +273,31 @@
                                 </form>
                             </div>
                         </div>
+
+                        <!-- bitly -->
+                        <div class="widget box">
+                            <div class="widget-header"></i> Bitly account</h4>
+                            </div>
+                            <div class="widget-content">
+                                <form class="form-horizontal row-border" id="bitly" method="post">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input type="text" name="buserid" class="form-control" style="width: 100%" placeholder="USER NAME (Bitly)" value="<?php echo @$bitly->username;?>" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input type="text" name="bapi" class="form-control" style="width: 100%" placeholder="API KEY (Bitly)" value="<?php echo @$bitly->api;?>" required />
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <input name="bitly" type="submit" value="Save" class="btn btn-primary pull-right" />
+                                </div> 
+                                </form>  
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                        <!-- Endbitly -->
                     </div>
 
                     <div class="col-md-9">

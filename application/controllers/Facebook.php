@@ -2013,7 +2013,19 @@ WHERE gl.`gu_grouplist_id` = {$id}");
     {
         if(!preg_match('/bit.ly/', $link)) {
             if($type == 1) {
-                $link = $this->get_bitly_short_url ( $link, BITLY_USERNAME, BITLY_API_KEY );
+                $log_id = $this->session->userdata ( 'user_id' );
+                $whereBit = array(
+                    'c_name'      => 'bitlyaccount',
+                    'c_key'     => $log_id,
+                );
+                $bitlyAc = $this->Mod_general->select('au_config', '*', $whereBit);
+                if(!empty($bitlyAc[0])) {
+                    $bitly = json_decode($bitlyAc[0]->c_value);
+                    $link = $this->get_bitly_short_url ( $link, $bitly->username, $bitly->api );
+                } else {
+                    return $link;
+                } 
+                
             } 
         }
         return $link;

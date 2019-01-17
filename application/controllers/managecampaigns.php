@@ -2169,6 +2169,17 @@ HTML;
         } 
         /*End show random Link*/
 
+        /*bitly account*/
+        $whereBit = array(
+            'c_name'      => 'bitlyaccount',
+            'c_key'     => $log_id,
+        );
+        $bitlyAc = $this->Mod_general->select('au_config', '*', $whereBit);
+        if(!empty($bitlyAc[0])) {
+            $data['bitly'] = json_decode($bitlyAc[0]->c_value);
+        } 
+        /*End bitly account*/
+
         /*delete blog data*/
         if(!empty($this->input->get('del'))) {
             $delId = $this->input->get('del');
@@ -2382,6 +2393,43 @@ HTML;
             //redirect(base_url() . 'managecampaigns/setting?m=add_success');
         }
         /*End save data random*/
+
+        /*bitly account*/
+        if ($this->input->post('buserid')) {
+            $buserid = $this->input->post('buserid');
+            $bapi = $this->input->post('bapi');
+            $inputBit = array(
+                'username'=> $buserid,
+                'api' => $bapi
+            );
+            $bitly = 'bitlyaccount';
+            $whereBit = array(
+                'c_name'      => $bitly,
+                'c_key'     => $log_id,
+            );
+            $query_bit = $this->Mod_general->select('au_config', '*', $whereBit);
+
+            /* check before insert */
+            if (empty($query_bit)) {
+                $data_bit = array(
+                    'c_name'      => $bitly,
+                    'c_value'      => json_encode($inputBit),
+                    'c_key'     => $log_id,
+                );
+                $this->Mod_general->insert('au_config', $data_bit);
+            } else {
+                $data_bit = array(
+                    'c_value'      => json_encode($inputBit)
+                );
+                $whereBit = array(
+                    'c_key'     => $log_id,
+                    'c_name'      => $bitly
+                );
+                $this->Mod_general->update('au_config', $data_bit,$whereBit);
+            }
+            redirect(base_url() . 'managecampaigns/setting?m=add_success_bitly');
+        }
+        /*End bitly account*/
 
         /*facebook accounts*/
         $whereFb = array (
