@@ -182,7 +182,7 @@ abstract class Remote
 		if (!class_exists('\ChipVN\Exception', FALSE)) {
             Loader::load('Exception');
         }
-        throw new Exception($message, $param);
+        //throw new Exception($message, $param);
     }
 
     /**

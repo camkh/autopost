@@ -1400,30 +1400,32 @@ public function get_video_id($param, $videotype = '')
                 $uploader = \ChipVN\Image_Uploader::factory($service);
                 $uploader->login($this->session->userdata('guid'), '0689989@Sn',$this->session->userdata('access_token'));
                 $image = $uploader->upload($imgName);
-                if(!empty($image)) {
-                    return $image;
-                } else {
-                    return false;
-                }
-                /*End upload to picasa*/
-
-                /*upload to imgur.com*/
-                // $image = file_get_contents($imgName);
-                // $ch = curl_init();
-                // curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
-                // curl_setopt($ch, CURLOPT_POST, TRUE);
-                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                // curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
-                // curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
-                // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                // $reply = curl_exec($ch);
-                // curl_close($ch);
-                // $reply = json_decode($reply);
-                // if(!empty($reply->data->link)) {
-                //     return $reply->data->link;
+                // if(!empty($image)) {
+                //     return $image;
                 // } else {
                 //     return false;
                 // }
+                /*End upload to picasa*/
+
+                if(empty($image)) {
+                    /*upload to imgur.com*/
+                    $image = file_get_contents($imgName);
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+                    curl_setopt($ch, CURLOPT_POST, TRUE);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    $reply = curl_exec($ch);
+                    curl_close($ch);
+                    $reply = json_decode($reply);
+                    if(!empty($reply->data->link)) {
+                        return $reply->data->link;
+                    } else {
+                        return false;
+                    }
+                }
                 /*End upload*/
             } else {
                 return false;

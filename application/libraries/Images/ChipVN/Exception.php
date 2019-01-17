@@ -17,7 +17,6 @@ class Exception extends \Exception
     public function __construct($message, $params = array(), $code = 0, Exception $previous = null)
     {
         $message = strtr($message, $params);
-
         parent::__construct($message, $code, $previous);
     }
 
