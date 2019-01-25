@@ -136,11 +136,11 @@ class Remote_Picasa extends Remote
         }
         $result = $this->http->getResponseText();
         preg_match('#<gphoto:width>(\d+)</gphoto:width>#', $result, $match);
-        $width = $match[1];
+        $width = @$match[1];
         preg_match('#<gphoto:height>(\d+)</gphoto:height>#', $result, $match);
-        $height = $match[1];
+        $height = @$match[1];
         preg_match('#src=\'([^\'"]+)\'#', $result, $match);
-        $url = $match[1];
+        $url = @$match[1];
 
         $size = ($this->_size !== NULL) ? $this->_size : max($width, $height);
         $url = str_replace(basename($url), 's' . $size . '/' . basename($url), $url);

@@ -11,6 +11,10 @@ class Managecampaigns extends CI_Controller {
 		$this->mod_general = new Mod_general ();
 		TIME_ZONE;
 		$this->load->library('Breadcrumbs');
+
+        if (!$this->session->userdata ( 'user_id' )) {
+            redirect(base_url() . '?continue=' . urlencode(base_url().'managecampaigns/index'));
+        } 
 	}
 	public function account($value='')
 	{
@@ -887,7 +891,7 @@ class Managecampaigns extends CI_Controller {
                                         //     $blogRand = $bid;
                                         // }
                                         
-                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><div style="text-align: center;"><a href="'.$link.'" rel="nofollow"><span style="color: red;"><span style="font-size: 20px;">👇👇👇กด Link ข้างล่างได้เลย👇👇👇</span></span><div style="font-size: 25px;">'.$getPost[0]->p_name.'</div><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/></a></div><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
+                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:238px"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;">&nbsp;</td><td style="background:url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
                                         $title = (string) $title;
                                         $dataContent          = new stdClass();
                                         $dataContent->setdate = false;        
