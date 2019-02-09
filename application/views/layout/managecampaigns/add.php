@@ -116,7 +116,7 @@
                             <div class="col-md-4">
                                 <div class="widget box">
                                     <div class="widget-content">
-                                        <div class="btn-group fbaccounts pull-left"> 
+                                        <div class="btn-group fbaccounts pull-left" id="fbaccounts"> 
                                             <select style="visibility: hidden;height: 1px" name="accoung" class="required" id="fbaccount" required>
                                             <option value="">Select Account</option>
                                             <?php foreach ($account as $vAccount): ?>
@@ -424,6 +424,9 @@
                                                 <label class="radio"> 
 
                                                     <select name="ppause" class="select2" style="width: 60px">
+                                                        <option value="2" <?php echo (@$wait_post==1 ? 'selected' : '');?>>1</option>
+                                                        <option value="2" <?php echo (@$wait_post==2 ? 'selected' : '');?>>2</option>
+                                                        <option value="3" <?php echo (@$wait_post==3 ? 'selected' : '');?>>3</option>
                                                             <option value="5" <?php echo (@$wait_post==5 ? 'selected' : '');?>>5</option>
                                                             <option value="10" <?php echo (@$wait_post==10 ? 'selected' : '');?>>10</option>
                                                             <option value="15" <?php if(!empty($data)) { echo (@$wait_post==15 ? 'selected' : '');} else { echo 'selected';}?>>15</option>
