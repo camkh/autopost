@@ -1358,7 +1358,7 @@ public function get_video_id($param, $videotype = '')
         return array('userAgent' => $u_agent, 'name' => $bname, 'version' => $version, 'platform' => $platform, 'pattern' => $pattern);
     }
 
-    public function uploadMedia($file_path='')
+    public function uploadMedia($file_path='', $param=array())
        {
         if(!empty($file_path)) {
              if (file_exists($file_path)) {
@@ -1388,13 +1388,49 @@ public function get_video_id($param, $videotype = '')
                     imagejpeg( $dst, $target_filename ); // adjust format as needed
                     imagedestroy( $dst );
                 }
+
+                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                if($im && imagefilter($im, IMG_FILTER_BRIGHTNESS, rand(10,100)))
+                {
+                    imagejpeg($im, $file_path);
+                    imagedestroy($im);
+                }
+
+                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                if($im && imagefilter($im, IMG_FILTER_CONTRAST, rand(10,30)))
+                {
+                    imagejpeg($im, $file_path);
+                    imagedestroy($im);
+                }
+
+                if(!empty($param['imgcolor'])) {
+                    $rgbColor = array();
+                    foreach(array('r', 'g', 'b') as $color){
+                        $rgbColor[$color] = mt_rand(0, 255);
+                    }
+                    $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                    if($im && imagefilter($im, IMG_FILTER_COLORIZE, $rgbColor['r'], $rgbColor['g'], $rgbColor['b']))
+                    {
+                        imagejpeg($im, $file_path);
+                        imagedestroy($im);
+                    }
+                }
+
+
                 /*end resize image*/
                 $this->load->library('ChipVNl');
                 \ChipVN\Loader::registerAutoLoad();
+
+                \ChipVN\Image::rotate($file_path, rand(1,4));
                 $logoPosition = 'lt';
                 $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
                 \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);
 
+                if(!empty($param['btnplayer'])) {
+                    $btnPosition = 'cc';
+                    $btnPath = FCPATH . '/uploads/image/watermark/btn/btn-'.rand(2,50).'.png';
+                    \ChipVN\Image::watermark($file_path, $btnPath, $btnPosition);
+                }
                 /*upload to picasa*/
                 $service  = 'Picasa';
                 $uploader = \ChipVN\Image_Uploader::factory($service);

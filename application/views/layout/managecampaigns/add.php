@@ -12,7 +12,9 @@
         .fixed {position: fixed; right: 40px; width: 90%;bottom: 0;background: #fff}
         #fbid {height: 300px; overflow: auto;}
         .fbaccounts .btn-lg{padding: 0 5px 0 0}
+        .khmer {font-family: 'Battambang';font-size: 14px!important;font-weight: 400!important;}
     </style>
+    <link href="https://fonts.googleapis.com/css?family=Battambang" rel="stylesheet">
     <div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
         <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"></div>
         Please wait...
@@ -184,8 +186,8 @@
 
 
                                 <div class="widget box">
-                                    <div class="widget-header">
-                                        <h4><i class="icon-reorder"></i> កំណត់នៃការស៊ែរ៍ / Share Option:</h4>
+                                    <div class="widget-header khmer">
+                                        <h4><i class="icon-reorder"></i> <span class="khmer">កំណត់នៃការស៊ែរ៍ </span>/ Share Option:</h4>
                                     </div>
                                     <div class="widget-content">
                                         <div class="form-group">
@@ -203,7 +205,7 @@
                                         </div>
                                         
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label"><img style="display: inline-block;width: 20px" border="0" src="https://1.bp.blogspot.com/-JdCz7PtuHDQ/W-k3U3fmFrI/AAAAAAAAZ_w/Cw_UCq_WbCEFrrQAEOr6V6jEHDoMXmx9gCLcBGAs/s320/bitly-1-432498.png" width="320" height="320" data-original-width="16" data-original-height="16" /> បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
+                                            <label class="col-md-4 control-label khmer"><img style="display: inline-block;width: 20px" border="0" src="https://1.bp.blogspot.com/-JdCz7PtuHDQ/W-k3U3fmFrI/AAAAAAAAZ_w/Cw_UCq_WbCEFrrQAEOr6V6jEHDoMXmx9gCLcBGAs/s320/bitly-1-432498.png" width="320" height="320" data-original-width="16" data-original-height="16" /> បំព្រួញលីងគ៍<br/>Bitly Short URL?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="1" name="shortlink" class="required" required <?php if(!empty($data)){ echo ($pSchedule['short_link']==1 ? 'checked' : '');}?>/>
@@ -217,7 +219,7 @@
                                         </div>
 
                                         <div class="form-group BitlySelect" style="display: none;">
-                                            <label class="col-md-4 control-label">ផុសឆ្លាស់លីងគ៍<br/>Random link?:</label>
+                                            <label class="col-md-4 control-label khmer">ផុសឆ្លាស់លីងគ៍<br/>Random link?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="1" name="randomlink" class="required" <?php if(!empty($data)){ echo ($pSchedule['randomGroup']==1 ? 'checked' : '');}?>/>
@@ -231,16 +233,25 @@
                                         </div>
 
                                         <div class="form-group shareType" style="display: none;">
-                                            <label class="col-md-4 control-label">លក្ខណៈស៊ែរ៍<br/>Share type:</label>
+                                            <label class="col-md-4 control-label khmer">លក្ខណៈស៊ែរ៍<br/>Share type:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="image" name="sharetype" class="required" <?php if(!empty($data)){ echo ($pSchedule['share_type']=='image' ? 'checked' : '');}?> />
-                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែបរូបភាព</i>
+                                                    <i class="subtopmenu hangmeas khmer">ស៊ែរ៍បែបរូបភាព</i>
                                                 </label> 
                                                 <label class="radio-inline">
                                                     <input type="radio" value="link" name="sharetype" class="required" disabled />
-                                                    <i class="subtopmenu hangmeas">ស៊ែរ៍បែប Link</i>
+                                                    <i class="subtopmenu hangmeas khmer">ស៊ែរ៍បែប Link</i>
                                                 </label>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="cimg" <?php if(!empty($data)){ echo ($pSchedule['check_image']=='1' ? 'checked' : '');}?>/>
+                                                    <i class="subtopmenu hangmeas khmer">Not check imge / មិនឆែករូបភាពមុនប៉ុស្តិ៍?</i>
+                                                </label>   
                                             </div>
                                         </div>
 
@@ -255,16 +266,16 @@
                                     <div class="widget-content">
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label>អត្ថបទបន្ថែម ពីមុខ / Prefix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីមុខ / Prefix</label>
                                                 <textarea rows="1" cols="5" name="Prefix" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['prefix_title'];}?></textarea>
-                                                បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ<br/>Ex: xxxx|xxxx|xxxx|xxxx
+                                                <span class="khmer">បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label>អត្ថបទបន្ថែម ពីក្រោយ / Suffix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីក្រោយ / Suffix</label>
                                                 <textarea rows="1" cols="5" name="addtxt" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['suffix_title'];}?></textarea>
-                                                បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ<br/>Ex: xxxx|xxxx|xxxx|xxxx
+                                                <span class="khmer">បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
 
                                             </div>
                                         </div>
@@ -404,9 +415,9 @@
                                     </div>
                                     <div class="widget-content">
                                         <div class="form-group">
-                                             <label class="col-md-4 control-label">ក្នុង១ក្រុមត្រូវរង់ចាំ<br/>each group waiting: </label>
+                                             <label class="col-md-4 control-label khmer">ក្នុង១ក្រុមត្រូវរង់ចាំ<br/>each group waiting: </label>
                                             <div class="col-md-8">
-                                                <label class="radio"> 
+                                                <label class="radio khmer"> 
                                                     <input 
                                                         class="form-control input-width-mini" 
                                                         type="number" 
@@ -419,14 +430,15 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label">ក្នុង១ប៉ុស្តិ៍ត្រូវរង់ចាំ<br/>Next Post waiting: </label>
+                                            <label class="col-md-4 control-label khmer">ក្នុង១ប៉ុស្តិ៍ត្រូវរង់ចាំ<br/>Next Post waiting: </label>
                                             <div class="col-md-8">
-                                                <label class="radio"> 
+                                                <label class="radio khmer"> 
 
                                                     <select name="ppause" class="select2" style="width: 60px">
                                                         <option value="2" <?php echo (@$wait_post==1 ? 'selected' : '');?>>1</option>
                                                         <option value="2" <?php echo (@$wait_post==2 ? 'selected' : '');?>>2</option>
                                                         <option value="3" <?php echo (@$wait_post==3 ? 'selected' : '');?>>3</option>
+                                                        <option value="4" <?php echo (@$wait_post==4 ? 'selected' : '');?>>4</option>
                                                             <option value="5" <?php echo (@$wait_post==5 ? 'selected' : '');?>>5</option>
                                                             <option value="10" <?php echo (@$wait_post==10 ? 'selected' : '');?>>10</option>
                                                             <option value="15" <?php if(!empty($data)) { echo (@$wait_post==15 ? 'selected' : '');} else { echo 'selected';}?>>15</option>
@@ -445,7 +457,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label">ផុសបែបឆ្លាស់<br/>Random Post?:</label>
+                                            <label class="col-md-4 control-label khmer">ផុសបែបឆ្លាស់<br/>Random Post?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="1" name="random" class="required" />

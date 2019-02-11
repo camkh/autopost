@@ -315,7 +315,7 @@ class Managecampaigns extends CI_Controller {
             );
 		
     		$this->load->library ( 'pagination' );
-    		$per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 10;
+    		$per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 20;
     		$config ['base_url'] = base_url () . 'managecampaigns/index';
     		$count_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
     		$config ['total_rows'] = count ( $count_blog );
@@ -659,6 +659,9 @@ class Managecampaigns extends CI_Controller {
 
             $blogLink = $this->input->post ( 'bloglink' );
             $userAgent = $this->input->post ( 'useragent' );
+            $checkImage = @$this->input->post ( 'cimg' );
+            $btnplayer = @$this->input->post ( 'btnplayer' );
+            $imgcolor = @$this->input->post ( 'imgcolor' );
             
             /* check account type */
             $s_acount = explode ( '|', $accoung );
@@ -706,6 +709,9 @@ class Managecampaigns extends CI_Controller {
                     'prefix_title' => @$PrefixTitle,
                     'suffix_title' => @$SuffixTitle,
                     'short_link' => @$short_link,
+                    'check_image' => @$checkImage,
+                    'imgcolor' => @$imgcolor,
+                    'btnplayer' => @$btnplayer,
                     'random_link' => @$random_link,
                     'share_type' => @$share_type,
                     'share_schedule' => @$post_action,
@@ -826,6 +832,7 @@ class Managecampaigns extends CI_Controller {
                 if(!empty($getPost[0])) {
                 /*End get post from post id*/
                     $pConent = json_decode($getPost[0]->p_conent);
+                    $pOption = json_decode($getPost[0]->p_schedule);
                     $links = $pConent->link;
                     $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
                     $thai_title = $getPost[0]->p_name;
@@ -855,12 +862,15 @@ class Managecampaigns extends CI_Controller {
                         }    
 
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                            copy($imgUrl, $fileName);                
-                            $image = $this->mod_general->uploadMedia($fileName);
+                            copy($imgUrl, $fileName);      
+                            $param = array(
+                                'btnplayer'=>$pOption->btnplayer,
+                                'imgcolor'=>$pOption->imgcolor,
+                            );        
+                            $image = $this->mod_general->uploadMedia($fileName,$param);
                         } else {
                             $image = $picture;
                         }
-
                         if(!empty($image)) {
                             @unlink($fileName);
                             $imgur = true;
@@ -892,7 +902,7 @@ class Managecampaigns extends CI_Controller {
                                         //     $blogRand = $bid;
                                         // }
                                         
-                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:238px"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;">&nbsp;</td><td style="background:url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
+                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
                                         $title = (string) $title;
                                         $dataContent          = new stdClass();
                                         $dataContent->setdate = false;        
@@ -1264,6 +1274,7 @@ class Managecampaigns extends CI_Controller {
 
             $account_gtype = $this->input->post ( 'groups' );
             $userAgent = $this->input->post ( 'useragent' );
+            $checkImage = @$this->input->post ( 'cimg' );
 			
 			/* check account type */
 			$s_acount = explode ( '|', $accoung );
@@ -1311,6 +1322,7 @@ class Managecampaigns extends CI_Controller {
                     'prefix_title' => @$PrefixTitle,
                     'suffix_title' => @$SuffixTitle,
                     'short_link' => @$short_link,
+                    'check_image' => @$checkImage,
                     'random_link' => @$random_link,
                     'share_type' => @$share_type,
                     'share_schedule' => @$post_action,

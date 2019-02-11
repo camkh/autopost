@@ -1854,6 +1854,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $sharePost->pTitle = $data['post'][0]->p_name;
 
                     /*time waiting*/
+                    /*Check image before post*/
+                    $sharePost->notcheckimage = @$pSchedule->check_image;
+                    /*Check image before post*/
 
                     /*random link and image*/
                     if($pSchedule->random_link == 1) {                    
