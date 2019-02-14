@@ -87,7 +87,7 @@
                          Post</span> <i class="icon-caret-down small"></i> </a>
                 <ul class="dropdown-menu"> 
                     <li><a href="<?php echo base_url();?>managecampaigns"><i class="icon-th-list"></i> Post list</a></li>
-                    <li><a href="<?php echo base_url();?>managecampaigns/yturl"><i style="color:red" class="icon-youtube-play"></i> Post from Youtube URL</a></li>
+                    <li><a href="<?php echo base_url();?>managecampaigns/yturl?renew=1"><i style="color:red" class="icon-youtube-play"></i> Post from Youtube URL</a></li>
                     <li><a href="<?php echo base_url();?>managecampaigns/add"><i class="icon-share"></i> Post by Url</a></li>
                     <li><a href="<?php echo base_url();?>facebook/shareation?post=getpost"><i class="icon-share"></i> Share now</a></li>
                     <li class="divider"></li>

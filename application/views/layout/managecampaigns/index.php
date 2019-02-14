@@ -294,7 +294,7 @@
 		            alert('please select one');
 		            return false;
 		    } else {
-		            return confirm('Do you want to Copy These posts?');
+		            //return confirm('Do you want to Copy These posts?');
 		    }
 		 });
 	});

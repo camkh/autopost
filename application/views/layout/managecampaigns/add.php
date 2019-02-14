@@ -58,6 +58,8 @@
                                             $pSchedule = json_decode($schedule, true);
                                             $Thumbnail = @$json['picture'];
                                             $postTitle = @$value->p_name;
+                                            $postTitle = @str_replace('"', "&#34;", $postTitle);
+                                            $postTitle = @str_replace("'", "&#39;", $postTitle);
                                             $postLink = @$json['link'];
                                             $description = @$json['description'];
                                             $wait_group = @$pSchedule['wait_group'];

@@ -348,7 +348,24 @@
                                                     <i class="subtopmenu hangmeas khmer">Random Image color / ដាក់បន្ថែមពណ៌?</i>
                                                 </label>   
                                             </div>
-                                        </div>                                        
+                                        </div>
+
+                                        <div class="form-group likeshare">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="txtlike" checked />
+                                                    <i class="subtopmenu hangmeas khmer">Share & Like text / អត្ថបទចុច Share & Like?</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+                                        <div class="form-group txtadd">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="txtadd" checked />
+                                                    <i class="subtopmenu hangmeas khmer">Addition text / ថែមអត្ថបទ?</i>
+                                                </label>   
+                                            </div>
+                                        </div>                                       
 
                                     </div>
                                 </div>

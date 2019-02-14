@@ -1362,6 +1362,10 @@ public function get_video_id($param, $videotype = '')
        {
         if(!empty($file_path)) {
              if (file_exists($file_path)) {
+                $this->load->library('ChipVNl');
+                \ChipVN\Loader::registerAutoLoad();
+
+
                 $imgName = $file_path;
                 $client_id = '51d22a7e4b628e4';
 
@@ -1418,10 +1422,11 @@ public function get_video_id($param, $videotype = '')
 
 
                 /*end resize image*/
-                $this->load->library('ChipVNl');
-                \ChipVN\Loader::registerAutoLoad();
+                
+                
+                \ChipVN\Image::rotate($file_path, rand(-4,4));
 
-                \ChipVN\Image::rotate($file_path, rand(1,4));
+
                 $logoPosition = 'lt';
                 $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
                 \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);

@@ -144,7 +144,7 @@ class Managecampaigns extends CI_Controller {
             $client->setState($state);
             $_SESSION['state'] = $state;
             $authUrl = $client->createAuthUrl();
-            header('Location: ' . $authUrl);
+             redirect($authUrl);
         }
         // Load view and send values stored in $data
         /*end google login*/
@@ -437,6 +437,11 @@ class Managecampaigns extends CI_Controller {
         $fbUserId = $this->session->userdata ( 'sid' );
         if(empty($access_token)) {
             $setUrl = base_url() . 'managecampaigns/account' . '?back='. urlencode(current_url());
+            redirect($setUrl);
+            exit();
+        }
+        if(!empty($this->input->get('renew'))) {
+            $setUrl = base_url() . 'managecampaigns/account?renew=1' . '?back='. urlencode(current_url());
             redirect($setUrl);
             exit();
         }
