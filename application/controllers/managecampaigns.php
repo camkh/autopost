@@ -315,7 +315,15 @@ class Managecampaigns extends CI_Controller {
             );
 		
     		$this->load->library ( 'pagination' );
-    		$per_page = (! empty ( $_GET ['result'] )) ? $_GET ['result'] : 20;
+
+            if(!empty($_GET ['result'])) {
+                $this->session->set_userdata('per_page', $_GET ['result']);
+            }
+            if($this->session->userdata ( 'per_page' )) {
+                $per_page = $this->session->userdata ( 'per_page' );
+            } else {
+                $per_page = 20;
+            }
     		$config ['base_url'] = base_url () . 'managecampaigns/index';
     		$count_blog = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
     		$config ['total_rows'] = count ( $count_blog );

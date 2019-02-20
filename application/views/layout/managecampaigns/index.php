@@ -146,11 +146,11 @@
 								<label> <select name="DataTables_Table_0_length" size="1"
 									aria-controls="DataTables_Table_0" class="select2-offscreen"
 									tabindex="-1" onchange="getComboA(this)">
-										<option value="5">5</option>
-										<option value="10">10</option>
-										<option value="20" selected="selected">20</option>
-										<option value="25">25</option>
-										<option value="50">50</option>
+										<option value="5" <?php echo (count($results) == 5 ? 'selected':'');?>>5</option>
+										<option value="10" <?php echo (count($results) == 10 ? 'selected':'');?>>10</option>
+										<option value="20" <?php echo (count($results) == 20 ? 'selected':'');?>>20</option>
+										<option value="25" <?php echo (count($results) == 25 ? 'selected':'');?>>25</option>
+										<option value="50" <?php echo (count($results) == 50 ? 'selected':'');?>>50</option>
 										<option value="-1">All</option>
 								</select>
 								</label>
