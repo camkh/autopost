@@ -819,7 +819,7 @@
             var a = $("#post_"+id);             
                 Apps.blockUI(a);
                 if(id!='') {
-                    var jqxhr = $.ajax( "http://localhost/wordpress/mynews/wp-content/plugins/splogr/scrap.php?action=1&max=1")
+                    var jqxhr = $.ajax( "<?php echo base_url();?>splogr/getpost")
                       .done(function(data) {
                         if ( data ) {                            
                             var obj = JSON.parse(data);                            

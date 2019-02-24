@@ -5,15 +5,264 @@ class Splogr extends CI_Controller
     protected $mod_general;
     public function __construct() {
         parent::__construct();
+        $this->load->model('Mod_general');
+        $this->load->library('dbtable');
+        $this->load->theme('layout');
+        $this->mod_general = new Mod_general();
+        TIME_ZONE;
+        $this->load->library('Breadcrumbs');
     }
     public function index() {
         $data['title'] = 'Autopost';
         $this->load->view('layout/splogr/index', $data);
     }
 
+    public function getnext()
+    {
+        $log_id = $this->session->userdata ('user_id');
+        /*check link*/
+        $where_link = array(
+            'status' => 0,
+            'type' => 'link',
+            'uid' => $log_id,
+        );
+        $nextLink = $this->Mod_general->select ('splogr', 'link', $where_link );
+        if(!empty($nextLink[0])) {
+            $contentJson = $this->getconents($nextLink[0]->link);
+             if(!empty($contentJson)) {
+                $error = array('error'=> 0); 
+                $setContent = array('content'=> $contentJson); 
+                $getJsonArray = array_merge($error,$setContent);
+            } else {
+                $error = array('error'=> 1); 
+                $getJsonArray = array_merge($error,$contentJson);
+            }
+            echo json_encode($getJsonArray);
+        } else {
+            $where_cur = array(
+                'status' => 0,
+                'type' => 'next',
+                'uid' => $log_id,
+            );
+            $curLink = $this->Mod_general->select ('splogr', 'link', $where_cur );
+            if(!empty($curLink[0])) {
+                $code = $this->get_from_site_id($curLink[0]->link);
+                redirect(base_url() . 'splogr?m=no_post');
+            } else {
+                redirect(base_url() . 'splogr?m=no_post');
+            }
+        }
+        /*End check link*/
+        die;
+    }
     public function getpost()
     {
-        # code...
+
+        $log_id = $this->session->userdata ('user_id');
+        /*check link*/
+        $where_link = array(
+            'status' => 0,
+            'type' => 'link',
+            'uid' => $log_id,
+        );
+        $nextLink = $this->Mod_general->select ('splogr', 'link', $where_link );
+        if(!empty($nextLink[0])) {
+            $contentJson = $this->getconents($nextLink[0]->link);
+             if(!empty($contentJson)) {
+                $error = array('error'=> 0); 
+                $setContent = array('content'=> $contentJson); 
+                $getJsonArray = array_merge($error,$setContent);
+            } else {
+                $error = array('error'=> 1); 
+                $getJsonArray = array_merge($error,$contentJson);
+            }
+            echo json_encode($getJsonArray);
+        } else {
+            $where_cur = array(
+                'status' => 0,
+                'type' => 'next',
+                'uid' => $log_id,
+            );
+            $curLink = $this->Mod_general->select ('splogr', 'link', $where_cur );
+            if(!empty($curLink[0])) {
+                $code = $this->get_from_site_id($curLink[0]->link);
+                redirect(base_url() . 'splogr/getpost');
+            } else {
+                redirect(base_url() . 'splogr?m=no_post');
+            }
+        }
+        /*End check link*/
+        die;
+    }
+
+    function get_from_site_id($site_url = '', $post_id = '', $thumb = '', $New_title = '', $New_label = '', $videotype = '') {
+        ini_set('max_execution_time', 0);
+        $log_id = $this->session->userdata ('user_id');
+        $this->load->library('html_dom');        
+        $parse = parse_url($site_url);
+
+        /*check link status*/
+        $lurl = $this->get_fcontent($site_url);
+        if($lurl[1] != 0) {    
+            /*End check link status*/
+            if(!empty($lurl[0])) {
+                $html = str_get_html($lurl[0]);
+                //$html = @file_get_html($site_url);
+                switch ($parse['host']) {
+                    case 'ezinearticles.com':
+                        foreach($html->find('#page-inner .article') as $e) {
+                            $link = $e->find('.article-title-link',0)->href;
+                            $link = 'http://ezinearticles.com'.$link;
+                            $where_u = array(
+                                'uid' => $log_id,
+                                'link' => $link,
+                            );
+                            $dataLink = $this->Mod_general->select ('splogr', 'link', $where_u );
+                            if(empty($dataLink)) {
+                                $LinkA = array('link'=>$link);
+                                $dataLink = array(
+                                    'sp_post'=> json_encode($LinkA),
+                                    'uid' => $log_id,
+                                    'link' => $link,
+                                    'type' => 'link',
+                                    'status' => 0,
+                                );  
+                                $this->mod_general->insert('splogr', $dataLink);
+                            } else {
+                                continue;
+                            }                    
+                        }
+                        $end = @$html->find('#page-inner .pagination .next-off',0)->innertext;
+                        if(!empty($end)) {
+                            $end = true;
+                        } else {
+                            $next = @$html->find('#page-inner .pagination a.next',0)->href;
+                            $next = 'http://ezinearticles.com'.$next;
+                            // echo '<center>Please wait...<br/>'.urlencode($next).'<br/>'.$next.'</center>';
+                            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($next).'";}, 15 );</script>'; 
+                            // //$this->get_from_site_id($next);
+
+
+                            $dataLink = array(
+                                'uid' => $log_id,
+                                'link' => $next,
+                                'type' => 'next',
+                                'status' => 0,
+                            ); 
+                            $this->mod_general->insert('splogr', $dataLink);
+                            $where_link = array(
+                                'uid' => $log_id,
+                                'link' => $site_url,
+                                'type' => 'next',
+                            );
+                            $updateLink = array('status' => 1);
+                            @$this->Mod_general->update ('splogr', $updateLink, $where_link);
+                        }
+
+                        break; 
+                    default:
+                        # code...
+                        break;
+                }
+            } else {
+                $this->get_from_site_id($site_url);
+                // echo '<center>Please wait...<br/>'.urlencode($site_url).'</center>';
+                // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($site_url).'";}, 15 );</script>'; 
+            }
+        }  else {
+            $this->get_from_site_id($site_url);
+            // echo '<center>Please wait...<br/>'.urlencode($site_url).'</center>';
+            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($site_url).'";}, 15 );</script>'; 
+        }              
+    }
+
+    public function getconents($site_url='')
+    {
+        ini_set('max_execution_time', 0);
+        $log_id = $this->session->userdata ('user_id');
+        $this->load->library('html_dom'); 
+        $lurl = $this->get_fcontent($site_url);
+        $getContent = [];                
+        if($lurl[1] != 0) {    
+            /*End check link status*/
+            if(!empty($lurl[0])) {
+                $html = str_get_html($lurl[0]);
+                $title = @$html->find('title',0)->innertext;
+                $content = @$html->find('#article-content',0)->innertext;
+                $resource = @$html->find('#article-resource',0)->innertext;
+                $getContent = array('title'=>$title,'content'=>$content . '<br/>'.$resource);
+            }
+        } 
+        /*update link*/
+        if(!empty($getContent)) {
+            $where_link = array(
+                'uid' => $log_id,
+                'link' => $site_url,
+                'type' => 'link',
+            );
+            $updateLink = array('status' => 1);
+            @$this->Mod_general->update ('splogr', $updateLink, $where_link);
+        }
+        /*End update link*/
+        $contentJson[] = $getContent;
+        return $contentJson;
+    }
+
+    public function get_fcontent( $url,  $javascript_loop = 0, $timeout = 5 )
+    {
+        var_dump($this->getRandomUserAgent());
+        die;
+        $url = str_replace( "&amp;", "&", urldecode(trim($url)) );
+        $cookie = tempnam ("/tmp", "CURLCOOKIE");
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_USERAGENT, $this->getRandomUserAgent() );
+        curl_setopt( $ch, CURLOPT_URL, $url );
+        curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+        curl_setopt( $ch, CURLOPT_ENCODING, "" );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_AUTOREFERER, true );
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );    # required for https urls
+        curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+        curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
+        curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+        $content = curl_exec( $ch );
+        $response = curl_getinfo( $ch );
+        curl_close ( $ch );
+
+        if ($response['http_code'] == 301 || $response['http_code'] == 302) {
+            ini_set("user_agent", $this->getRandomUserAgent());
+
+            if ( $headers = get_headers($response['url']) ) {
+                foreach( $headers as $value ) {
+                    if ( substr( strtolower($value), 0, 9 ) == "location:" )
+                        return get_url( trim( substr( $value, 9, strlen($value) ) ) );
+                }
+            }
+        }
+
+        if (    ( preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $content, $value) || preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $content, $value) ) && $javascript_loop < 5) {
+            return get_url( $value[1], $javascript_loop+1 );
+        } else {
+            return array( $content, $response );
+        }
+    }
+
+    public function getRandomUserAgent()
+    {
+         $userAgents=array(
+         "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6",
+         "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)",
+         "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)",
+         "Opera/9.20 (Windows NT 6.0; U; en)",
+         "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en) Opera 8.50",
+         "Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 5.1) Opera 7.02 [en]",
+         "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; fr; rv:1.7) Gecko/20040624 Firefox/0.9",
+         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31",
+         "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/48 (like Gecko) Safari/48" 
+         );
+         $random = rand(0,count($userAgents)-1);         
+         return $userAgents[$random];
     }
 }
 
