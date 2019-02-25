@@ -65,9 +65,12 @@ class Splogr extends CI_Controller
             'type' => 'link',
             'uid' => $log_id,
         );
-        $nextLink = $this->Mod_general->select ('splogr', 'link', $where_link );
+        $nextLink = $this->Mod_general->select ('splogr', 'link,sp_post', $where_link );
         if(!empty($nextLink[0])) {
-            $contentJson = $this->getconents($nextLink[0]->link);
+            $sp_post = json_decode($nextLink[0]->sp_post);
+            //$contentJson = $this->getconents($nextLink[0]->link);
+            $getContent = array('title'=>$sp_post->title,'content'=>$sp_post->summary . '<br/> from: '.$nextLink[0]->link);
+            $contentJson[] = $getContent;
              if(!empty($contentJson)) {
                 $error = array('error'=> 0); 
                 $setContent = array('content'=> $contentJson); 
@@ -76,6 +79,17 @@ class Splogr extends CI_Controller
                 $error = array('error'=> 1); 
                 $getJsonArray = array_merge($error,$contentJson);
             }
+            /*update link*/
+            if(!empty($getContent)) {
+                $wherelink = array(
+                    'uid' => $log_id,
+                    'link' => $nextLink[0]->link,
+                    'type' => 'link',
+                );
+                $updateLink = array('status' => 1);
+                @$this->Mod_general->update ('splogr', $updateLink, $wherelink);
+            }
+            /*End update link*/
             echo json_encode($getJsonArray);
         } else {
             $where_cur = array(
@@ -88,7 +102,8 @@ class Splogr extends CI_Controller
                 $code = $this->get_from_site_id($curLink[0]->link);
                 redirect(base_url() . 'splogr/getpost');
             } else {
-                redirect(base_url() . 'splogr?m=no_post');
+                $error = array('error'=> 1); 
+                $getJsonArray = array_merge($error,'not config');
             }
         }
         /*End check link*/
@@ -102,78 +117,70 @@ class Splogr extends CI_Controller
         $parse = parse_url($site_url);
 
         /*check link status*/
-        $lurl = $this->get_fcontent($site_url);
-        if($lurl[1] != 0) {    
-            /*End check link status*/
-            if(!empty($lurl[0])) {
-                $html = str_get_html($lurl[0]);
-                //$html = @file_get_html($site_url);
-                switch ($parse['host']) {
-                    case 'ezinearticles.com':
-                        foreach($html->find('#page-inner .article') as $e) {
-                            $link = $e->find('.article-title-link',0)->href;
-                            $link = 'http://ezinearticles.com'.$link;
-                            $where_u = array(
-                                'uid' => $log_id,
-                                'link' => $link,
-                            );
-                            $dataLink = $this->Mod_general->select ('splogr', 'link', $where_u );
-                            if(empty($dataLink)) {
-                                $LinkA = array('link'=>$link);
-                                $dataLink = array(
-                                    'sp_post'=> json_encode($LinkA),
-                                    'uid' => $log_id,
-                                    'link' => $link,
-                                    'type' => 'link',
-                                    'status' => 0,
-                                );  
-                                $this->mod_general->insert('splogr', $dataLink);
-                            } else {
-                                continue;
-                            }                    
-                        }
-                        $end = @$html->find('#page-inner .pagination .next-off',0)->innertext;
-                        if(!empty($end)) {
-                            $end = true;
-                        } else {
-                            $next = @$html->find('#page-inner .pagination a.next',0)->href;
-                            $next = 'http://ezinearticles.com'.$next;
-                            // echo '<center>Please wait...<br/>'.urlencode($next).'<br/>'.$next.'</center>';
-                            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($next).'";}, 15 );</script>'; 
-                            // //$this->get_from_site_id($next);
-
-
-                            $dataLink = array(
-                                'uid' => $log_id,
-                                'link' => $next,
-                                'type' => 'next',
-                                'status' => 0,
-                            ); 
-                            $this->mod_general->insert('splogr', $dataLink);
-                            $where_link = array(
-                                'uid' => $log_id,
-                                'link' => $site_url,
-                                'type' => 'next',
-                            );
-                            $updateLink = array('status' => 1);
-                            @$this->Mod_general->update ('splogr', $updateLink, $where_link);
-                        }
-
-                        break; 
-                    default:
-                        # code...
-                        break;
+        //$lurl = $this->get_fcontent($site_url);
+        $html = file_get_html($site_url);
+        switch ($parse['host']) {
+            case 'ezinearticles.com':
+                foreach($html->find('#page-inner .article') as $e) {
+                    $link = $e->find('.article-title-link',0)->href;
+                    $title = $e->find('.article-title-link',0)->innertext;
+                    $summary = $e->find('.article-summary',0)->innertext;
+                    $link = 'http://ezinearticles.com'.$link;
+                    $where_u = array(
+                        'uid' => $log_id,
+                        'link' => $link,
+                    );
+                    $dataLink = $this->Mod_general->select ('splogr', 'link', $where_u );
+                    if(empty($dataLink)) {
+                        $LinkA = array(
+                            'link'=>$link,
+                            'title'=>$title,
+                            'summary'=>$summary,
+                        );
+                        $dataLink = array(
+                            'sp_post'=> json_encode($LinkA),
+                            'uid' => $log_id,
+                            'link' => $link,
+                            'type' => 'link',
+                            'status' => 0,
+                        );  
+                        $this->mod_general->insert('splogr', $dataLink);
+                    } else {
+                        continue;
+                    }                    
                 }
-            } else {
-                $this->get_from_site_id($site_url);
-                // echo '<center>Please wait...<br/>'.urlencode($site_url).'</center>';
-                // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($site_url).'";}, 15 );</script>'; 
-            }
-        }  else {
-            $this->get_from_site_id($site_url);
-            // echo '<center>Please wait...<br/>'.urlencode($site_url).'</center>';
-            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($site_url).'";}, 15 );</script>'; 
-        }              
+                $end = @$html->find('#page-inner .pagination .next-off',0)->innertext;
+                if(!empty($end)) {
+                    $end = true;
+                } else {
+                    $next = @$html->find('#page-inner .pagination a.next',0)->href;
+                    $next = 'http://ezinearticles.com'.$next;
+                    // echo '<center>Please wait...<br/>'.urlencode($next).'<br/>'.$next.'</center>';
+                    // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'splogr/getpost?p='.urlencode($next).'";}, 15 );</script>'; 
+                    // //$this->get_from_site_id($next);
+
+
+                    $dataLink = array(
+                        'uid' => $log_id,
+                        'link' => $next,
+                        'type' => 'next',
+                        'status' => 0,
+                    ); 
+                    $this->mod_general->insert('splogr', $dataLink);
+                    $where_link = array(
+                        'uid' => $log_id,
+                        'link' => $site_url,
+                        'type' => 'next',
+                    );
+                    $updateLink = array('status' => 1);
+                    @$this->Mod_general->update ('splogr', $updateLink, $where_link);
+                }
+
+                break; 
+            default:
+                # code...
+                break;
+        }            
     }
 
     public function getconents($site_url='')
@@ -186,13 +193,22 @@ class Splogr extends CI_Controller
         if($lurl[1] != 0) {    
             /*End check link status*/
             if(!empty($lurl[0])) {
-                $html = str_get_html($lurl[0]);
+$str = <<< HTML
+'.$lurl[0].'
+HTML;
+                $html = str_get_html($str);
                 $title = @$html->find('title',0)->innertext;
                 $content = @$html->find('#article-content',0)->innertext;
                 $resource = @$html->find('#article-resource',0)->innertext;
                 $getContent = array('title'=>$title,'content'=>$content . '<br/>'.$resource);
             }
         } 
+        // $html = file_get_html($site_url);
+        // $title = @$html->find('title',0)->innertext;
+        // $content = @$html->find('#article-content',0)->innertext;
+        // $resource = @$html->find('#article-resource',0)->innertext;
+        // $getContent = array('title'=>$title,'content'=>$content . '<br/>'.$resource);
+
         /*update link*/
         if(!empty($getContent)) {
             $where_link = array(
@@ -210,12 +226,30 @@ class Splogr extends CI_Controller
 
     public function get_fcontent( $url,  $javascript_loop = 0, $timeout = 5 )
     {
-        var_dump($this->getRandomUserAgent());
-        die;
         $url = str_replace( "&amp;", "&", urldecode(trim($url)) );
-        $cookie = tempnam ("/tmp", "CURLCOOKIE");
+        $cookie = @tempnam ("/tmp", "CURLCOOKIE");
+        $userAgents = $this->getRandomUserAgent();
+
+        $proxies = array(); // Declaring an array to store the proxy list
+ 
+        // Adding list of proxies to the $proxies array
+        $proxies[] = '182.53.206.144:42352';  // Some proxies require user, password, IP and port number
+        $proxies[] = '182.53.96.159:36893';
+        $proxies[] = '81.173.195.38:48522';
+        $proxies[] = '46.5.164.115:1080';  // Some proxies only require IP
+        $proxies[] = '36.80.193.187:8080';
+        $proxies[] = '149.28.189.104:1080'; // Some proxies require IP and port number
+        $proxies[] = '123.215.15.132:1080';
+        if (isset($proxies)) {  // If the $proxies array contains items, then
+            $proxy = $proxies[array_rand($proxies)];    // Select a random proxy from the array and assign to $proxy variable
+        }
+        $ipAddress = "173.249.35.163";
         $ch = curl_init();
-        curl_setopt( $ch, CURLOPT_USERAGENT, $this->getRandomUserAgent() );
+        if (isset($proxy)) {    // If the $proxy variable is set, then
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);    // Set CURLOPT_PROXY with proxy in $proxy variable
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["REMOTE_ADDR: $ipAddress", "HTTP_X_FORWARDED_FOR: $ipAddress"]);
+        curl_setopt( $ch, CURLOPT_USERAGENT, $userAgents );
         curl_setopt( $ch, CURLOPT_URL, $url );
         curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
         curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
@@ -231,7 +265,7 @@ class Splogr extends CI_Controller
         curl_close ( $ch );
 
         if ($response['http_code'] == 301 || $response['http_code'] == 302) {
-            ini_set("user_agent", $this->getRandomUserAgent());
+            ini_set("user_agent", $userAgents);
 
             if ( $headers = get_headers($response['url']) ) {
                 foreach( $headers as $value ) {

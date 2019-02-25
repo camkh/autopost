@@ -911,6 +911,7 @@
                       $('#description_' + id).val(obj.description);
                       $('#image_' + id).val(obj.picture);
                       $('#show_' + id).attr("src",obj.picture);
+                      getcontent(id.replace("link_", ""));
                     }
                   })
                   .fail(function() {
