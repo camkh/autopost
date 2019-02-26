@@ -848,7 +848,15 @@
                         }
                       })
                       .fail(function() {
-                        alert( "error" );
+                        //alert( "error" );
+                            window.setTimeout(function () {
+                                Apps.unblockUI(a);
+                                noty({
+                                    text: "<strong>Error contact to admin</strong>",
+                                    type: "error",
+                                    timeout: 1000
+                                })
+                            }, 1000)
                       })
                       .always(function() {
                         //alert( "complete" );
