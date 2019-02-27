@@ -208,8 +208,8 @@
 								<td class="hidden-xs">
         <?php echo $value->{Tbl_posts::p_date}; ?>
                                         </td>
-								<td class="hidden-xs" style="width:300px;overflow: hidden;">
-   
+								<td class="hidden-xs" style="width:300px;overflow: auto;">
+   										<?php echo $link;?>
                                         </td>
 								<td>
 									<?php $glink = $content->link;
