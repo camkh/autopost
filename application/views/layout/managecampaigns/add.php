@@ -78,7 +78,7 @@
                                             <div class="input-group">                                                 
                                                 <input type="text" value="<?php echo @$postTitle; ?>" class="form-control post-option" name="title[]" placeholder="Title" id="title_link_<?php echo @$post_id; ?>" />
                                                 <span class="input-group-btn"> 
-                                                    // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id && empty($copy)) ? 'disabled':'';?>>
+                                                    // <button class="btn btn-default removediv bs-tooltip" data-original-title="Remove this" type="button" <?php echo ($post_id && empty($copy)) ? '':'';?>>
                                                         <i class="icon-remove text-danger"></i>
                                                     </button> 
                                                 </span> 
