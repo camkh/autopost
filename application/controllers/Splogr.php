@@ -97,13 +97,14 @@ class Splogr extends CI_Controller
                 'type' => 'next',
                 'uid' => $log_id,
             );
-            $curLink = $this->Mod_general->select ('splogr', 'link', $where_cur );
+            $curLink = $this->Mod_general->select ('splogr', 'link', $where_cur,'rand()','',1 );
             if(!empty($curLink[0])) {
                 $code = $this->get_from_site_id($curLink[0]->link);
                 redirect(base_url() . 'splogr/getpost');
             } else {
                 $error = array('error'=> 1); 
-                $getJsonArray = array_merge($error,'not config');
+                $getJsonArray = array('error'=> 1,'content'=> 'not config');
+                echo json_encode($getJsonArray);
             }
         }
         /*End check link*/
