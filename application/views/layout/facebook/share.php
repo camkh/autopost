@@ -79,9 +79,9 @@
     if(!empty($sharePost->pcount)):
         $pTitle = $sharePost->title;
         if(!empty($uerAgent)) {
-            $pLink = $sharePost->link . '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1';
+            $pLink = $sharePost->link;
         } else {
-            $pLink = urlencode($sharePost->link . '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1');
+            $pLink = urlencode($sharePost->link);
         }
         $group_id = $sharePost->group_id;
         $pid = $sharePost->pid;

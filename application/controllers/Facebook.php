@@ -1844,11 +1844,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $pConent = json_decode($data['post'][0]->p_conent);                
                     $pSchedule = json_decode($data['post'][0]->p_schedule);
 
-                    $str = time();
-                    $str = md5($str);
-                    $uniq_id = substr($str, 0, 9);
-                    $link = $pConent->link . '?s=' . $uniq_id;
-                    $link = $this->shorturl($link,$pSchedule->short_link);
+
                     $sharePost->conent = $pConent;
                     $sharePost->option = $pSchedule;
                     $sharePost->pTitle = $data['post'][0]->p_name;
@@ -1858,13 +1854,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $sharePost->notcheckimage = @$pSchedule->check_image;
                     /*Check image before post*/
 
-                    /*random link and image*/
-                    if($pSchedule->random_link == 1) {                    
-                        $sharePost->link = $this->randomLink($link,$pConent->picture);
-                    } else {
-                        $sharePost->link = $link;
-                    }
-                    /*End random link*/
+                    
 
                     /*Post schedule*/
                     if($pSchedule->share_schedule == 1) {
@@ -1936,6 +1926,22 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $shareCountPost = $this->Mod_general->select ('share','*', $whereCount);
                 $sharePost->totalGroups = count($shareCountPost);
                 /*End count share posts*/
+
+                $str = time();
+                $str = md5($str);
+                $uniq_id = substr($str, 0, 9);
+                $link = $pConent->link . '?s=' . $uniq_id. '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1';
+                
+                //$pLink = $sharePost->link . '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1';
+                $link = $this->shorturl($link,$pSchedule->short_link);
+
+                /*random link and image*/
+                if($pSchedule->random_link == 1) {                    
+                    $sharePost->link = $this->randomLink($link,$pConent->picture);
+                } else {
+                    $sharePost->link = $link;
+                }
+                /*End random link*/
 
                 /*create csv*/
                 // $file_name = $pid . '_post.csv';
