@@ -142,6 +142,30 @@
                             </div>
                         </div>
                         <!-- End blog link -->
+
+                        <!-- splogr -->
+                        <div class="widget box widget-closed">
+                            <div class="widget-header">
+                                <h4><i class="icon-reorder"></i> Splogr</h4>
+                                <div class="toolbar no-padding">
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-up"></i></span> </div>
+                                </div>
+                            </div>
+                            <div class="widget-content">
+                                <form class="form-horizontal row-border" action="" method="post">
+                                    <div class="form-group"> 
+                                        <div class="col-md-12"> 
+                                            <input class="form-control required" name="next link" type="text"> 
+                                            <span class="help-block">Enter Next link.</span> 
+                                        </div> 
+                                    </div>
+                                    <div class="form-actions"> 
+                                        <input type="submit" value="Save" class="btn btn-primary pull-right"> 
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- End splogr -->
                     </div>
 
                     <div class="col-md-6">
@@ -191,11 +215,11 @@
                 <!-- Prefix and Subfix -->
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="widget box">
+                        <div class="widget box widget-closed">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Prefix for Random Title</h4>
                                 <div class="toolbar no-padding">
-                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-up"></i></span> </div>
                                 </div>
                             </div>
                             <div class="widget-content">
@@ -218,11 +242,11 @@
 
                 <!-- Prefix and Subfix -->
                     <div class="col-md-6">
-                        <div class="widget box">
+                        <div class="widget box widget-closed">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Suffix for Random Title</h4>
                                 <div class="toolbar no-padding">
-                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-up"></i></span> </div>
                                 </div>
                             </div>
                             <div class="widget-content">
@@ -246,11 +270,11 @@
 
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="widget box">
+                        <div class="widget box widget-closed">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Random post?</h4>
                                 <div class="toolbar no-padding">
-                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-up"></i></span> </div>
                                 </div>
                             </div>
                             <div class="widget-content">
@@ -275,8 +299,11 @@
                         </div>
 
                         <!-- bitly -->
-                        <div class="widget box">
-                            <div class="widget-header"></i> Bitly account</h4>
+                        <div class="widget box widget-closed">
+                            <div class="widget-header"><h4> Bitly account</h4>
+                                <div class="toolbar no-padding">
+                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-up"></i></span> </div>
+                                </div>
                             </div>
                             <div class="widget-content">
                                 <form class="form-horizontal row-border" id="bitly" method="post">
@@ -301,7 +328,7 @@
                     </div>
 
                     <div class="col-md-9">
-                        <div class="widget box">
+                        <div class="widget box widget-closed">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Facebook Accounts</h4>
                                 <div class="toolbar no-padding">
