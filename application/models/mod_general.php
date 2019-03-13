@@ -1393,18 +1393,22 @@ public function get_video_id($param, $videotype = '')
                     imagedestroy( $dst );
                 }
 
-                $im = imagecreatefromstring( file_get_contents( $file_name ) );
-                if($im && imagefilter($im, IMG_FILTER_BRIGHTNESS, rand(10,100)))
-                {
-                    imagejpeg($im, $file_path);
-                    imagedestroy($im);
+                if(!empty($param['filter_brightness'])) {
+                    $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                    if($im && imagefilter($im, IMG_FILTER_BRIGHTNESS, rand(10,100)))
+                    {
+                        imagejpeg($im, $file_path);
+                        imagedestroy($im);
+                    }
                 }
 
-                $im = imagecreatefromstring( file_get_contents( $file_name ) );
-                if($im && imagefilter($im, IMG_FILTER_CONTRAST, rand(10,30)))
-                {
-                    imagejpeg($im, $file_path);
-                    imagedestroy($im);
+                if(!empty($param['filter_contrast'])) {
+                    $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                    if($im && imagefilter($im, IMG_FILTER_CONTRAST, rand(10,30)))
+                    {
+                        imagejpeg($im, $file_path);
+                        imagedestroy($im);
+                    }
                 }
 
                 if(!empty($param['imgcolor'])) {
@@ -1423,24 +1427,67 @@ public function get_video_id($param, $videotype = '')
 
                 /*end resize image*/
                 
-                
-                \ChipVN\Image::rotate($file_path, rand(-4,4));
+                if(!empty($param['img_rotate'])) {
+                    \ChipVN\Image::rotate($file_path, rand(-4,4));
+                }
+                if(empty($param['playerstyle'])) {
+                    if(!empty($param['txtadd'])) {
+                        $logoPosition = 'lt';
+                        $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
+                        \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);
+                    }
+                }
 
+                if(!empty($param['playerstyle'])) {
+                    $btnPosition = 'cc';
+                    $btnPath = FCPATH . '/uploads/image/watermark/btn/btn-'.rand(1,15).'.png';
+                    \ChipVN\Image::watermark($file_path, $btnPath, $btnPosition);     
 
-                $logoPosition = 'lt';
-                $logoPath = FCPATH . '/uploads/image/watermark/web-logo.png';
-                \ChipVN\Image::watermark($file_path, $logoPath, $logoPosition);
+                    $setWidth = 800;
+                    $setHeight = 450;
+                    list($width, $height, $type, $attr) = getimagesize( $file_name );
+                    if ( $width < $setWidth || $height < $setWidth ) {
+                        $target_filename = $file_name;
+                        $ratio = $width/$height;
+                        if( $ratio > 1) {
+                            $new_width = $setWidth;
+                            $new_height = $setWidth/$ratio;
+                        } else {
+                            $new_width = $setWidth*$ratio;
+                            $new_height = $setWidth;
+                        }
+
+                        $src = imagecreatefromstring( file_get_contents( $file_name ) );
+                        $dst = imagecreatetruecolor( $new_width, 520 );
+                        imagecopyresampled( $dst, $src, 0, 0, 0, 0, $new_width, $new_height, $width, $height );
+                        imagedestroy( $src );
+                        imagejpeg( $dst, $target_filename ); // adjust format as needed
+                        imagedestroy( $dst );
+                    }
+                    /*btn player bottom style*/
+                    $btncPosition = 'lb';
+                    $btnPc = FCPATH . '/uploads/image/watermark/player/btn-c.png';
+                    \ChipVN\Image::watermark($file_path, $btnPc, $btncPosition);
+
+                    $btnlPosition = 'lb';
+                    $btnPl = FCPATH . '/uploads/image/watermark/player/btn-l.png';
+                    \ChipVN\Image::watermark($file_path, $btnPl, $btnlPosition);
+                    $btnrPosition = 'rb';
+                    $btnPr = FCPATH . '/uploads/image/watermark/player/btn-r.png';
+                    \ChipVN\Image::watermark($file_path, $btnPr, $btnrPosition);
+                    /*End btn player bottom*/
+                }
 
                 if(!empty($param['btnplayer'])) {
                     $btnPosition = 'cc';
-                    $btnPath = FCPATH . '/uploads/image/watermark/btn/btn-'.rand(2,50).'.png';
-                    \ChipVN\Image::watermark($file_path, $btnPath, $btnPosition);
-                }
+                    $btnPath = FCPATH . '/uploads/image/watermark/btn/btn-'.rand(1,15).'.png';
+                    \ChipVN\Image::watermark($file_path, $btnPath, $btnPosition);                    
+                }          
                 /*upload to picasa*/
-                $service  = 'Picasa';
-                $uploader = \ChipVN\Image_Uploader::factory($service);
-                $uploader->login($this->session->userdata('guid'), '0689989@Sn',$this->session->userdata('access_token'));
-                $image = $uploader->upload($imgName);
+                // $service  = 'Picasa';
+                // $uploader = \ChipVN\Image_Uploader::factory($service);
+                // $uploader->login($this->session->userdata('guid'), '0689989@Sn',$this->session->userdata('access_token'));
+                // $image = $uploader->upload($imgName);
                 // if(!empty($image)) {
                 //     return $image;
                 // } else {

@@ -185,6 +185,9 @@
                                     <div class="widget-content">
                                         <div class="form-group">
                                             <div class="col-md-12">
+                                                <span class="label label-primary khmer" style="font-size: 16px"><label><input type="checkbox" value="" id="getDataAll"/> យកតាមជម្រើសចាស់  </label></span>
+                                            </div>
+                                            <div class="col-md-12">
                                                 <label class="control-label">
                                                     Select Blog post to:
                                                 </label>
@@ -326,7 +329,46 @@
                                         </div>
 
                                         <div class="form-group chekimg">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <i class="icon-sun" style="color:red"></i>
+                                                    <i class="subtopmenu hangmeas khmer">Brightness level / កែពន្លឺនៃរូបភាព</i>
+                                                </label>   
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="radio"> 
+                                                    <input type="checkbox" name="filter_brightness" style="float:left" value="1" checked /> 
+                                                    <span style="float: left;margin-right: 5px;margin-left: 5px"> Randomly: </span> 
+                                                    <input name="brandom" class="form-control input-width-mini" type="text" style="float:left;margin-right:5px;height:25px" value="10,100" readonly/> level
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <i class="icon-adjust" style="color:blue"></i> 
+                                                    <i class="subtopmenu hangmeas khmer">Contrast level / កែភាពច្បាស់នៃរូបភាព</i>
+                                                </label>
+                                                <label class="radio"> 
+                                                    <input type="checkbox" name="filter_contrast" style="float:left" value="1" checked /> 
+                                                    <span style="float: left;margin-right: 5px;margin-left: 5px"> Randomly: </span> 
+                                                    <input name="crandom" class="form-control input-width-mini" type="text" style="float:left;margin-right:5px;height:25px" value="10,100" readonly /> level
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <i class="icon-repeat"></i> 
+                                                    <input type="checkbox" value="1" name="img_rotate" checked />
+                                                    <i class="subtopmenu hangmeas khmer">Image Rotate / បង្វិលរូបភាព</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-12">
                                                 <label class="radio-inline">
                                                     <input type="checkbox" value="1" name="cimg" <?php if(!empty($data)){ echo ($pSchedule['check_image']=='1' ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas khmer">Not check imge / មិនឆែករូបភាពមុនប៉ុស្តិ៍?</i>
@@ -334,15 +376,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group btnplayer">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
                                                 <label class="radio-inline">
                                                     <input type="checkbox" value="1" name="btnplayer" <?php if(!empty($data)){ echo ($pSchedule['btnplayer']=='play-button-overlay.png' ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas khmer">Button Player / មានប៉ូតុង?</i>
                                                 </label>   
                                             </div>
                                         </div>
+                                        <div class="form-group btnplayer">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="playerstyle" />
+                                                    <i class="subtopmenu hangmeas khmer">Player style/ មានក្បាលចាក់?</i>
+                                                </label>   
+                                            </div>
+                                        </div>
                                         <div class="form-group imagecolor">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
                                                 <label class="radio-inline">
                                                     <input type="checkbox" value="1" name="imgcolor" <?php if(!empty($data)){ echo ($pSchedule['btnplayer']=='play-button-overlay.png' ? 'checked' : '');}?>/>
                                                     <i class="subtopmenu hangmeas khmer">Random Image color / ដាក់បន្ថែមពណ៌?</i>
@@ -351,7 +401,7 @@
                                         </div>
 
                                         <div class="form-group likeshare">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
                                                 <label class="radio-inline">
                                                     <input type="checkbox" value="1" name="txtlike" checked />
                                                     <i class="subtopmenu hangmeas khmer">Share & Like text / អត្ថបទចុច Share & Like?</i>
@@ -534,7 +584,7 @@
                                                         class="form-control input-width-mini" 
                                                         type="number" 
                                                         style="float:left;margin-right:5px;" 
-                                                        value="180"
+                                                        value="30"
                                                         name="pause"
                                                    /> វិនាទី/seconds [recommended value: 60 seconds]
                                                 </label>
@@ -545,7 +595,7 @@
                                             <label class="col-md-4 control-label khmer">ក្នុង១ប៉ុស្តិ៍ត្រូវរង់ចាំ<br/>Next Post waiting: </label>
                                             <div class="col-md-8">
                                                 <label class="radio khmer"> 
-                                                    <select name="ppause" class="select2" style="width: 60px">
+                                                    <select name="ppause" class="select2" style="width: 60px" id="ppause">
                                                         <option value="1" >1</option>
                                                         <option value="2" >2</option>
                                                         <option value="3" >3</option>
@@ -589,8 +639,18 @@
                         </div>
 
                         <div class="form-group fixed">
-                            <div class="col-md-12">
+                            <div class="col-md-1">
                                 <span id="addfield1" class="addfield btn btn-success bs-tooltip <?php echo ($post_id) ? 'disabled':'';?>" data-original-title="Add more..."><i class="icon-plus"></i></span>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="radio-inline">
+                                    <input value="1" name="post_by_manaul" type="checkbox">
+                                    <i class="subtopmenu hangmeas khmer">Post and get code / ប៉ុស្តិ៍យកកូដផុសដៃ?</i>
+                                </label>
+                            </div>
+                            <div class="col-md-2">
                                 <input name="submit" type="submit" value="Public Content" class="btn btn-primary pull-right" />
                             </div>
                         </div> 
@@ -670,6 +730,74 @@
                 "color": false, //Button to change color of font  
                 "blockquote": false,
                 "html": true, //Button which allows you to edit the generated HTML. Default false
+            });
+
+            $('#getDataAll').click(function () {
+                if(this.checked) {
+                    $.ajax({
+                        url: '<?php echo base_url();?>uploads/<?php echo $this->session->userdata ('user_id');?>/<?php echo $this->session->userdata('fb_user_id');?>_tmp_action.json',
+                        dataType: 'json',
+                        async: false,
+                        success: function(json) {
+                            if(json) {
+                                if(json.blogid != '') {
+                                    /*set blog id*/
+                                   $("#blogpost").val(json.blogid); 
+                                   var blogpostxt = $( "#blogpost option:selected" ).text();
+                                   $("#s2id_blogpost").find(".select2-chosen").html(blogpostxt);
+                                }
+                                if(json.account_group_type != '') {
+                                    $("#togroup").val(json.account_group_type); 
+                                    var togrouptxt = $( "#togroup option:selected" ).text();
+                                   $("#s2id_togroup").find(".select2-chosen").html(togrouptxt);
+                                    /*set group id*/
+                                   $.ajax
+                                    ({
+                                        type: "get",
+                                        url: "<?php echo base_url ();?>managecampaigns/ajax?gid="+json.account_group_type+'&p=getgrouptype',
+                                        cache: false,
+                                        success: function(html)
+                                        {
+                                            $('#groupWrapLoading').hide();
+                                            $("#getAllGroups").html(html);
+                                            $("#groupWrap").show();
+                                            $("#checkAll").prop( "checked", true );
+                                        }
+                                    });
+                                   /*end set group id*/
+                               }
+
+                               /*blog link type*/
+                               $("input[name=bloglink][value="+json.blogLink+"]").prop('checked', true);
+                               /*userAgent*/
+                               $("input[name=useragent][value="+json.useragent+"]").prop('checked', true);
+                               $("input[name=shortlink][value="+json.short_link+"]").prop('checked', true);
+
+                               $("input[name=filter_brightness]").prop('checked', json.filter_brightness);
+                               $("input[name=filter_contrast]").prop('checked', json.filter_contrast);
+                               $("input[name=img_rotate]").prop('checked', json.img_rotate);
+
+                               $("input[name=cimg]").prop('checked', json.checkImage);
+                               $("input[name=btnplayer]").prop('checked', json.btnplayer);
+                               $("input[name=playerstyle]").prop('checked', json.playerstyle);
+                               $("input[name=imgcolor]").prop('checked', json.imgcolor);
+                               $("input[name=txtadd]").prop('checked', json.txtadd);
+
+                               $("textarea[name=Prefix]").val(json.prefix_title);
+                               $("textarea[name=addtxt]").val(json.suffix_title);
+
+                               $("input[name=ptype][value="+json.ptype+"]").prop('checked', true);
+                               /*wait_group*/
+                               $("input[name=pause]").val(json.wait_group);
+                               $("#ppause").val(json.wait_post); 
+                                var ppausetxt = $( "#ppause option:selected" ).text();
+                                $("#s2id_ppause").find(".select2-chosen").html(ppausetxt);  
+
+                                $("input[name=random][value="+json.randomGroup+"]").prop('checked', true);
+                            }
+                        }
+                    });
+                }
             });
 
             $('input[name=paction]').click(function () {

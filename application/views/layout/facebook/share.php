@@ -100,12 +100,15 @@
     elseif($action == 'checkpost'):?>
         <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
         <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var wm = Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window = wm.getMostRecentWindow(&quot;navigator:browser&quot;);var limit = 40,clear = 0,timedelay= 5,homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
-    <?php endif;?>   
+    <?php endif;?> 
     <script>
         $( document ).ready(function() {
+            <?php 
+            if($action != 'checkpost'):
+            if($sharePost->option->share_schedule ==1):?>
             setInterval(function() {            
-                //closeOnLoad("<?php echo base_url();?>managecampaigns");
-              }, 30000); 
+                closeOnLoad("<?php echo base_url();?>facebook/shareation?post=getpost");
+              }, 1800000);<?php endif;endif;?> 
         <?php if(!empty($action) && $action != 'checkpost'):?>    
         <?php
             $year = $month = $day = $hour = $minute = $second = 0;
@@ -233,15 +236,16 @@
 
 function closeOnLoad(myLink)
 {
-  var newWindow = window.open(myLink, "connectWindow", "width=600,height=400,scrollbars=yes");
-  setTimeout(
-             function()
-             {
-               newWindow.close();
-             },
-            2000
-            );
-  return false;
+    location.reload();
+  // var newWindow = window.open(myLink, "connectWindow", "width=600,height=400,scrollbars=yes");
+  // setTimeout(
+  //            function()
+  //            {
+  //              newWindow.close();
+  //            },
+  //           2000
+  //           );
+  // return false;
 }
 function checkPostBeforeShare() {
     // body...

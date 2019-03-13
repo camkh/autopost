@@ -210,6 +210,9 @@
                                         </td>
 								<td class="hidden-xs" style="width:300px;overflow: auto;">
    										<?php echo $content->link;?>
+   										<?php if(!empty($this->input->get('post_by_manaul'))):?>
+   											<textarea style="height: 40px;" id="copy-text" type="text" name="glink" class="form-control" onClick="copyText(this);"><?php echo $value->{Tbl_posts::name}; ?>&#13;&#10;<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p><?php echo $content->message;?></p></div> <a href="#" class="readmore">... Click to read more</a></div><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/<?php echo $content->vid;?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div></textarea>
+   										<?php endif;?>
                                         </td>
 								<td>
 									<?php $glink = $content->link;
@@ -219,7 +222,7 @@
 						                    $link = $glink . '?s=' . $uniq_id;
 						                    //$link = get_bitly_short_url( $link, BITLY_USERNAME, BITLY_API_KEY );
         									?>
-        									<input id="copy-text" type="text" name="glink" value="<?php echo $value->{Tbl_posts::name}.' 👉เม้นคำว่า ขอบคุณ แล้วกดเข้าไปดูเลขได้เลย #กดแชร์ 👉 ';echo $link;?>" class="form-control" onClick="copyText(this);" readonly/>
+        									<textarea style="height: 40px;" id="copy-text" type="text" name="glink" class="form-control" onClick="copyText(this);"><?php echo $value->{Tbl_posts::name}.'&#13;&#10;#กดแชร์ 👉 กดดูได้เลย 👇&#13;&#10;';?><a href="<?php echo $link;?>"><img style="border:1px solid #000;display: none;" src="<?php echo $content->picture; ?>" alt="" class="wp-image-45"/></a><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url(<?php echo $content->picture; ?>);"><a href="<?php echo $link;?>" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table></textarea>
         <?php if ($value->{Tbl_posts::status} == 1) { ?>
                                                 <span
 									class="label label-success"> Active </span>

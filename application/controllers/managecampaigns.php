@@ -674,7 +674,13 @@ class Managecampaigns extends CI_Controller {
             $userAgent = $this->input->post ( 'useragent' );
             $checkImage = @$this->input->post ( 'cimg' );
             $btnplayer = @$this->input->post ( 'btnplayer' );
+            $playerstyle = @$this->input->post ( 'playerstyle' );
             $imgcolor = @$this->input->post ( 'imgcolor' );
+            $txtadd = @$this->input->post ( 'txtadd' );
+            $filter_brightness = @$this->input->post ( 'filter_brightness' );
+            $filter_contrast = @$this->input->post ( 'filter_contrast' );
+            $img_rotate = @$this->input->post ( 'img_rotate' );
+            $post_by_manaul = @$this->input->post ( 'post_by_manaul' );
             
             /* check account type */
             $s_acount = explode ( '|', $accoung );
@@ -708,29 +714,47 @@ class Managecampaigns extends CI_Controller {
                     }
                 }
             }
+
             $schedule = array (                    
-                    'start_date' => @$startDate,
-                    'start_time' => @$startTime,
-                    'end_date' => @$endDate,
-                    'end_time' => @$endDate,
-                    'loop' => @$looptype,
-                    'loop_every' => @$loopOnEvery,
-                    'loop_on' => @$days,
-                    'wait_group' => @$pause,
-                    'wait_post' => @$ppause,
-                    'randomGroup' => @$random,
-                    'prefix_title' => @$PrefixTitle,
-                    'suffix_title' => @$SuffixTitle,
-                    'short_link' => @$short_link,
-                    'check_image' => @$checkImage,
-                    'imgcolor' => @$imgcolor,
-                    'btnplayer' => @$btnplayer,
-                    'random_link' => @$random_link,
-                    'share_type' => @$share_type,
-                    'share_schedule' => @$post_action,
-                    'account_group_type' => @$account_gtype,
+                'start_date' => @$startDate,
+                'start_time' => @$startTime,
+                'end_date' => @$endDate,
+                'end_time' => @$endDate,
+                'loop' => @$looptype,
+                'loop_every' => @$loopOnEvery,
+                'loop_on' => @$days,
+                'wait_group' => @$pause,
+                'wait_post' => @$ppause,
+                'randomGroup' => @$random,
+                'prefix_title' => @$PrefixTitle,
+                'suffix_title' => @$SuffixTitle,
+                'short_link' => @$short_link,
+                'check_image' => @$checkImage,
+                'imgcolor' => @$imgcolor,
+                'btnplayer' => @$btnplayer,
+                'playerstyle' => @$playerstyle,
+                'random_link' => @$random_link,
+                'share_type' => @$share_type,
+                'share_schedule' => @$post_action,
+                'account_group_type' => @$account_gtype,
+                'txtadd' => @$txtadd,
+                'blogid' => $bid,
+                'blogLink' => $blogLink,
+                'userAgent' => $userAgent,
+                'checkImage' => $checkImage,
+                'ptype' => $postType,
+                'img_rotate' => $img_rotate,
+                'filter_contrast' => $filter_contrast,
+                'filter_brightness' => $filter_brightness,
+                'post_by_manaul' => $post_by_manaul,
             );
+
             /* end data schedule */  
+            /*save tmp data post*/
+            $tmp_path = './uploads/'.$log_id.'/';
+            $file_tmp_name = $fbuids . '_tmp_action.json';
+            $this->json($tmp_path,$file_tmp_name, $schedule);
+            /*End save tmp data post*/
             if (!empty($link)) {
 
                 for ($i = 0; $i < count($link); $i++) {
@@ -739,13 +763,16 @@ class Managecampaigns extends CI_Controller {
                                      
 
                     /* data content */
-                    $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]); 
+                    $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
+                    $vid = $this->Mod_general->get_video_id($link[$i]);
+                    $vid = $vid['vid']; 
                     $content = array (
                             'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $title[$i]))),
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'picture' => @$thumb[$i],                            
+                            'vid' => @$vid,                          
                     );
                     /* end data content */
                     @iconv_set_encoding("internal_encoding", "TIS-620");
@@ -831,6 +858,7 @@ class Managecampaigns extends CI_Controller {
         /* end form */
 
         /*Post to blogger*/
+        $post_by_manaul = false;
         if(!empty($this->input->get('action'))) {
             if($this->input->get('action') == 'postblog' && !empty($this->input->get('bid'))) {
                 $bid = $this->input->get('bid');
@@ -878,76 +906,100 @@ class Managecampaigns extends CI_Controller {
                             copy($imgUrl, $fileName);      
                             $param = array(
                                 'btnplayer'=>$pOption->btnplayer,
+                                'playerstyle'=>$pOption->playerstyle,
                                 'imgcolor'=>$pOption->imgcolor,
+                                'txtadd'=>$pOption->txtadd,
+                                'filter_brightness'=>$pOption->filter_brightness,
+                                'filter_contrast'=>$pOption->filter_contrast,
+                                'img_rotate'=>$pOption->img_rotate,
                             );        
                             $image = $this->mod_general->uploadMedia($fileName,$param);
                         } else {
                             $image = $picture;
                         }
+                        $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
                             @unlink($fileName);
-                            $imgur = true;
-                            /*End upload photo first*/
-                            
-                            $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                            $link = @$blogData->url;
+                            if(empty($pOption->post_by_manaul)) {
+                                $imgur = true;
+                                /*End upload photo first*/
+                                
+                                $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                                $link = @$blogData->url;
 
-                            /*End Post to Blogger first*/
+                                /*End Post to Blogger first*/
 
-                            /*blog link*/
-                            if(!empty($link)) {
-                                if(!empty($blink) && $blink == 1) {
-                                    /*show blog link*/
-                                    $where_link = array(
-                                        'c_name'      => 'blog_linkA',
-                                        'c_key'     => $log_id,
-                                    );
-                                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                                    if (!empty($query_blog_link[0])) {
-                                        $data = json_decode($query_blog_link[0]->c_value);
-                                        $big = array();
-                                        foreach ($data as $key => $blog) {
-                                            $big[] = $blog->bid;                                
-                                        }
-                                        $brand = mt_rand(0, count($big) - 1);
-                                        $blogRand = $big[$brand];
-                                        // if($blink == 2) {
-                                        //     $blogRand = $bid;
-                                        // }
-                                        
-                                        $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script>';
-                                        $title = (string) $title;
-                                        $dataContent          = new stdClass();
-                                        $dataContent->setdate = false;        
-                                        $dataContent->editpost = false;
-                                        $dataContent->pid      = 0;
-                                        $dataContent->customcode = '';
-                                        $dataContent->bid     = $blogRand;
-                                        $dataContent->title    = $bid . $title;        
-                                        $dataContent->bodytext = $bodytext;
-                                        $dataContent->label    = 'blink';
-                                        $DataBlogLink = $this->postBlogger($dataContent);
-                                        $link = $DataBlogLink->url;
-                                    } 
-                                }
-                                /*End blog link*/
-
-                                /*update post*/
+                                /*blog link*/
                                 if(!empty($link)) {
-                                    $whereUp = array('p_id' => $pid);
-                                    $content = array (
-                                        'name' => $pConent->name,
-                                        'message' => $pConent->message,
-                                        'caption' => $pConent->caption,
-                                        'link' => @$link,
-                                        'picture' => @$image,                            
-                                    );
-                                    $dataPostInstert = array (
-                                        Tbl_posts::conent => json_encode ( $content ),
-                                        'p_post_to' => 0,
-                                    );
-                                    $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                                }
+                                    if(!empty($blink) && $blink == 1) {
+                                        /*show blog link*/
+                                        $where_link = array(
+                                            'c_name'      => 'blog_linkA',
+                                            'c_key'     => $log_id,
+                                        );
+                                        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                                        if (!empty($query_blog_link[0])) {
+                                            $data = json_decode($query_blog_link[0]->c_value);
+                                            $big = array();
+                                            foreach ($data as $key => $blog) {
+                                                $big[] = $blog->bid;                                
+                                            }
+                                            $brand = mt_rand(0, count($big) - 1);
+                                            $blogRand = $big[$brand];
+                                            // if($blink == 2) {
+                                            //     $blogRand = $bid;
+                                            // }
+                                            
+                                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
+                                            $title = (string) $title;
+                                            $dataContent          = new stdClass();
+                                            $dataContent->setdate = false;        
+                                            $dataContent->editpost = false;
+                                            $dataContent->pid      = 0;
+                                            $dataContent->customcode = '';
+                                            $dataContent->bid     = $blogRand;
+                                            $dataContent->title    = $title . ' '. $bid;        
+                                            $dataContent->bodytext = $bodytext;
+                                            $dataContent->label    = 'blink';
+                                            $DataBlogLink = $this->postBlogger($dataContent);
+                                            $link = $DataBlogLink->url;
+                                        } 
+                                    }
+                                    /*End blog link*/
+
+                                    /*update post*/
+                                    if(!empty($link)) {
+                                        $whereUp = array('p_id' => $pid);
+                                        $content = array (
+                                            'name' => $pConent->name,
+                                            'message' => $pConent->message,
+                                            'caption' => $pConent->caption,
+                                            'link' => $link,
+                                            'picture' => @$image,                            
+                                        );
+                                        $dataPostInstert = array (
+                                            Tbl_posts::conent => json_encode ( $content ),
+                                            'p_post_to' => 0,
+                                        );
+                                        $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                                    }
+                                    /*End update post*/
+                                } 
+                            } else {
+                                /*update post*/
+                                $whereUp = array('p_id' => $pid);
+                                $content = array (
+                                    'name' => $pConent->name,
+                                    'message' => $pConent->message,
+                                    'caption' => $pConent->caption,
+                                    'link' => $pConent->link,
+                                    'picture' => @$image,                            
+                                );
+                                $dataPostInstert = array (
+                                    Tbl_posts::conent => json_encode ( $content ),
+                                    'p_post_to' => 2,
+                                );
+                                $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
                                 /*End update post*/
                             }
                         }
@@ -968,7 +1020,7 @@ class Managecampaigns extends CI_Controller {
                         echo '<center>Please wait...</center>';
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 15 );</script>'; 
                     } else {
-                        redirect(base_url() . 'managecampaigns?m=post_success');
+                        redirect(base_url() . 'managecampaigns?m=post_success&post_by_manaul=' . @$post_by_manaul);
                     }
                     /*End check next post*/
                 }                
@@ -2724,6 +2776,37 @@ HTML;
           } catch (Google_Exception $e) {
             return array('error' => 'Authorization Required ' . $e->getMessage());
           }
+    }
+
+    public function json($upload_path,$file_name, $list = array(),$do='update')
+    {
+        if (!file_exists($upload_path)) {
+            mkdir($upload_path, 0700);
+        }
+        if (!file_exists($upload_path.$file_name)) {
+            $f = fopen($upload_path.$file_name, 'w');
+            $fwrite = fwrite($f, json_encode($list));
+            fclose($f);
+        } else {
+            $f = fopen($upload_path.$file_name, 'w');
+            $fwrite = fwrite($f, json_encode($list));
+            fclose($f);
+        }
+        if ($do == 'update') {
+            $f = fopen($upload_path.$file_name, 'w');
+            $fwrite = fwrite($f, json_encode($list));
+            fclose($f);
+        } else if ($do == 'delete') {
+            unlink($upload_path.$file_name);
+            $f = fopen($upload_path.$file_name, 'w');
+            $fwrite = fwrite($f, json_encode($list));
+            fclose($f);
+        }
+        if ($fwrite === false) {
+            return TRUE;
+        } else {
+            return false;
+        }
     }
 }
 /* End of file welcome.php */
