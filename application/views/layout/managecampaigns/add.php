@@ -118,8 +118,20 @@
                             </div>
 
                             <div class="col-md-4">
+
                                 <div class="widget box">
                                     <div class="widget-content">
+                                        <?php if(empty($copy)):?>
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="foldlink" />
+                                                    <i class="subtopmenu hangmeas khmer">From lld link / យកពីប្លុកចាស់?</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+                                        <?php endif;?>
+
                                         <div class="btn-group fbaccounts pull-left" id="fbaccounts"> 
                                             <select style="visibility: hidden;height: 1px" name="accoung" class="required" id="fbaccount" required>
                                             <option value="">Select Account</option>
@@ -598,9 +610,9 @@
         }
         function getLink(e) {
             $("#blockuis").show();
-            var id = $(e).attr('id');
+            var id = $(e).attr('id'),oldlink = $("input[name=foldlink]").val();
             if(e!='') {
-                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val())
+                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
                   .done(function(data) {
                     if ( data ) {
                         $("#blockuis").hide();

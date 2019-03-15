@@ -681,6 +681,8 @@ class Managecampaigns extends CI_Controller {
             $filter_contrast = @$this->input->post ( 'filter_contrast' );
             $img_rotate = @$this->input->post ( 'img_rotate' );
             $post_by_manaul = @$this->input->post ( 'post_by_manaul' );
+            $foldlink = @$this->input->post ( 'foldlink' );
+            $youtube_link = @$this->input->post ( 'vid' );
             
             /* check account type */
             $s_acount = explode ( '|', $accoung );
@@ -747,6 +749,7 @@ class Managecampaigns extends CI_Controller {
                 'filter_contrast' => $filter_contrast,
                 'filter_brightness' => $filter_brightness,
                 'post_by_manaul' => $post_by_manaul,
+                'foldlink' => $foldlink,
             );
 
             /* end data schedule */  
@@ -764,7 +767,11 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
-                    $vid = $this->Mod_general->get_video_id($link[$i]);
+                    if(!empty( $foldlink )) {
+                        $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
+                    } else {
+                        $vid = $this->Mod_general->get_video_id($link[$i]);
+                    }                    
                     $vid = $vid['vid']; 
                     $content = array (
                             'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $title[$i]))),
@@ -912,8 +919,12 @@ class Managecampaigns extends CI_Controller {
                                 'filter_brightness'=>$pOption->filter_brightness,
                                 'filter_contrast'=>$pOption->filter_contrast,
                                 'img_rotate'=>$pOption->img_rotate,
-                            );        
-                            $image = $this->mod_general->uploadMedia($fileName,$param);
+                            );
+                            if(!empty($pOption->foldlink)) {
+                                $image = $pConent->picture;
+                            } else {
+                                $image = $this->mod_general->uploadMedia($fileName,$param);
+                            }                            
                         } else {
                             $image = $picture;
                         }
@@ -923,9 +934,12 @@ class Managecampaigns extends CI_Controller {
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
                                 /*End upload photo first*/
-                                
-                                $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                                $link = @$blogData->url;
+                                if(!empty($pOption->foldlink)) {
+                                    $link = $pConent->link;
+                                } else {
+                                   $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                                    $link = @$blogData->url; 
+                                }                                
 
                                 /*End Post to Blogger first*/
 
@@ -1073,15 +1087,15 @@ class Managecampaigns extends CI_Controller {
                     'videoID' => $vid
                 );
                 $customcode = json_encode($dataMeta);
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div id="cshow"></div><div id="someAds"></div>';
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div id="cshow"></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 break;
             case 'link':
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div id="someAdsA"></div><div>คลิปดูวีดีโอ==>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div id="someAds"></div>';
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div>คลิปดูวีดีโอ==>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 $label = 'link';
                 $customcode = '';
                 break;
             default:
-                $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div id="someAdsA"></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div id="someAds"></div>';
+                $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 $customcode = '';
                 break;
         }
@@ -1798,16 +1812,25 @@ HTML;
         if (! empty ( $url )) {
             $this->load->library ( 'html_dom' );
             $html = file_get_html ( $url );
-            $title = @$html->find ( 'meta[property=og:title]', 0 )->content;
             $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
-            $title1 = @$html->find ( '.post-title', 0 )->innertext;
-            if (!$title) {
-                $title = $html->find ( '.post-title a', 0 )->innertext;
-            } elseif ($title1) {
-                $title = $html->find ( '.post-title', 0 )->innertext;
+            $vid = '';
+            if (! empty ( $this->input->get('old') )) {
+                $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                $html1 = file_get_html ( $iframe );
+                $title = $html1->find ( 'title', 0 )->innertext;
+                $vid = $iframe;
             } else {
-                $title = $html->find ( 'title', 0 )->innertext;
+                $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
+                $title1 = @$html->find ( '.post-title', 0 )->innertext;
+                if (!$title) {
+                    $title = $html->find ( '.post-title a', 0 )->innertext;
+                } elseif ($title1) {
+                    $title = $html->find ( '.post-title', 0 )->innertext;
+                } else {
+                    $title = $html->find ( 'title', 0 )->innertext;
+                }
             }
+            
             $postTitle = $title;
             $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
             $image_src = @$html->find ( 'link [rel=image_src]', 0 )->href;
@@ -1825,7 +1848,8 @@ HTML;
                     'message' => trim ( $title ),
                     'caption' => trim ( $title ),
                     'description' => trim ( $description ),
-                    'link' => $url
+                    'link' => $url,
+                    'vid' => $vid,
             );            
             if (! empty ( $data )) {
                 if(!empty($this->input->get('url'))) {

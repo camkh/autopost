@@ -109,6 +109,7 @@
                                                                                 <div class="col-md-12"> 
                                                                                 <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
                                                                                 <input type="hidden" value="<?php echo @$post_id; ?>" name="postid" id="postID"/>
+                                                                                <input type="hidden" value="" name="vid[]" id="vid_link_1"/>
                                                                                 </div>
                                                                             </div>                                                   
                                                                             <div class="form-group" style="border: none;margin-bottom: 3px">
@@ -183,6 +184,15 @@
                             <div class="col-md-4">
                                 <div class="widget box">
                                     <div class="widget-content">
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="foldlink" />
+                                                    <i class="subtopmenu hangmeas khmer">From lld link / យកពីប្លុកចាស់?</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <span class="label label-primary khmer" style="font-size: 16px"><label><input type="checkbox" value="" id="getDataAll"/> យកតាមជម្រើសចាស់  </label></span>
@@ -872,9 +882,10 @@
                 var name = 'name_link_' + code;
                 var description = 'description_link_' + code;
                 var image = 'image_link_' + code;
+                var vid = 'vid_link_' + code;
                 var image_show = 'show_link_' + code;
                 var n = $( ".optionBox" ).length;
-              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
+              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /><input type="hidden" id="'+vid+'" value="" class="form-control post-option" name="vid[]" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
                 getEditor(code);
                 updateCount();
@@ -1035,15 +1046,16 @@
         }
         function getLink(e) {
             $("#blockuis").show();
-            var id = $(e).attr('id');
+            var id = $(e).attr('id'),oldlink = $("input[name=foldlink]").val();
             if(e!='') {
-                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val())
+                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
                   .done(function(data) {
                     if ( data ) {
                         $("#blockuis").hide();
                         var obj = JSON.parse(data);
                       $('#title_' + id).val(obj.name);
                       $('#name_' + id).val(obj.name);
+                      $('#vid_' + id).val(obj.vid);
                       $('#description_' + id).val(obj.description);
                       $('#image_' + id).val(obj.picture);
                       $('#show_' + id).attr("src",obj.picture);
