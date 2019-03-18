@@ -19,6 +19,7 @@
     padding: 3px;
     font-weight: bold;
     color: #fff;
+    text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
 }
 .in-online a span{padding:5px 3px 0 3px;display:block;height:30px;overflow:hidden;font-size: 14px;line-height: 15px;}
 @media(max-width: 468px) {
