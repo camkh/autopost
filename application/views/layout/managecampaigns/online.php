@@ -110,7 +110,7 @@ setOnline();
 //$('#content').remove();
 setInterval(function(){
     setOnline();
-}, 100000);
+}, 60000);
     
 
      var random = myImages[Math.floor(Math.random() * myImages.length)];
