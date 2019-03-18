@@ -1837,10 +1837,15 @@ HTML;
             $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
             $vid = '';
             if (! empty ( $this->input->get('old') )) {
-                $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
-                $html1 = file_get_html ( $iframe );
-                $title = $html1->find ( 'title', 0 )->innertext;
-                $vid = $iframe;
+                $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
+                if(empty($iframeCheck)) {
+                    $title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
+                } else {
+                    $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                    $html1 = file_get_html ( $iframe );
+                    $title = $html1->find ( 'title', 0 )->innertext;
+                    $vid = $iframe;
+                }                
             } else {
                 $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
                 $title1 = @$html->find ( '.post-title', 0 )->innertext;

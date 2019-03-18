@@ -80,8 +80,12 @@ var myImages = new Array("https://preykabbas.files.wordpress.com/2012/08/dsc_098
 var otherOnline = [
 {"name":"SN","online":"nb21iphzm4"},
 {"name":"TK","online":"kdw1lefeye"},
-{"name":"SR","online":"xm28ed325tw4"},
+{"name":"SR","online":"ytxi8u64m8"},
 {"name":"KV","online":"qt0w20fqui"},
+{"name":"DV","online":"lzs1gw464i"},
+{"name":"BB1","online":"f9c95vmq0z"},
+{"name":"BS","online":"tnei4ubws0"},
+{"name":"SrL","online":"ygakythr9m"},
 {"name":"R","online":"cg5tms2uhr"},
 {"name":"01","online":"von9995p84"},
 {"name":"02","online":"mmx6oo8wu5"},
@@ -90,7 +94,10 @@ var otherOnline = [
 {"name":"05","online":"azsdu97oge"},
 {"name":"06","online":"djspuafipc"},
 {"name":"07","online":"5pok49g7xj"},
-{"name":"Burma 8","online":"43zmhetjvpry"},
+{"name":"BB","online":"55vfmrfk3z"},
+{"name":"08","online":"6m0b3kzsmd"},
+{"name":"09","online":"bhdhdap5hi"},
+{"name":"News 1","online":"186p1xd648"},
 ];
 var items = ["FF5647","FF3CAE","EA49FF","5D5BFF","62C0FF","00E08A","00E309","FF8537","FF000F","FD0044","E9A100","7CBA00","40C200","FE3EFF","C78FFF","72D8FF","007F23","00C61A","157200","3A6F00","647A00","D7D900","E37A00","DC3A00","DD0017","DD0067","C2008B","740057","940052","A1001C","9C1400","9D4A00","845D00","5E6400"];
 $(document).ready(function(){

@@ -610,7 +610,10 @@
         }
         function getLink(e) {
             $("#blockuis").show();
-            var id = $(e).attr('id'),oldlink = $("input[name=foldlink]").val();
+            var id = $(e).attr('id'),oldlink ='';
+            if($("input[name=foldlink]").is(":checked")) {
+                oldlink = $("input[name=foldlink]").val();
+            }
             if(e!='') {
                 var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
                   .done(function(data) {
