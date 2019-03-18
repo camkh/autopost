@@ -362,6 +362,28 @@ class Managecampaigns extends CI_Controller {
 		$user = $this->session->userdata ( 'username' );
 		$this->load->view ( 'managecampaigns/index', $data );
 	}
+    public function online()
+    {
+        $this->Mod_general->checkUser ();
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Online';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('Posts', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Online', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        $this->load->view ( 'managecampaigns/online', $data );
+
+    }
 	public function posted($value='')
 	{
         $fbUserId = $this->session->userdata ( 'sid' );
@@ -2084,6 +2106,21 @@ HTML;
                     }
                     echo json_encode($dataTy);
                  break;
+                 case 'online':
+                    $id = ! empty ( $_GET ['id'] ) ? $_GET ['id'] : '';
+                    $url = 'https://whos.amung.us/stats/data/?jtdrz87p&k='.$id.'&list=recents&max=1';
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    $result = curl_exec($ch);
+                    curl_close($ch);
+
+                    $obj = json_decode($result);
+                    echo $obj->total_count;
+                    die;
+                    // $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
+                     break;
 			}
 		}
 	}
