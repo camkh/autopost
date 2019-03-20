@@ -1054,7 +1054,7 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($nextPost[0])) {
                         $p_id = $nextPost[0]->p_id;
                         echo '<center>Please wait...</center>';
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 15 );</script>'; 
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'";}, 30 );</script>'; 
                     } else {
                         redirect(base_url() . 'managecampaigns?m=post_success&post_by_manaul=' . @$post_by_manaul);
                     }
