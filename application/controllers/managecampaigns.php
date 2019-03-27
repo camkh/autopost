@@ -916,6 +916,26 @@ class Managecampaigns extends CI_Controller {
                     $vid = $vid['vid'];
                     $blink = $this->input->get('blink');
 
+                    // if false video
+                    if(strlen($vid) < 10) {
+                        $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
+                        /*check next post*/
+                        $whereNext = array (
+                            'user_id' => $log_id,
+                            'u_id' => $fbUserId,
+                            'p_post_to' => 1,
+                        );
+                        $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
+                        if(!empty($nextPost[0])) {
+                            $p_id = $nextPost[0]->p_id;
+                            $autopost = $this->input->get('autopost');
+                            echo '<div style="background-image:url(https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no);background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;"><center>Please wait...</center></div>';
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>'; 
+                        }
+                    }
+                    // if false video
+
+                    
                     /*upload photo first*/
                     $imgur = false;        
                     if(!empty($vid)) {
