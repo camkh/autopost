@@ -74,6 +74,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
         function createblog() {
             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
         }
+        <?php if(!empty($this->input->get('startpost'))):?>createblog();<?php endif;?>
     </script>    
     <div class="page-header">
     </div>

@@ -238,6 +238,20 @@ class Managecampaigns extends CI_Controller {
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
 
+        /*check auto post*/
+        if($this->input->get('m') == 'runout_post') {
+            $whereShowAuto = array(
+                'c_name'      => 'autopost',
+                'c_key'     => $log_id,
+            );
+            $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
+            if(!empty($autoData[0])) {
+                if($autoData[0]->c_value == 1) {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?startpost=1";}, 30 );</script>'; 
+                }
+            }
+        }
+        /*end check auto post*/
 
 		$data ['addJsScript'] = array (
 				"$('#checkAll').click(function () {
@@ -935,7 +949,7 @@ class Managecampaigns extends CI_Controller {
                     }
                     // if false video
 
-                    
+
                     /*upload photo first*/
                     $imgur = false;        
                     if(!empty($vid)) {
