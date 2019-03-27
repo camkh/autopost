@@ -55,7 +55,7 @@ class Splogr extends CI_Controller
         /*End check link*/
         die;
     }
-    public function getpost()
+    public function getpost($get='')
     {
 
         $log_id = $this->session->userdata ('user_id');
@@ -90,7 +90,11 @@ class Splogr extends CI_Controller
                 @$this->Mod_general->update ('splogr', $updateLink, $wherelink);
             }
             /*End update link*/
-            echo json_encode($getJsonArray);
+            if(!empty($get)) {
+                return $getJsonArray;
+            } else {
+                echo json_encode($getJsonArray);
+            }            
         } else {
             $where_cur = array(
                 'status' => 0,
@@ -100,11 +104,16 @@ class Splogr extends CI_Controller
             $curLink = $this->Mod_general->select ('splogr', 'link', $where_cur,'rand()','',1 );
             if(!empty($curLink[0])) {
                 $code = $this->get_from_site_id($curLink[0]->link);
-                redirect(base_url() . 'splogr/getpost');
+                //redirect(base_url() . 'splogr/getpost');
+                $this->getpost($get);
             } else {
                 $error = array('error'=> 1); 
                 $getJsonArray = array('error'=> 1,'content'=> 'not config');
-                echo json_encode($getJsonArray);
+                if(!empty($get)) {
+                    return $getJsonArray;
+                } else {
+                    echo json_encode($getJsonArray);
+                }
             }
         }
         /*End check link*/

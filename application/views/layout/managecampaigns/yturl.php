@@ -67,7 +67,9 @@
                                                     <div class="input-group ytid">               
                                                         <select name="ytmax" class="select2" style="width: 60px">
                                                                 <option value="5" >5</option>
-                                                                <option value="10" selected>10</option>
+                                                                <option value="10">10</option>
+                                                                <option value="15" selected>15</option>
+                                                                <option value="20">20</option>
                                                                 <option value="25">25</option>
                                                                 <option value="50">50</option>
                                                                 <option value="60">60</option>
