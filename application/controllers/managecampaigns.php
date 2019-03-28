@@ -2527,11 +2527,13 @@ HTML;
             $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
             if(!empty($nextPost[0])) {
                 $p_id = $nextPost[0]->p_id;
-                redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=postblog&blink='.$json_a->blogLink.'&autopost=1'); 
+                //redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=postblog&blink='.$json_a->blogLink.'&autopost=1'); 
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>'; 
             }                              
         } else {
-            redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
-            exit();
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/ajax?gid=&p=autopostblog";}, 30 );</script>'; 
+            //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
+            //exit();
         }
     }
 
