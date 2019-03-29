@@ -2466,6 +2466,7 @@ HTML;
         $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
         $string = file_get_contents($tmp_path);
         $json_a = json_decode($string);
+        echo '<meta http-equiv="refresh" content="60"/>';
 
         /*update main blog link*/
         if(!empty($this->input->get('addbloglink'))) {
