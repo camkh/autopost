@@ -23,11 +23,39 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 if(!empty($bloglinkA[0])) {
-    $bName = $bloglinkA[0]->title;
-    $bint = (int) filter_var($bName, FILTER_SANITIZE_NUMBER_INT);
-    $bArr = explode($bint, $bName);
-    $bNewName = $bArr[0]. ($bint + 1);
+    $bLink = array();
+    foreach ($bloglinkA as $key => $bloglink) {
+        // echo '<pre>'; 
+        // print_r($bloglink);                               
+        // echo '</pre>';   
+        $twoDaysAgo = new DateTime(date('Y-m-d H:i:s', strtotime('-1 days')));
+        $dateModify = new DateTime(date('Y-m-d H:i:s', strtotime($bloglink->date)));
+        /*if video date is >= before yesterday*/
+        //today
+        if($dateModify < $twoDaysAgo) {
+            if($bloglink->status ==1) {
+                $bLink[] = $bloglink;
+            }
+        } else if($dateModify > $twoDaysAgo) {
+            $bLink[] = $bloglink;
+        }                  
+    }
+    if(!empty($bLink)) {
+        $brand = mt_rand(0, count($bLink) - 1);
+        $blogRand = $bLink[$brand];
+        $bName = $blogRand->title;
+        $bLinkID = $blogRand->bid;
+        $bint = (int) filter_var($bName, FILTER_SANITIZE_NUMBER_INT);
+        $bArr = explode($bint, $bName);
+        $bNewName = $bArr[0]. ($bint + 1);
+        $createNewBlog = false;
+    } else {
+        $createNewBlog = true;
+        $bNewName = generateRandomString(1).'1';
+    }
+    
 } else {
+    $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
@@ -74,7 +102,39 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
         function createblog() {
             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
         }
-        <?php if(!empty($this->input->get('startpost'))):?>createblog();<?php endif;?>
+        function checkBloggerPost(gettype) {
+            $.ajax({        
+                url : 'https://www.blogger.com/feeds/<?php echo @$bLinkID;?>/posts/default?max-results=1&alt=json-in-script',
+                type : 'get',
+                dataType : "jsonp",
+                success : function (data) {
+                    loading = false; //set loading flag off once the content is loaded
+                    var totalResults = data.feed.openSearch$totalResults.$t,posturl='';
+                    for (var i = 0; i < data.feed.entry.length; i++) {
+                        var content = data.feed.entry;
+                        for (var j = 0; j < content[i].link.length; j++) {
+                            if (content[i].link[j].rel == "alternate") {
+                                posturl = content[i].link[j].href;
+                            }
+                        }
+                    }
+                    // if(totalResults>15) {
+                    //     //check link 
+                    // }
+                    // if(totalResults<15) {
+                    //     //post
+                    // }
+                }
+            })
+        }
+        <?php if(!empty($this->input->get('startpost'))):?>
+            <?php if(!empty($createNewBlog)):?>
+                createblog();
+            <?php endif;?>
+            <?php if(empty($createNewBlog)):?>
+                checkBloggerPost();
+            <?php endif;?>
+        <?php endif;?>
     </script>    
     <div class="page-header">
     </div>
@@ -83,6 +143,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             <div class="row">
                     <!-- body -->
                     <div class="col-md-4">
+                        <a href="javascript:;" onclick="checkBloggerPost()" class="btn btn-primary pull-right">Start now</a>
                         <form class="form-horizontal row-border" action="" method="post"> 
                             <div class="row">
                                 <div class="col-md-12">
