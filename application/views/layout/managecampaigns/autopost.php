@@ -62,6 +62,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
+<code id="codeD" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=7\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?start=1\n&quot;;retcode=iimPlay(mm);</code>
 <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo $bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = 1, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
     <script type="text/javascript">
@@ -104,6 +105,9 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
         }
         function checkBloggerPost(gettype) {
+            <?php if($isAccessTokenExpired):?>
+            logginfirst();
+            <?php endif;?>
             $.ajax({        
                 url : 'https://www.blogger.com/feeds/<?php echo @$bLinkID;?>/posts/default?max-results=1&alt=json-in-script',
                 type : 'get',
@@ -124,6 +128,11 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                     runcode(res);
                 }
             })
+        }
+
+        function logginfirst() {
+            var str = $("#codeD").text();
+            runcode(str);
         }
         <?php if(!empty($this->input->get('startpost'))):?>
             <?php if(!empty($createNewBlog)):?>

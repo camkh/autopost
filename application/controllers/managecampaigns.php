@@ -793,6 +793,7 @@ class Managecampaigns extends CI_Controller {
                 'filter_brightness' => $filter_brightness,
                 'post_by_manaul' => $post_by_manaul,
                 'foldlink' => $foldlink,
+                'gemail' => $this->session->userdata ( 'gemail' ),
             );
 
             /* end data schedule */  
@@ -2878,6 +2879,7 @@ HTML;
         $user = $this->session->userdata ( 'email' );
         $provider_uid = $this->session->userdata ( 'provider_uid' );
         $provider = $this->session->userdata ( 'provider' );
+        $fbUserId = $this->session->userdata ( 'fb_user_id' );
         $this->load->theme ( 'layout' );
         $data ['title'] = 'Autopost :: Admin Area';
 
@@ -2889,6 +2891,16 @@ HTML;
         $this->breadcrumbs->add('Setting', base_url().$this->uri->segment(1));
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
+        $data['isAccessTokenExpired'] = true;
+        if(!empty($this->session->userdata('access_token'))) {
+            $this->load->library('google_api');
+            $client = new Google_Client();                  
+            $client->setAccessToken($this->session->userdata('access_token'));
+            $data['isAccessTokenExpired'] = false;
+            if($client->isAccessTokenExpired()) {
+                $data['isAccessTokenExpired'] = true;
+            }
+        }
 
         /*show blog linkA*/
         $where_link = array(
@@ -3185,6 +3197,9 @@ HTML;
 
         }
         /*End add blog link by Imacros*/
+        $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+        $string = file_get_contents($tmp_path);
+        $data['json_a'] = json_decode($string);
 
         $this->load->view ( 'managecampaigns/autopost', $data );
     }
@@ -3213,14 +3228,13 @@ HTML;
             $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
             if(!empty($autoData[0])) {
                 if($autoData[0]->c_value == 1) {
-                    echo date('H');
-                    echo '<br/>';
                     if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
                     } 
                     //localhost/autopost/managecampaigns/autopost?start=1
                 }
             }
+
         $this->load->view ( 'managecampaigns/waiting', $data );
     }
 
@@ -3256,7 +3270,7 @@ HTML;
             'c_name'      => 'blog_link',
             'c_key'     => $log_id,
         );
-        $data['bloglink'] = false;
+        $data['bloglink'] = array();
         $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
         if (!empty($query_blog_link[0])) {
             $data['bloglink'] = json_decode($query_blog_link[0]->c_value);
