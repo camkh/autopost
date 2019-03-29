@@ -247,7 +247,14 @@ class Managecampaigns extends CI_Controller {
             $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
             if(!empty($autoData[0])) {
                 if($autoData[0]->c_value == 1) {
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?startpost=1";}, 30 );</script>'; 
+                    echo date('H');
+                    echo '<br/>';
+                    if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                       echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
+                    } else {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
+                    }
+                    //localhost/autopost/managecampaigns/autopost?start=1
                 }
             }
         }
@@ -932,7 +939,7 @@ class Managecampaigns extends CI_Controller {
                     $blink = $this->input->get('blink');
 
                     // if false video
-                    if(strlen($vid) < 10) {
+                    if(strlen($vid) > 10) {
                         $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
                         /*check next post*/
                         $whereNext = array (
@@ -2193,6 +2200,50 @@ HTML;
                     $lid = ! empty ( $_GET ['lid'] ) ? $_GET ['lid'] : '';
                     $max = ! empty ( $_GET ['max'] ) ? $_GET ['max'] : '15';
                     $sid = $this->session->userdata ( 'sid' );
+
+                    /*update for bloglink*/
+                    if(!empty($lid)) {
+                        $blogLinkType = 'blog_linkA';
+                        if (!empty($lid)) {
+                            $whereLinkA = array(
+                                'c_name'      => $blogLinkType,
+                                'c_key'     => $log_id,
+                            );
+                            $queryLinkData = $this->Mod_general->select('au_config', '*', $whereLinkA);
+                            /* check before insert */
+                            if (!empty($queryLinkData[0])) {
+                                $bdata = json_decode($queryLinkData[0]->c_value);
+                                $found = false;
+                                $jsondata = array();
+                                foreach ($bdata as $key => $bvalue) {
+                                    $pos = strpos($bvalue->bid, $lid);
+                                    if ($pos === false) {
+                                        $jsondata[] = array(
+                                            'bid' => $bvalue->bid,
+                                            'title' => $bvalue->title,
+                                            'status' => $bvalue->status,
+                                            'date' => @$bvalue->date
+                                        );
+                                    } else {
+                                       $jsondata[] = array(
+                                            'bid' => $bvalue->bid,
+                                            'title' => $bvalue->title,
+                                            'status' => 1,
+                                            'date' => date('Y-m-d H:i:s')
+                                        ); 
+                                    }
+                                } 
+                                $data_blog = array(
+                                    'c_value'      => json_encode($jsondata),
+                                );
+                                $WhereLinkA = array(
+                                    'c_key'     => $log_id,
+                                    'c_name'      => $blogLinkType
+                                );
+                                $lastID = $this->Mod_general->update('au_config', $data_blog,$WhereLinkA);
+                            }
+                        }
+                    }
                     
                     /*check video exist*/
                     $checkYtExist = $this->mod_general->select ( 
@@ -2212,6 +2263,7 @@ HTML;
                         if (! empty ( $id )) {
                             $ytID = $id;
                         } else {
+                            echo 111;
                             $where_yt = array(
                                 'c_name'      => 'youtubeChannel',
                                 'c_key'     => $log_id,
@@ -2326,15 +2378,19 @@ HTML;
                         );
                         /*End check data exist*/
                         if(empty($checkExist[0])) {
-                            $dataYtInstert = array (
-                                'yid' => $dataContent->vid,
-                                'y_date' => $ytArr['snippet']['publishedAt'],
-                                'y_other' => json_encode($dataContent),
-                                'y_status' => 0,
-                                'y_fid' => $sid,
-                                'y_uid' => $log_id,
-                            );
-                            $ytData = $this->Mod_general->insert ( 'youtube', $dataYtInstert );
+                            if(strlen($dataContent->vid) > 10) {
+                                $dataYtInstert = array (
+                                    'yid' => $dataContent->vid,
+                                    'y_date' => $ytArr['snippet']['publishedAt'],
+                                    'y_other' => json_encode($dataContent),
+                                    'y_status' => 0,
+                                    'y_fid' => $sid,
+                                    'y_uid' => $log_id,
+                                );
+                                $ytData = $this->Mod_general->insert ( 'youtube', $dataYtInstert );
+                            } else {
+                                continue;
+                            }
                         }
                     }
                 }
@@ -2410,6 +2466,93 @@ HTML;
         $string = file_get_contents($tmp_path);
         $json_a = json_decode($string);
 
+        /*update main blog link*/
+        if(!empty($this->input->get('addbloglink'))) {
+            $addbloglink = $this->input->get('addbloglink');
+            $pid = $this->input->get('pid');
+            $bid = $this->input->get('bid');
+            $blog_link_id = $this->input->get('blog_link_id');
+            $wPost = array (
+                'user_id' => $log_id,
+                'p_id' => $pid,
+                'p_post_to' => 1,
+            );
+            $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+            if(!empty($getPost[0])) {
+                $pConent = json_decode($getPost[0]->p_conent);
+                //$pOption = json_decode($getPost[0]->p_schedule);
+                $whereUp = array('p_id' => $pid,'user_id' => $log_id);
+                $content = array (
+                    'name' => $pConent->name,
+                    'message' => $pConent->message,
+                    'caption' => $pConent->caption,
+                    'link' => $pConent->link,
+                    'mainLink' => $addbloglink,
+                    'picture' => $pConent->picture,                            
+                    'vid' => @$pConent->vid,                            
+                );
+                $dataPostInstert = array (
+                    Tbl_posts::conent => json_encode ( $content ),
+                    'p_post_to' => 1,
+                    'yid' => $pConent->vid,
+                );
+                $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+            }
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=bloglink&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
+        }
+        /*End update main blog link*/
+
+        /*update blog link*/
+        if(!empty($this->input->get('linkbloglink'))) {
+            $bloglink = $this->input->get('linkbloglink');
+            $pid = $this->input->get('pid');
+            $bid = $this->input->get('bid');
+            $blog_link_id = $this->input->get('blog_link_id');
+            $wPost = array (
+                'user_id' => $log_id,
+                'p_id' => $pid,
+                'p_post_to' => 1,
+            );
+            $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+            if(!empty($getPost[0])) {
+                $pConent = json_decode($getPost[0]->p_conent);
+                //$pOption = json_decode($getPost[0]->p_schedule);
+                $whereUp = array('p_id' => $pid,'user_id' => $log_id);
+                $content = array (
+                    'name' => $pConent->name,
+                    'message' => $pConent->message,
+                    'caption' => $pConent->caption,
+                    'link' => $bloglink,
+                    'mainLink' => $pConent->mainLink,
+                    'picture' => $pConent->picture,                            
+                    'vid' => @$pConent->vid,                            
+                );
+                $dataPostInstert = array (
+                    Tbl_posts::conent => json_encode ( $content ),
+                    'p_post_to' => 0,
+                    'yid' => $pConent->vid,
+                );
+                $blogLinkUpdate = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                if($blogLinkUpdate) {
+                    $sid = $this->session->userdata ( 'sid' );
+                    $whereNext = array (
+                        'user_id' => $log_id,
+                        'u_id' => $sid,
+                        'p_post_to' => 1,
+                    );
+                    $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
+                    if(!empty($nextPost[0])) {
+                        $p_id = $nextPost[0]->p_id;
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink=&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';  
+                    } else {
+                        //http://localhost/autopost/facebook/shareation?post=getpost
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>'; 
+                    }
+                }
+            }
+        }
+        /*End update blog link*/
+
         if(empty($this->input->get('action'))) {
             $schedule = array (                    
                 'start_date' => $json_a->start_date,
@@ -2482,66 +2625,101 @@ HTML;
                     $contents = $aObj->getpost(1);
                     $txt = preg_replace('/\r\n|\r/', "\n", $contents["content"][0]["content"]);                   
                     $vid = $ytData->yid; 
+                    if(strlen($vid) > 10) {
+                        $y_other = json_decode($ytData->y_other);
+                        $title = $y_other->title;
 
-                    $y_other = json_decode($ytData->y_other);
-                    $title = $y_other->title;
-                    $content = array (
-                            'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
-                            'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
-                            'caption' => @$y_other->description,
-                            'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
-                            'picture' => 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg',                            
-                            'vid' => @$ytData->yid,                          
-                    );
-                    /* end data content */
-                    @iconv_set_encoding("internal_encoding", "TIS-620");
-                    @iconv_set_encoding("output_encoding", "UTF-8");   
-                    @ob_start("ob_iconv_handler");
-                    $dataPostInstert = array (
-                            Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($y_other->title)),
-                            Tbl_posts::conent => json_encode ( $content ),
-                            Tbl_posts::p_date => date('Y-m-d H:i:s'),
-                            Tbl_posts::schedule => json_encode ( $schedule ),
-                            Tbl_posts::user => $sid,
-                            'user_id' => $log_id,
-                            Tbl_posts::post_to => 0,
-                            'p_status' => 1,
-                            'p_post_to' => 1,
-                            Tbl_posts::type => 'Facebook' 
-                    );
-                    @ob_end_flush();
-                    $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
-                    /* end add data to post */
-                    
-                    /* add data to group of post */
-                    if(!empty($itemGroups)) {
-                        if($json_a->share_schedule == 1) {
-                            $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
-                            $cPost = $date->format('Y-m-d H:i:s');
-                        } else {
-                            $cPost = date('Y-m-d H:i:s');
-                        }
-                        $ShContent = array (
-                            'userAgent' => @$json_a->userAgent,                            
-                        );                    
-                        foreach($itemGroups as $key => $groups) { 
-                            if(!empty($groups)) {       
-                                $dataGoupInstert = array(
-                                    'p_id' => $AddToPost,
-                                    'sg_page_id' => $groups->sg_id,
-                                    'social_id' => @$sid,
-                                    'sh_social_type' => 'Facebook',
-                                    'sh_type' => $json_a->ptype,
-                                    'c_date' => $cPost,
-                                    'uid' => $log_id,                                    
-                                    'sh_option' => json_encode($ShContent),                                    
-                                );
-                                $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                        /*upload image so server*/
+                        $picture = 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg';
+                        $imgUrl = $picture;
+                            
+                            $structure = FCPATH . 'uploads/image/';
+                            if (!file_exists($structure)) {
+                                mkdir($structure, 0777, true);
                             }
-                        } 
-                    }
-                    /* end add data to group of post */
+                            $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                            $file_title = basename($imgUrl);
+                            $fileName = FCPATH . 'uploads/image/'.$ytData->yid.$file_title;
+
+                            if (!preg_match('/ytimg.com/', $fileName)) {
+                                $imgUrl = $picture;
+                            }    
+
+                            if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
+                                copy($imgUrl, $fileName);      
+                                $param = array(
+                                    'btnplayer'=>$json_a->btnplayer,
+                                    'playerstyle'=>$json_a->playerstyle,
+                                    'imgcolor'=>$json_a->imgcolor,
+                                    'txtadd'=>$json_a->txtadd,
+                                    'filter_brightness'=>$json_a->filter_brightness,
+                                    'filter_contrast'=>$json_a->filter_contrast,
+                                    'img_rotate'=>$json_a->img_rotate,
+                                );
+                                $image = $this->mod_general->uploadMedia($fileName,$param);                  
+                            } else {
+                                $image = $picture;
+                            }
+                        /*End upload image so server*/
+                        $content = array (
+                                'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
+                                'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
+                                'caption' => @$y_other->description,
+                                'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
+                                'picture' => $image,                            
+                                'vid' => @$ytData->yid,                          
+                        );
+                        /* end data content */
+                        @iconv_set_encoding("internal_encoding", "TIS-620");
+                        @iconv_set_encoding("output_encoding", "UTF-8");   
+                        @ob_start("ob_iconv_handler");
+                        $dataPostInstert = array (
+                                Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($y_other->title)),
+                                Tbl_posts::conent => json_encode ( $content ),
+                                Tbl_posts::p_date => date('Y-m-d H:i:s'),
+                                Tbl_posts::schedule => json_encode ( $schedule ),
+                                Tbl_posts::user => $sid,
+                                'user_id' => $log_id,
+                                Tbl_posts::post_to => 0,
+                                'p_status' => 1,
+                                'p_post_to' => 1,
+                                Tbl_posts::type => 'Facebook' 
+                        );
+                        @ob_end_flush();
+                        $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
+                        /* end add data to post */
+                        
+                        /* add data to group of post */
+                        if(!empty($itemGroups)) {
+                            if($json_a->share_schedule == 1) {
+                                $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
+                                $cPost = $date->format('Y-m-d H:i:s');
+                            } else {
+                                $cPost = date('Y-m-d H:i:s');
+                            }
+                            $ShContent = array (
+                                'userAgent' => @$json_a->userAgent,                            
+                            );                    
+                            foreach($itemGroups as $key => $groups) { 
+                                if(!empty($groups)) {       
+                                    $dataGoupInstert = array(
+                                        'p_id' => $AddToPost,
+                                        'sg_page_id' => $groups->sg_id,
+                                        'social_id' => @$sid,
+                                        'sh_social_type' => 'Facebook',
+                                        'sh_type' => $json_a->ptype,
+                                        'c_date' => $cPost,
+                                        'uid' => $log_id,                                    
+                                        'sh_option' => json_encode($ShContent),                                    
+                                    );
+                                    $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                                }
+                            } 
+                        }
+                        /* end add data to group of post */
+                    }   
                 }
+                /*end foreach*/
 
                 $sid = $this->session->userdata ( 'sid' );
                 $whereNext = array (
@@ -2560,8 +2738,8 @@ HTML;
                     redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
                     exit();
                 }
-                //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
-                //exit();
+                redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
+                exit();
             }
         } else {
             $sid = $this->session->userdata ( 'sid' );
@@ -2586,7 +2764,7 @@ HTML;
                 // exit();
             }
         }
-        
+        $data['staticdata'] = $json_a;
         $this->load->view ( 'managecampaigns/postauto', $data );
     }
 
@@ -3009,6 +3187,41 @@ HTML;
         /*End add blog link by Imacros*/
 
         $this->load->view ( 'managecampaigns/autopost', $data );
+    }
+
+    public function waiting()
+    {
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Waiting for post :: Admin Area';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('blog post', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Setting', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+        $whereShowAuto = array(
+                'c_name'      => 'autopost',
+                'c_key'     => $log_id,
+            );
+            $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
+            if(!empty($autoData[0])) {
+                if($autoData[0]->c_value == 1) {
+                    echo date('H');
+                    echo '<br/>';
+                    if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                       echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
+                    } 
+                    //localhost/autopost/managecampaigns/autopost?start=1
+                }
+            }
+        $this->load->view ( 'managecampaigns/waiting', $data );
     }
 
     public function setting()

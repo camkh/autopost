@@ -133,6 +133,9 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                 checkBloggerPost();
             <?php endif;?>
         <?php endif;?>
+        <?php if(!empty($this->input->get('start'))):?>
+            checkBloggerPost();
+        <?php endif;?>
     </script>    
     <div class="page-header">
     </div>

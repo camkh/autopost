@@ -59,9 +59,11 @@ if(!empty($bloglinkA[0])) {
     $bNewName = generateRandomString(1).'1';
 }
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
+$blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid : $this->input->get('blog_link_id');
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var homeUrl = &quot;<?php echo base_url();?>&quot;,pid=&quot;<?php echo @$this->input->get('pid');?>&quot;,bid=&quot;<?php echo @$this->input->get('bid');?>&quot;,blog_link_id=&quot;<?php echo @$this->input->get('blog_link_id');?>&quot;,title=&quot;<?php echo @$this->input->get('bid');?>&quot;,content=&quot;<?php echo @$this->input->get('bid');?>&quot;;</code>
+<code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var homeUrl = &quot;<?php echo base_url();?>&quot;,pid=&quot;<?php echo @$this->input->get('pid');?>&quot;,bid=&quot;<?php echo @$blogPostID;?>&quot;,blog_link_id=&quot;<?php echo @$this->input->get('blog_link_id');?>&quot;,title=&quot;&quot;,content=&quot;&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
     <script type="text/javascript">
         function runcode(codes) {
@@ -134,9 +136,18 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
         function posttoMainblog() {
             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToMainBlog");
         }
+        function postToBlogAds() {
+            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToBlogAds");
+        }
+        function postToBlogLink() {
+            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToBlogLink");
+        }
         <?php if(!empty($this->input->get('action'))):?>
-            <?php if($this->input->get('action') == 'generate'):?>
-                //posttoMainblog();
+            <?php if($this->input->get('action') =='generate'):?>
+                postToBlogAds();
+            <?php endif;?>
+            <?php if($this->input->get('action') =='bloglink'):?>
+                postToBlogLink();
             <?php endif;?>
         <?php endif;?>
     </script>    
@@ -157,10 +168,16 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                             <div class="widget-content">
                                 <?php if(!empty($datapost)):
                                     $p_id = $datapost->p_id;
+                                    $p_title = preg_replace('/\s+/', '<sp>', $datapost->p_name);
                                     $yid = $datapost->yid;
                                     $p_conent = json_decode($datapost->p_conent);
                                     $bTitle = $p_conent->name;
-                                    $bContent = $p_conent->message;
+                                    //$bContent = str_replace(' ', '<sp>', $p_conent->message);
+                                    $bContent = preg_replace('/\s+/', '<sp>', $p_conent->message);
+                                    $bContent = str_replace('/\n/g', '<br>', $bContent);
+                                    $image = $p_conent->picture;
+                                    $vid = $p_conent->vid;
+                                    $mainLink = @$p_conent->mainLink;
                                     ?>
                                     <form class="form-horizontal row-border" id="mainblog" method="post">
                                         <div class="form-group">
@@ -170,7 +187,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <textarea class="form-control"><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div>Others news:</div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div></textarea>
+                                                <textarea class="form-control" id="getcontent"><?php if($this->input->get('action') == 'generate'):?>&lt;img class=&quot;thumbnail noi&quot; style=&quot;text-align:center&quot; src=&quot;<?php echo @$image;?>&quot;/&gt;&lt;!--more--&gt;&lt;div&gt;&lt;b&gt;<?php echo @$bTitle;?>&lt;/b&gt;&lt;/div&gt;&lt;div class=&quot;wrapper&quot;&gt;&lt;div class=&quot;small&quot;&gt;&lt;p&gt;<?php echo trim(@$bContent);?>&lt;/p&gt;&lt;/div&gt; &lt;a href=&quot;#&quot; class=&quot;readmore&quot;&gt;... Click to read more&lt;/a&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;script async src=&quot;//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js&quot; &gt;&lt;/script&gt;&lt;script&gt;document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});&lt;/script&gt;&lt;/div&gt;&lt;div&gt;Others news:&lt;/div&gt;&lt;iframe width=&quot;100%&quot; height=&quot;280&quot; src=&quot;https://www.youtube.com/embed/<?php echo @$vid;?>&quot; frameborder=&quot;0&quot; allow=&quot;autoplay; encrypted-media&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;script async src=&quot;//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js&quot; &gt;&lt;/script&gt;&lt;script&gt;document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});&lt;/script&gt;&lt;/div&gt;<?php endif;?><?php if($this->input->get('action') == 'bloglink'):?><?php echo $p_title;?>&lt;br&gt;#กดแชร์ 👉 กดดูได้เลย 👇&lt;a href=&quot;<?php echo @$mainLink;?>&quot;&gt;&lt;img style=&quot;border:1px solid #000;display: none;&quot; src=&quot;https://i.imgur.com/5z8qEcJ.jpg&quot; alt=&quot;&quot; class=&quot;wp-image-45&quot;/&gt;&lt;/a&gt;&lt;table width=&quot;100%&quot; border=&quot;0&quot; align=&quot;center&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td colspan=&quot;3&quot; style=&quot;background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url(<?php echo @$image;?>);&quot;&gt;&lt;a href=&quot;<?php echo @$mainLink;?>&quot; target=&quot;_top&quot; rel=&quot;nofollow&quot; style=&quot;display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;&quot;&gt;&lt;a href=&quot;<?php echo @$mainLink;?>&quot; target=&quot;_top&quot; rel=&quot;nofollow&quot; style=&quot;display:block;height:39px;width:100%;&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;&quot;&gt; &lt;/td&gt;&lt;td style=&quot;background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;&quot;&gt; &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;<?php endif;?></textarea>
                                             </div>
                                         </div>
                                     </form>

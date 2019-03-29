@@ -68,6 +68,8 @@
                 })
             }
         }
+        <?php if(!empty($this->input->get('wait'))):?>
+        <?php endif;?>
     </script> 	
 <?php if(empty($this->session->userdata ( 'fb_user_id' ))):?>  
 	<script type="text/javascript">
