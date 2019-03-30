@@ -2469,7 +2469,7 @@ HTML;
         echo '<meta http-equiv="refresh" content="60"/>';
 
         /*update main blog link*/
-        if(!empty($this->input->get('addbloglink'))) {
+        if(!empty($this->input->get('addbloglink')) && count(strlen($this->input->get('addbloglink')))> 10) {
             $addbloglink = $this->input->get('addbloglink');
             $pid = $this->input->get('pid');
             $bid = $this->input->get('bid');
@@ -2505,7 +2505,7 @@ HTML;
         /*End update main blog link*/
 
         /*update blog link*/
-        if(!empty($this->input->get('linkbloglink'))) {
+        if(!empty($this->input->get('linkbloglink')) && count(strlen($this->input->get('linkbloglink')))> 10) {
             $bloglink = $this->input->get('linkbloglink');
             $pid = $this->input->get('pid');
             $bid = $this->input->get('bid');
@@ -3773,49 +3773,43 @@ HTML;
                     $found = false;
                     $jsondata = array();
                     foreach ($bdata as $key => $bvalue) {
-                        $jsondata[] = array(
+                        $pos = strpos($bvalue->bid, $bLinkID);
+                        if ($pos === false) {
+                            $jsondata[] = array(
                             'bid' => $bvalue->bid,
                             'title' => $bvalue->title,
                             'status' => $bvalue->status,
                             'date' => @$bvalue->date
                         );
-                        $pos = strpos($bvalue->bid, $bLinkID);
-                        if ($pos === false) {
                         } else {
-                           $found = true; 
+                            $jsondata[] = array(
+                                'bid' => $bLinkID,
+                                'title' => $bLinkTitle,
+                                'status' => 2,
+                                'date' => date('Y-m-d H:i:s')
+                            );
                         }
-                    }          
-                    if(empty($found)) {
-                        $jsondataNew[] = array(
-                            'bid' => $bLinkID,
-                            'title' => $bLinkTitle,
-                            'status' => 1,
-                            'date' => date('Y-m-d H:i:s')
-                        );
-                        $dataAdd = array_merge($jsondata, $jsondataNew);
-                        $data_blog = array(
-                            'c_value'      => json_encode($dataAdd),
-                        );
-                        $where = array(
-                            'c_key'     => $log_id,
-                            'c_name'      => $blogLinkType
-                        );
-                        $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
                     }
-                    //----------
-
-
+                    $data_blog = array(
+                        'c_value'      => json_encode($jsondata),
+                    );
+                    $where = array(
+                        'c_key'     => $log_id,
+                        'c_name'      => $blogLinkType
+                    );
+                    $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
                     // $whereBlink = array(
                     //     'c_key'     => $log_id,
                     //     'c_name'      => $blogLinkType
                     // );
                     // $lastID = $this->Mod_general->update('au_config', $data_blog,$whereBlink);
                 }
-                if($lastID) {
-                    //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
-                    //exit();
-                }
+                // if($lastID) {
+                //     //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
+                //     //exit();
+                // }
             }
+            die;
 
         }
         /*End add blog link by Imacros*/

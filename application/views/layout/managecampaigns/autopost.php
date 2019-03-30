@@ -37,8 +37,10 @@ if(!empty($bloglinkA[0])) {
                 $bLink[] = $bloglink;
             }
         } else if($dateModify > $twoDaysAgo) {
-            $bLink[] = $bloglink;
-        }                  
+            if($bloglink->status ==1) {
+                $bLink[] = $bloglink;
+            }
+        }
     }
     if(!empty($bLink)) {
         $brand = mt_rand(0, count($bLink) - 1);
@@ -65,7 +67,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 <code id="codeD" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=7\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?start=1\n&quot;;retcode=iimPlay(mm);</code>
 <code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo $bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = 1, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
-<meta http-equiv="refresh" content="60"/>
+<meta http-equiv="refresh" content="10"/>
     <script type="text/javascript">
         function runcode(codes) {
             var str = $("#examplecode5").text();
