@@ -118,17 +118,30 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                 success : function (data) {
                     loading = false; //set loading flag off once the content is loaded
                     var totalResults = data.feed.openSearch$totalResults.$t,posturl='';
-                    for (var i = 0; i < data.feed.entry.length; i++) {
-                        var content = data.feed.entry;
-                        for (var j = 0; j < content[i].link.length; j++) {
-                            if (content[i].link[j].rel == "alternate") {
-                                posturl = content[i].link[j].href;
+                    if(totalResults=='0') {
+                        window.location.href = "<?php echo base_url();?>managecampaigns/ajax?lid=<?php echo @$bLinkID;?>&p=autopostblog";
+                    }
+                    if(data.feed.entry.length>0) {
+                        for (var i = 0; i < data.feed.entry.length; i++) {
+                            var content = data.feed.entry;
+                            for (var j = 0; j < content[i].link.length; j++) {
+                                if (content[i].link[j].rel == "alternate") {
+                                    posturl = content[i].link[j].href;
+                                }
                             }
                         }
                     }
-                    var str = $("#codeC").text();
-                    var res = str.replace("xxxxxxxxxxx", posturl);
-                    runcode(res);
+                    if(totalResults>0) {
+                        if(totalResults>15) {
+                            createblog();
+                        }
+                        if(totalResults<15) {
+                            var str = $("#codeC").text();
+                            var res = str.replace("xxxxxxxxxxx", posturl);
+                            runcode(res);
+                        }
+                    }
+                    
                 }
             })
         }
