@@ -892,7 +892,6 @@ class Managecampaigns extends CI_Controller {
                     }
                     /* end add data to group of post */
                 }
-
                 $fbUserId = $this->session->userdata ( 'sid' );
                 $whereNext = array (
                     'user_id' => $log_id,
@@ -940,7 +939,7 @@ class Managecampaigns extends CI_Controller {
                     $blink = $this->input->get('blink');
 
                     // if false video
-                    if(strlen($vid) > 10) {
+                    if(strlen($vid) < 10) {
                         $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
                         /*check next post*/
                         $whereNext = array (
