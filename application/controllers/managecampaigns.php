@@ -3427,11 +3427,7 @@ HTML;
                     foreach ($bdata as $key => $bvalue) {
                         $pos = strpos($bvalue->bid, $this->input->get('del'));
                         if ($pos === false) {
-                            $jsondata[] = array(
-                                'bid' => $bvalue->bid,
-                                'title' => $bvalue->title,
-                                'status' => $bvalue->status,
-                            );
+                            $jsondata[] = $bvalue;
                         }
                     }
                     $data_blog = array(
