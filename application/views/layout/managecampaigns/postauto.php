@@ -7,7 +7,7 @@
     .khmer {font-family: 'Hanuman', serif;font-size: 30px}
 </style>
 <link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"> 
-<meta http-equiv="refresh" content="10"/>
+<meta http-equiv="refresh" content="60"/>
 <div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
     <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"/>
     </div>
