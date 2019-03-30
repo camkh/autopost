@@ -3779,31 +3779,29 @@ HTML;
                     $found = false;
                     $jsondata = array();
                     foreach ($bdata as $key => $bvalue) {
+                        $jsondata[] = $bvalue;
                         $pos = strpos($bvalue->bid, $bLinkID);
                         if ($pos === false) {
-                            $jsondata[] = array(
-                            'bid' => $bvalue->bid,
-                            'title' => $bvalue->title,
-                            'status' => $bvalue->status,
-                            'date' => @$bvalue->date
-                        );
                         } else {
-                            $jsondata[] = array(
-                                'bid' => $bLinkID,
-                                'title' => $bLinkTitle,
-                                'status' => 2,
-                                'date' => date('Y-m-d H:i:s')
-                            );
+                           $found = true; 
                         }
                     }
-                    $data_blog = array(
-                        'c_value'      => json_encode($jsondata),
-                    );
-                    $where = array(
-                        'c_key'     => $log_id,
-                        'c_name'      => $blogLinkType
-                    );
-                    $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
+                    if(empty($found)) {
+                        $jsondata[] = array(
+                            'bid' => $bLinkID,
+                            'title' => $bLinkTitle,
+                            'status' => 2,
+                            'date' => date('Y-m-d H:i:s')
+                        );
+                        $data_blog = array(
+                            'c_value'      => json_encode($jsondata),
+                        );
+                        $where = array(
+                            'c_key'     => $log_id,
+                            'c_name'      => $blogLinkType
+                        );
+                        $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
+                    }
                     // $whereBlink = array(
                     //     'c_key'     => $log_id,
                     //     'c_name'      => $blogLinkType
