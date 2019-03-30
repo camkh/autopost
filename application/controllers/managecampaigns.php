@@ -3753,6 +3753,7 @@ HTML;
         if (!empty($this->input->get('blog_link_a'))) {
             $bLinkTitle = trim($this->input->get('title'));
             $bLinkID    = trim($this->input->get('bid'));
+            $status    = trim($this->input->get('status'));
             $blogLinkType = 'blog_linkA';
             if (!empty($bLinkID)) {
                 $whereLinkA = array(
@@ -3782,26 +3783,30 @@ HTML;
                         $jsondata[] = $bvalue;
                         $pos = strpos($bvalue->bid, $bLinkID);
                         if ($pos === false) {
+                            $jsondata[] = array(
+                                'bid' => $bLinkID,
+                                'title' => $bLinkTitle,
+                                'status' => 1,
+                                'date' => date('Y-m-d H:i:s')
+                            );
                         } else {
                            $found = true; 
+                           $jsondata[] = array(
+                                'bid' => $bLinkID,
+                                'title' => $bLinkTitle,
+                                'status' => $status,
+                                'date' => date('Y-m-d H:i:s')
+                            );
                         }
                     }
-                    if(empty($found)) {
-                        $jsondata[] = array(
-                            'bid' => $bLinkID,
-                            'title' => $bLinkTitle,
-                            'status' => 2,
-                            'date' => date('Y-m-d H:i:s')
-                        );
-                        $data_blog = array(
-                            'c_value'      => json_encode($jsondata),
-                        );
-                        $where = array(
-                            'c_key'     => $log_id,
-                            'c_name'      => $blogLinkType
-                        );
-                        $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
-                    }
+                    $data_blog = array(
+                        'c_value'      => json_encode($jsondata),
+                    );
+                    $where = array(
+                        'c_key'     => $log_id,
+                        'c_name'      => $blogLinkType
+                    );
+                    $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
                     // $whereBlink = array(
                     //     'c_key'     => $log_id,
                     //     'c_name'      => $blogLinkType
