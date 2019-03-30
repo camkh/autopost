@@ -976,6 +976,16 @@
                                     })
                                 }, 1000)
                             }
+                            if(obj.error) {
+                                window.setTimeout(function () {
+                                    Apps.unblockUI(a);
+                                    noty({
+                                        text: "<strong>No data</strong>",
+                                        type: "error",
+                                        timeout: 1000
+                                    })
+                                }, 1000)
+                            }
                         }
                         if ( !data ) {
                             window.setTimeout(function () {

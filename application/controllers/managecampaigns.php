@@ -2466,10 +2466,10 @@ HTML;
         $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
         $string = file_get_contents($tmp_path);
         $json_a = json_decode($string);
-        echo '<meta http-equiv="refresh" content="60"/>';
+        echo '<meta http-equiv="refresh" content="20"/>';
 
         /*update main blog link*/
-        if(!empty($this->input->get('addbloglink')) && count(strlen($this->input->get('addbloglink')))> 10) {
+        if(!empty($this->input->get('addbloglink')) && strlen($this->input->get('addbloglink')) > 20) {
             $addbloglink = $this->input->get('addbloglink');
             $pid = $this->input->get('pid');
             $bid = $this->input->get('bid');
@@ -2501,11 +2501,14 @@ HTML;
                 $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
             }
             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=bloglink&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
+        } else if($this->input->get('addbloglink') == 'null') {
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=bloglink&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
+
         }
         /*End update main blog link*/
 
         /*update blog link*/
-        if(!empty($this->input->get('linkbloglink')) && count(strlen($this->input->get('linkbloglink')))> 10) {
+        if(!empty($this->input->get('linkbloglink')) && strlen($this->input->get('linkbloglink')) > 20) {
             $bloglink = $this->input->get('linkbloglink');
             $pid = $this->input->get('pid');
             $bid = $this->input->get('bid');
@@ -2552,6 +2555,8 @@ HTML;
                     }
                 }
             }
+        } else if($this->input->get('linkbloglink') == 'null') {
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=generate&blink=&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
         }
         /*End update blog link*/
 
@@ -2745,25 +2750,29 @@ HTML;
             }
         } else {
             $sid = $this->session->userdata ( 'sid' );
-            $whereNext = array (
-                'user_id' => $log_id,
-                'u_id' => $sid,
-                'p_post_to' => 1,
-                'p_id' => $this->input->get('pid'),
-            );
-            $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereNext );
-            if(!empty($nextPost[0])) {
-                $data['datapost'] = $nextPost[0];
-                // $p_id = $nextPost[0]->p_id;
-                // $yid = $nextPost[0]->yid;
-                // $p_conent = json_decode($nextPost[0]->p_conent);
-                // $bTitle = $p_conent->name;
-                // $bContent = $p_conent->message;
-                // var_dump($bContent);
-                // die;
-                //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid.'";}, 300 );</script>';  
-                // redirect(base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid);
-                // exit();
+            if(!empty($this->input->get('pid'))) {
+                $whereNext = array (
+                    'user_id' => $log_id,
+                    'u_id' => $sid,
+                    'p_post_to' => 1,
+                    'p_id' => $this->input->get('pid'),
+                );
+                $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereNext );
+                if(!empty($nextPost[0])) {
+                    $data['datapost'] = $nextPost[0];
+                    // $p_id = $nextPost[0]->p_id;
+                    // $yid = $nextPost[0]->yid;
+                    // $p_conent = json_decode($nextPost[0]->p_conent);
+                    // $bTitle = $p_conent->name;
+                    // $bContent = $p_conent->message;
+                    // var_dump($bContent);
+                    // die;
+                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid.'";}, 300 );</script>';  
+                    // redirect(base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid);
+                    // exit();
+                }
+            } else {
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 300 );</script>';
             }
         }
         $data['staticdata'] = $json_a;
