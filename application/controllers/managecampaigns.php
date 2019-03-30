@@ -2198,7 +2198,7 @@ HTML;
                     //echo '<meta http-equiv="refresh" content="30">';
                      $dataTy = array();
                     $lid = ! empty ( $_GET ['lid'] ) ? $_GET ['lid'] : '';
-                    $max = ! empty ( $_GET ['max'] ) ? $_GET ['max'] : '15';
+                    $max = ! empty ( $_GET ['max'] ) ? $_GET ['max'] : '6';
                     $sid = $this->session->userdata ( 'sid' );
 
                     /*update for bloglink*/
@@ -2255,15 +2255,13 @@ HTML;
                             'y_status' => 0,
                         )
                     );
-                    if(!empty($checkYtExist[0]) && count($checkYtExist)> 15) {
+                    if(!empty($checkYtExist[0]) && count($checkYtExist)> 6) {
                         //$this->postauto();
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$lid.'";}, 30 );</script>';
                     } else {
-                        echo 222;
                         if (! empty ( $id )) {
                             $ytID = $id;
                         } else {
-                            echo 111;
                             $where_yt = array(
                                 'c_name'      => 'youtubeChannel',
                                 'c_key'     => $log_id,
@@ -2608,7 +2606,7 @@ HTML;
                 ),
                 0, 
                 0, 
-                4
+                2
             );
            
            /*get group*/
