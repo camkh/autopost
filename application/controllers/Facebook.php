@@ -1823,6 +1823,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
             );
             //'DATE(c_date)' => $curr_date
+            
             //'DATE(c_date) <=' =>  $curr_date
             $data['share'] = $this->Mod_general->select(
                 'share',
@@ -1844,7 +1845,32 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $pConent = json_decode($data['post'][0]->p_conent);                
                     $pSchedule = json_decode($data['post'][0]->p_schedule);
 
-
+                    /*check before share*/
+                    /*show blog linkA*/
+                    $where_link = array(
+                        'c_name'      => 'blog_linkA',
+                        'c_key'     => $log_id,
+                    );
+                    $data['bloglinkA'] = false;
+                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                    if (!empty($query_blog_link[0])) {
+                        $bloglinkA = json_decode($query_blog_link[0]->c_value);
+                        $bLink = array();
+                        foreach ($bloglinkA as $key => $bloglink) {
+                            if($bloglink->status ==1) {
+                                $bLink[] = $bloglink;
+                            }
+                        }
+                        if(!empty($bLink)) {
+                            $brand = mt_rand(0, count($bLink) - 1);
+                            $blogRand = $bLink[$brand];
+                        }
+                    }
+                    /*End show blog link*/
+                    if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$blogRand.'";}, 30 );</script>';
+                    }
+                    /*end check before share*/
                     $sharePost->conent = $pConent;
                     $sharePost->option = $pSchedule;
                     $sharePost->pTitle = $data['post'][0]->p_name;
