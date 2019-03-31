@@ -2255,7 +2255,7 @@ HTML;
                             'y_status' => 0,
                         )
                     );
-                    if(!empty($checkYtExist[0]) && count($checkYtExist)> 20) {
+                    if(!empty($checkYtExist[0]) && count($checkYtExist)> 2) {
                         //$this->postauto();
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$lid.'";}, 30 );</script>';
                     } else {
@@ -2552,8 +2552,8 @@ HTML;
                     }
                 }
             }
-        } else if($this->input->get('linkbloglink') == 'null') {
-            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=generate&blink=&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
+        } else if($this->input->get('linkbloglink') < 15) {
+            //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $bid . '&action=generate&blink=&autopost=1&blog_link_id='.$blog_link_id.'";}, 30 );</script>';
         }
         /*End update blog link*/
 
@@ -2722,10 +2722,12 @@ HTML;
                         }
                         /* end add data to group of post */
                     }   
+                    /*update youtube that get posted*/
+                    $sid = $this->session->userdata ( 'sid' );
+                    $this->Mod_general->update('youtube', array('y_status'=>1), array('yid'=>$ytData->yid,'y_fid'=>$sid));
+                    /*End update youtube that get posted*/
                 }
                 /*end foreach*/
-
-                $sid = $this->session->userdata ( 'sid' );
                 $whereNext = array (
                     'user_id' => $log_id,
                     'u_id' => $sid,
