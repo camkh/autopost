@@ -238,6 +238,18 @@ class Managecampaigns extends CI_Controller {
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
 
+        /*delete spam url*/
+        if($this->input->get('spam_url')) {
+            $fbUserId = $this->session->userdata ( 'sid' );
+            $whereSpam = array (
+                'user_id' => $log_id,
+                'u_id' => $fbUserId
+            );
+            $this->Mod_general->delete('post', $whereSpam);
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
+        }
+        /*End delete spam url*/
+
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $whereShowAuto = array(
