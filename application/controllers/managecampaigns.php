@@ -3764,6 +3764,7 @@ HTML;
             $bLinkID    = trim($this->input->get('bid'));
             $status    = trim($this->input->get('status'));
             $blogLinkType = 'blog_linkA';
+            $jsondata = array();
             if (!empty($bLinkID)) {
                 $whereLinkA = array(
                     'c_name'      => $blogLinkType,
@@ -3788,25 +3789,23 @@ HTML;
                     $bdata = json_decode($queryLinkData[0]->c_value);
                     $found = false;
                     $jsondata = array();
-                    foreach ($bdata as $key => $bvalue) {
-                        $jsondata[] = $bvalue;
-                        $pos = strpos($bvalue->bid, $bLinkID);
-                        if ($pos === false) {
-                            $jsondata[] = array(
-                                'bid' => $bLinkID,
-                                'title' => $bLinkTitle,
-                                'status' => 1,
-                                'date' => date('Y-m-d H:i:s')
-                            );
-                        } else {
-                           $found = true; 
-                           $jsondata[] = array(
-                                'bid' => $bLinkID,
-                                'title' => $bLinkTitle,
-                                'status' => $status,
-                                'date' => date('Y-m-d H:i:s')
-                            );
+                    if(!empty($queryLinkData[0])) {
+                        foreach ($bdata as $key => $bvalue) {
+                            $jsondata[] = $bvalue;
+                            $pos = strpos($bvalue->bid, $bLinkID);
+                            if ($pos === false) {
+                            } else {
+                               $found = true; 
+                            }
                         }
+                    }
+                    if(empty($found)) {
+                        $jsondata[] = array(
+                            'bid' => $bLinkID,
+                            'title' => $bLinkTitle,
+                            'status' => 1,
+                            'date' => date('Y-m-d H:i:s')
+                        );
                     }
                     $data_blog = array(
                         'c_value'      => json_encode($jsondata),
