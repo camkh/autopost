@@ -150,6 +150,9 @@ $blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid :
             <?php if($this->input->get('action') =='bloglink'):?>
                 postToBlogLink();
             <?php endif;?>
+            <?php if($this->input->get('action') =='createblog'):?>
+                createblog();
+            <?php endif;?>
         <?php endif;?>
     </script>    
     <div class="page-header">
