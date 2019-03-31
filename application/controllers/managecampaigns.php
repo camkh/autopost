@@ -2630,97 +2630,108 @@ HTML;
                     $txt = preg_replace('/\r\n|\r/', "\n", $contents["content"][0]["content"]);                   
                     $vid = $ytData->yid; 
                     if(strlen($vid) > 10) {
-                        $y_other = json_decode($ytData->y_other);
-                        $title = $y_other->title;
-
-                        /*upload image so server*/
-                        $picture = 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg';
-                        $imgUrl = $picture;
-                            
-                            $structure = FCPATH . 'uploads/image/';
-                            if (!file_exists($structure)) {
-                                mkdir($structure, 0777, true);
-                            }
-                            $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
-                            $file_title = basename($imgUrl);
-                            $fileName = FCPATH . 'uploads/image/'.$ytData->yid.$file_title;
-
-                            if (!preg_match('/ytimg.com/', $fileName)) {
-                                $imgUrl = $picture;
-                            }    
-
-                            if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                                copy($imgUrl, $fileName);      
-                                $param = array(
-                                    'btnplayer'=>$json_a->btnplayer,
-                                    'playerstyle'=>$json_a->playerstyle,
-                                    'imgcolor'=>$json_a->imgcolor,
-                                    'txtadd'=>$json_a->txtadd,
-                                    'filter_brightness'=>$json_a->filter_brightness,
-                                    'filter_contrast'=>$json_a->filter_contrast,
-                                    'img_rotate'=>$json_a->img_rotate,
-                                );
-                                $image = $this->mod_general->uploadMedia($fileName,$param);                  
-                            } else {
-                                $image = $picture;
-                            }
-                        /*End upload image so server*/
-                        $content = array (
-                                'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
-                                'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
-                                'caption' => @$y_other->description,
-                                'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
-                                'picture' => $image,                            
-                                'vid' => @$ytData->yid,                          
+                        $whereNext = array (
+                            'user_id' => $log_id,
+                            'u_id' => $sid,
+                            'yid' => $ytData->yid,
                         );
-                        /* end data content */
-                        @iconv_set_encoding("internal_encoding", "TIS-620");
-                        @iconv_set_encoding("output_encoding", "UTF-8");   
-                        @ob_start("ob_iconv_handler");
-                        $dataPostInstert = array (
-                                Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($y_other->title)),
-                                Tbl_posts::conent => json_encode ( $content ),
-                                Tbl_posts::p_date => date('Y-m-d H:i:s'),
-                                Tbl_posts::schedule => json_encode ( $schedule ),
-                                Tbl_posts::user => $sid,
-                                'user_id' => $log_id,
-                                Tbl_posts::post_to => 0,
-                                'p_status' => 1,
-                                'p_post_to' => 1,
-                                Tbl_posts::type => 'Facebook' 
-                        );
-                        @ob_end_flush();
-                        $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
-                        /* end add data to post */
-                        
-                        /* add data to group of post */
-                        if(!empty($itemGroups)) {
-                            if($json_a->share_schedule == 1) {
-                                $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
-                                $cPost = $date->format('Y-m-d H:i:s');
-                            } else {
-                                $cPost = date('Y-m-d H:i:s');
-                            }
-                            $ShContent = array (
-                                'userAgent' => @$json_a->userAgent,                            
-                            );                    
-                            foreach($itemGroups as $key => $groups) { 
-                                if(!empty($groups)) {       
-                                    $dataGoupInstert = array(
-                                        'p_id' => $AddToPost,
-                                        'sg_page_id' => $groups->sg_id,
-                                        'social_id' => @$sid,
-                                        'sh_social_type' => 'Facebook',
-                                        'sh_type' => $json_a->ptype,
-                                        'c_date' => $cPost,
-                                        'uid' => $log_id,                                    
-                                        'sh_option' => json_encode($ShContent),                                    
-                                    );
-                                    $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                        $PostCheck = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
+                        if(empty($PostCheck[0])) {
+                            $y_other = json_decode($ytData->y_other);
+                            $title = $y_other->title;
+
+                            /*upload image so server*/
+                            $picture = 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg';
+                            $imgUrl = $picture;
+                                
+                                $structure = FCPATH . 'uploads/image/';
+                                if (!file_exists($structure)) {
+                                    mkdir($structure, 0777, true);
                                 }
-                            } 
+                                $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                                $file_title = basename($imgUrl);
+                                $fileName = FCPATH . 'uploads/image/'.$ytData->yid.$file_title;
+
+                                if (!preg_match('/ytimg.com/', $fileName)) {
+                                    $imgUrl = $picture;
+                                }    
+
+                                if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
+                                    copy($imgUrl, $fileName);      
+                                    $param = array(
+                                        'btnplayer'=>$json_a->btnplayer,
+                                        'playerstyle'=>$json_a->playerstyle,
+                                        'imgcolor'=>$json_a->imgcolor,
+                                        'txtadd'=>$json_a->txtadd,
+                                        'filter_brightness'=>$json_a->filter_brightness,
+                                        'filter_contrast'=>$json_a->filter_contrast,
+                                        'img_rotate'=>$json_a->img_rotate,
+                                    );
+                                    $image = $this->mod_general->uploadMedia($fileName,$param);                  
+                                } else {
+                                    $image = $picture;
+                                }
+                            /*End upload image so server*/
+                            $content = array (
+                                    'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
+                                    'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
+                                    'caption' => @$y_other->description,
+                                    'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
+                                    'picture' => $image,                            
+                                    'vid' => @$ytData->yid,                          
+                            );
+                            /* end data content */
+                            @iconv_set_encoding("internal_encoding", "TIS-620");
+                            @iconv_set_encoding("output_encoding", "UTF-8");   
+                            @ob_start("ob_iconv_handler");
+                            $dataPostInstert = array (
+                                    Tbl_posts::name => str_replace(' - YouTube', '', $this->remove_emoji($y_other->title)),
+                                    Tbl_posts::conent => json_encode ( $content ),
+                                    Tbl_posts::p_date => date('Y-m-d H:i:s'),
+                                    Tbl_posts::schedule => json_encode ( $schedule ),
+                                    Tbl_posts::user => $sid,
+                                    'user_id' => $log_id,
+                                    Tbl_posts::post_to => 0,
+                                    'p_status' => 1,
+                                    'p_post_to' => 1,
+                                    'yid' => $ytData->yid,
+                                    Tbl_posts::type => 'Facebook' 
+                            );
+                            @ob_end_flush();
+                            $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
+                            /* end add data to post */
+                            
+                            /* add data to group of post */
+                            if(!empty($itemGroups)) {
+                                if($json_a->share_schedule == 1) {
+                                    $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
+                                    $cPost = $date->format('Y-m-d H:i:s');
+                                } else {
+                                    $cPost = date('Y-m-d H:i:s');
+                                }
+                                $ShContent = array (
+                                    'userAgent' => @$json_a->userAgent,                            
+                                );                    
+                                foreach($itemGroups as $key => $groups) { 
+                                    if(!empty($groups)) {       
+                                        $dataGoupInstert = array(
+                                            'p_id' => $AddToPost,
+                                            'sg_page_id' => $groups->sg_id,
+                                            'social_id' => @$sid,
+                                            'sh_social_type' => 'Facebook',
+                                            'sh_type' => $json_a->ptype,
+                                            'c_date' => $cPost,
+                                            'uid' => $log_id,                                    
+                                            'sh_option' => json_encode($ShContent),                                    
+                                        );
+                                        $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                                    }
+                                } 
+                            }
+                            /* end add data to group of post */
+                        } else {
+                            continue;
                         }
-                        /* end add data to group of post */
                     }   
                     /*update youtube that get posted*/
                     $sid = $this->session->userdata ( 'sid' );
