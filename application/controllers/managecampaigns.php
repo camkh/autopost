@@ -3828,7 +3828,16 @@ HTML;
                             $pos = strpos($bvalue->bid, $bLinkID);
                             if ($pos === false) {
                             } else {
-                               $found = true; 
+                                $found = true; 
+                                $bLinkID = !empty($bLinkID) ? $bLinkID : $bvalue->bid;
+                                $bLinkTitle = !empty($bLinkTitle) ? $bLinkTitle : $bvalue->title;
+                                $status = !empty($status) ? $status : $bvalue->status;
+                                $jsondata[] = array(
+                                    'bid' => $bLinkID,
+                                    'title' => $bLinkTitle,
+                                    'status' => $status,
+                                    'date' => date('Y-m-d H:i:s')
+                                );
                             }
                         }
                     }
@@ -3859,7 +3868,6 @@ HTML;
                 //     //exit();
                 // }
             }
-            die;
         }
         /*End add blog link by Imacros*/
         if (!empty($this->input->get('backto'))) {
