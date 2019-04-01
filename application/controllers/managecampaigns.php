@@ -3859,8 +3859,6 @@ HTML;
                 //     //exit();
                 // }
             }
-            die;
-
         }
         /*End add blog link by Imacros*/
         if (!empty($this->input->get('backto'))) {
