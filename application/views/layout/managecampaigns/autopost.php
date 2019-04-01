@@ -224,22 +224,45 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="1" name="autopost" <?php echo !empty($autopost) ? 'checked': '';?> />
-                                                    <input type="hidden" name="setLink" value="1"/>
+                                                    <input type="radio" value="1" name="autopost" <?php echo !empty($autopost->autopost) ? 'checked': '';?> />
+                                                    <input type="hidden" name="setPostAuto" value="1"/>
                                                     <i class="subtopmenu hangmeas">Yes</i>
                                                 </label> 
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="0" name="autopost" <?php echo empty($autopost) ? 'checked': '';?>/>
+                                                    <input type="radio" value="0" name="autopost" <?php echo empty($autopost->autopost) ? 'checked': '';?>/>
                                                     <i class="subtopmenu hangmeas">No</i>
                                                 </label>                                
                                             </div>
                                             <div style="clear: both;"></div>
                                         </div>
-                                        <?php if(!empty($autopost)):?>
-                                        <div class="form-actions" style="padding: 10px 20px 10px">
-                                            <a href="javascript:;" onclick="createblog()" class="btn btn-primary pull-right">Start now</a>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="posttype" <?php echo !empty($autopost->posttype) ? 'checked': '';?> />
+                                                    <i class="subtopmenu hangmeas">Google API</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="posttype" <?php echo empty($autopost->posttype) ? 'checked': '';?>/>
+                                                    <i class="subtopmenu hangmeas">Post by Manaully</i>
+                                                </label>                                
+                                            </div>
+                                            <div style="clear: both;"></div>
                                         </div>
-                                        <?php endif;?>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input type="text" name="titleExcept" class="form-control" style="width: 100%" placeholder="Title Except... Ex: 16/4/26562|16-4-2562" value="<?php echo @$autopost->titleExcept;?>" required />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input type="text" name="bloggerTemplate" class="form-control" style="width: 100%" placeholder="blogger Template" value="<?php echo @$autopost->templateLink;?>" required />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-actions" style="padding: 10px 20px 10px">
+                                            <input name="saveAuto" type="button" value="Save" class="btn btn-primary pull-right" />
+                                            <?php if(!empty($autopost)):?><a href="javascript:;" onclick="createblog()" class="btn btn-primary pull-right">Start now</a><?php endif;?>
+                                        </div>
                                 </form>
                             </div>
                         </div>
@@ -330,10 +353,10 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             });
 
             /*autopost*/
-            $("input[name=autopost]").click(function(){
+            $("input[name=saveAuto]").click(function(){
                 var values = $('#autopost').serialize();
                 $.ajax({
-                    url: "<?php echo base_url();?>managecampaigns/setting",
+                    url: "<?php echo base_url();?>managecampaigns/autopost",
                     type: "post",
                     data: values ,
                     success: function (response) {

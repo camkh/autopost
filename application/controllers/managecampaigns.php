@@ -276,7 +276,8 @@ class Managecampaigns extends CI_Controller {
             );
             $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
             if(!empty($autoData[0])) {
-                if($autoData[0]->c_value == 1) {
+                $autopost = json_decode($autoData[0]->c_value);
+                if($autopost->autopost == 1) {
                     echo date('H');
                     echo '<br/>';
                     if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
@@ -2472,6 +2473,9 @@ HTML;
     public function postauto()
     {
         $lid = $this->input->get('lid');
+        if(!empty($lid)) {
+            $this->session->set_userdata('lid', $lid);
+        }
         $log_id = $this->session->userdata ( 'user_id' );
         $user = $this->session->userdata ( 'email' );
         $provider_uid = $this->session->userdata ( 'provider_uid' );
@@ -2651,6 +2655,25 @@ HTML;
             $itemGroups = $this->Mod_general->join('group_user', $tablejoin, $fields = '*', $wGroupType);
            /*End get group*/
            $dataPost = false;
+           $titleExcept = false;
+           $autoposts = false;
+           $posttype = false;
+
+           /*config autopost*/
+            $whereShowAuto = array(
+                'c_name'      => 'autopost',
+                'c_key'     => $log_id,
+            );
+            $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
+            if(!empty($autoData[0])) {
+                $autopost = json_decode($autoData[0]->c_value);
+                if(!empty($autopost)) {
+                    $titleExcept = $autopost->titleExcept;
+                    $autoposts = $autopost->autopost;
+                    $posttype = $autopost->posttype;
+                }
+            } 
+           /*end config autopost*/
             if (!empty($checkYtExist)) {
                 require_once(APPPATH.'controllers/Splogr.php');
                 $aObj = new Splogr();  
@@ -2672,6 +2695,24 @@ HTML;
                             $y_other = json_decode($ytData->y_other);
                             $title = $y_other->title;
 
+                            if(!empty($titleExcept)) {
+                                $arr = explode('|',$titleExcept);
+                                $found = false;
+                                foreach ($arr as $test) {
+                                    if (preg_match('/'.$test.'/', $title)) {
+                                        $found = true;
+                                    }
+                                }
+                                if(empty($found)) {
+                                    /*update youtube that get posted*/
+                                    $sid = $this->session->userdata ( 'sid' );
+                                    $this->Mod_general->update('youtube', array('y_status'=>1), array('yid'=>$ytData->yid,'y_fid'=>$sid));
+                                    /*End update youtube that get posted*/
+                                    $lid = $this->session->userdata ( 'lid' );
+                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$lid.'";}, 30 );</script>';
+                                    continue;
+                                }
+                            }
                             /*upload image so server*/
                             $picture = 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg';
                             $imgUrl = $picture;
@@ -2779,7 +2820,12 @@ HTML;
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
                 if(!empty($nextPost[0])) {
                     $p_id = $nextPost[0]->p_id;
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid.'";}, 300 );</script>';  
+                    if(!empty($posttype)) {
+                        /*post by Google API*/
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                    } else {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $json_a->blogid . '&action=generate&blink='.$json_a->blogLink.'&autopost=1&blog_link_id='.$lid.'";}, 300 );</script>';  
+                    }
                 }                              
             } else {
                 if(empty($dataPost)) {
@@ -2973,7 +3019,7 @@ HTML;
         );
         $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
         if(!empty($autoData[0])) {
-            $data['autopost'] = $autoData[0]->c_value;
+            $data['autopost'] = json_decode($autoData[0]->c_value);
         } 
         /*End AutoPost*/
         
@@ -3076,25 +3122,34 @@ HTML;
         /*End delete blog data*/
         
         /*save data Autopost*/
-        if ($this->input->post('setLink')) {
+        if ($this->input->post('setPostAuto')) {
             $inputAuto = $this->input->post('autopost');
+            $titleExcept = $this->input->post('titleExcept');
+            $bloggerTemplate = $this->input->post('bloggerTemplate');
+            $posttype = $this->input->post('posttype');
             $autopost = 'autopost';
             $whereAuto = array(
                 'c_name'      => $autopost,
                 'c_key'     => $log_id,
             );
             $query_ran = $this->Mod_general->select('au_config', '*', $whereAuto);
+            $dataAutoInsert = array(
+                'autopost' => $inputAuto,
+                'templateLink' => $bloggerTemplate,
+                'titleExcept' => $titleExcept,
+                'posttype' => $posttype,
+            );
             /* check before insert */
             if (empty($query_ran)) {
                 $dataAuto = array(
                     'c_name'      => $autopost,
-                    'c_value'      => $inputAuto,
+                    'c_value'      => json_encode($dataAutoInsert),
                     'c_key'     => $log_id,
                 );
                 $this->Mod_general->insert('au_config', $dataAuto);
             } else {
                 $dataAuto = array(
-                    'c_value'      => $inputAuto
+                    'c_value'      => json_encode($dataAutoInsert)
                 );
                 $whereAuto = array(
                     'c_key'     => $log_id,
@@ -3620,31 +3675,31 @@ HTML;
 
         /*save data Autopost*/
         if ($this->input->post('setLink')) {
-            $inputAuto = $this->input->post('autopost');
-            $autopost = 'autopost';
-            $whereAuto = array(
-                'c_name'      => $autopost,
-                'c_key'     => $log_id,
-            );
-            $query_ran = $this->Mod_general->select('au_config', '*', $whereAuto);
-            /* check before insert */
-            if (empty($query_ran)) {
-                $dataAuto = array(
-                    'c_name'      => $autopost,
-                    'c_value'      => $inputAuto,
-                    'c_key'     => $log_id,
-                );
-                $this->Mod_general->insert('au_config', $dataAuto);
-            } else {
-                $dataAuto = array(
-                    'c_value'      => $inputAuto
-                );
-                $whereAuto = array(
-                    'c_key'     => $log_id,
-                    'c_name'      => $autopost
-                );
-                $this->Mod_general->update('au_config', $dataAuto,$whereAuto);
-            }
+            // $inputAuto = $this->input->post('autopost');
+            // $autopost = 'autopost';
+            // $whereAuto = array(
+            //     'c_name'      => $autopost,
+            //     'c_key'     => $log_id,
+            // );
+            // $query_ran = $this->Mod_general->select('au_config', '*', $whereAuto);
+            // /* check before insert */
+            // if (empty($query_ran)) {
+            //     $dataAuto = array(
+            //         'c_name'      => $autopost,
+            //         'c_value'      => $inputAuto,
+            //         'c_key'     => $log_id,
+            //     );
+            //     $this->Mod_general->insert('au_config', $dataAuto);
+            // } else {
+            //     $dataAuto = array(
+            //         'c_value'      => $inputAuto
+            //     );
+            //     $whereAuto = array(
+            //         'c_key'     => $log_id,
+            //         'c_name'      => $autopost
+            //     );
+            //     $this->Mod_general->update('au_config', $dataAuto,$whereAuto);
+            // }
             //redirect(base_url() . 'managecampaigns/setting?m=add_success');
         }
         /*End save data Autopost*/
