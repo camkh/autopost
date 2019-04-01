@@ -252,13 +252,16 @@ class Managecampaigns extends CI_Controller {
             $html = file_get_html ( $this->input->get('spam_url') );
             $title = $html->find ( 'title', 0 )->innertext;
             $backURL = urlencode(base_url().'managecampaigns?m=runout_post');
+            $blID = false;
             if(!empty($title)) {
                 $bArr = explode('blid-', $title);
                 if(!empty($bArr[1])) {
+                    $blID = true;
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bArr[1].'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
-                } else {
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
                 }
+            }
+            if(empty($blID)) {
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
             }
             /*End get blog id*/
             //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
