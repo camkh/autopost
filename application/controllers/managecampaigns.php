@@ -1056,7 +1056,7 @@ class Managecampaigns extends CI_Controller {
                                             $dataContent->pid      = 0;
                                             $dataContent->customcode = '';
                                             $dataContent->bid     = $blogRand;
-                                            $dataContent->title    = $title . ' '. $bid;        
+                                            $dataContent->title    = $title . ' '. $bid . '-blid-'.$blogRand;        
                                             $dataContent->bodytext = $bodytext;
                                             $dataContent->label    = 'blink';
                                             $DataBlogLink = $this->postBlogger($dataContent);
