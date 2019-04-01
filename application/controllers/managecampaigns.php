@@ -2762,7 +2762,7 @@ HTML;
                                 'yid' => $ytData->yid,
                             );
                             $PostExCheck = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whExist );
-                            if(empty($PostExCheck[0])) {
+                            if(!empty($PostExCheck[0])) {
                                 $pConent = json_decode($PostExCheck[0]->p_conent);
                                 //$pOption = json_decode($PostExCheck[0]->p_schedule);
                                 $schedule = array (                    
