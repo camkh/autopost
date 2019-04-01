@@ -1038,7 +1038,9 @@ class Managecampaigns extends CI_Controller {
                                                 $data = json_decode($query_blog_link[0]->c_value);
                                                 $big = array();
                                                 foreach ($data as $key => $blog) {
-                                                    $big[] = $blog->bid;                                
+                                                    if($blog->status ==1) {
+                                                        $big[] = $blog->bid;
+                                                    }                                
                                                 }
                                                 $brand = mt_rand(0, count($big) - 1);
                                                 $blogRand = $big[$brand];
