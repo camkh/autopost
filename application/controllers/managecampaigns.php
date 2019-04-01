@@ -245,7 +245,7 @@ class Managecampaigns extends CI_Controller {
                 'user_id' => $log_id,
                 'u_id' => $fbUserId
             );
-            $this->Mod_general->delete('post', $whereSpam);
+            //$this->Mod_general->delete('post', $whereSpam);
             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
         }
         /*End delete spam url*/
