@@ -3827,6 +3827,16 @@ HTML;
                             $jsondata[] = $bvalue;
                             $pos = strpos($bvalue->bid, $bLinkID);
                             if ($pos === false) {
+                                $found = true; 
+                                $bLinkID = !empty($bLinkID) ? $bLinkID : $bvalue->bid;
+                                $bLinkTitle = !empty($bLinkTitle) ? $bLinkTitle : $bvalue->title;
+                                $status = !empty($status) ? $status : $bvalue->status;
+                                $jsondata[] = array(
+                                    'bid' => $bLinkID,
+                                    'title' => $bLinkTitle,
+                                    'status' => $status,
+                                    'date' => date('Y-m-d H:i:s')
+                                );
                             } else {
                                 $found = true; 
                                 $bLinkID = !empty($bLinkID) ? $bLinkID : $bvalue->bid;
@@ -3840,14 +3850,6 @@ HTML;
                                 );
                             }
                         }
-                    }
-                    if(empty($found)) {
-                        $jsondata[] = array(
-                            'bid' => $bLinkID,
-                            'title' => $bLinkTitle,
-                            'status' => 1,
-                            'date' => date('Y-m-d H:i:s')
-                        );
                     }
                     $data_blog = array(
                         'c_value'      => json_encode($jsondata),
