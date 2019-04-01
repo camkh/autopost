@@ -537,7 +537,10 @@ class Managecampaigns extends CI_Controller {
             $client = new Google_Client();                  
             $client->setAccessToken($this->session->userdata('access_token'));
             if($client->isAccessTokenExpired()) {
-                redirect(base_url() . 'managecampaigns/account?renew=1');
+                if(empty($this->input->get('action')) && empty($this->input->get('bid'))) {
+                    $setUrl = base_url() . 'managecampaigns/account?renew=1' . '?back='. urlencode(current_url());
+                    redirect($setUrl);
+                } 
             }
         }
 
@@ -943,6 +946,26 @@ class Managecampaigns extends CI_Controller {
         $post_by_manaul = false;
         if(!empty($this->input->get('action'))) {
             if($this->input->get('action') == 'postblog' && !empty($this->input->get('bid'))) {
+                if(!empty($this->session->userdata('access_token'))) {
+                    $this->load->library('google_api');
+                    $client = new Google_Client();                  
+                    $client->setAccessToken($this->session->userdata('access_token'));
+                    if($client->isAccessTokenExpired()) {
+                        //$data['isAccessTokenExpired'] = true;
+                        $blink = $this->input->get('blink');
+                        $pid = $this->input->get('pid');
+                        $action = $this->input->get('action');
+                        //$current_url = ;
+                        
+                         $currentURL = current_url(); //for simple URL
+                         $params = $_SERVER['QUERY_STRING']; //for parameters
+                         $fullURL = $currentURL . '?' . $params; //full URL with parameter
+                        echo $fullURL;
+                        $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
+                        redirect($setUrl);
+                        exit();
+                    }
+                }
                 $bid = $this->input->get('bid');
                 $pid = $this->input->get('pid');
                 $fbid = $this->session->userdata ( 'sid' );
