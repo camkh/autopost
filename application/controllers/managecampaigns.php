@@ -240,13 +240,28 @@ class Managecampaigns extends CI_Controller {
 
         /*delete spam url*/
         if($this->input->get('spam_url')) {
+            
             $fbUserId = $this->session->userdata ( 'sid' );
             $whereSpam = array (
                 'user_id' => $log_id,
                 'u_id' => $fbUserId
             );
-            //$this->Mod_general->delete('post', $whereSpam);
-            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
+            $this->Mod_general->delete('post', $whereSpam);
+            /*get blog id*/
+            $this->load->library ( 'html_dom' );
+            $html = file_get_html ( $this->input->get('spam_url') );
+            $title = $html->find ( 'title', 0 )->innertext;
+            $backURL = urlencode(base_url().'managecampaigns?m=runout_post');
+            if(!empty($title)) {
+                $bArr = explode('blid-', $title);
+                if(!empty($bArr[1])) {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bArr[1].'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
+                } else {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
+                }
+            }
+            /*End get blog id*/
+            //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
         }
         /*End delete spam url*/
 
@@ -3471,6 +3486,7 @@ HTML;
         }
         /*End delete blog data*/
 
+
         /*add new blog*/
         if ($this->input->post('submit')) {
             $blogTitle = trim($this->input->post('blogTitle'));
@@ -3844,7 +3860,9 @@ HTML;
 
         }
         /*End add blog link by Imacros*/
-
+        if (!empty($this->input->get('backto'))) {
+            redirect($this->input->get('backto'));
+        }
         $this->load->view ( 'managecampaigns/setting', $data );
     }
 	public function socailpost() {
