@@ -853,6 +853,7 @@ class Managecampaigns extends CI_Controller {
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
+                            'mainlink' => @$link[$i],
                             'picture' => @$thumb[$i],                            
                             'vid' => @$vid,                          
                     );
@@ -1032,12 +1033,12 @@ class Managecampaigns extends CI_Controller {
                                 $imgur = true;
                                 /*End upload photo first*/
                                 if(!empty($pOption->foldlink)) {
-                                    $link = $pConent->link;
+                                    $link = @$pConent->mainlink;
                                 } else {
                                     $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
                                     $link = @$blogData->url; 
                                 }                                
-
+                                $mainlink = $link; 
                                 /*End Post to Blogger first*/
 
                                 /*blog link*/
@@ -1092,6 +1093,7 @@ class Managecampaigns extends CI_Controller {
                                             'message' => $pConent->message,
                                             'caption' => $pConent->caption,
                                             'link' => $link,
+                                            'mainlink' => $mainlink,
                                             'picture' => @$image,                            
                                         );
                                         $dataPostInstert = array (
@@ -2746,14 +2748,69 @@ HTML;
                                 }
                             /*End upload image so server*/
                             $content = array (
+                                'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
+                                'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
+                                'caption' => @$y_other->description,
+                                'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
+                                'picture' => $image,                            
+                                'vid' => @$ytData->yid,                          
+                            );
+                            /* end data content */
+                            /*check for exist video in old link*/
+                            $whExist = array (
+                                'user_id' => $log_id,
+                                'yid' => $ytData->yid,
+                            );
+                            $PostExCheck = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whExist );
+                            if(empty($PostExCheck[0])) {
+                                $pConent = json_decode($PostExCheck[0]->p_conent);
+                                //$pOption = json_decode($PostExCheck[0]->p_schedule);
+                                $schedule = array (                    
+                                    'start_date' => $json_a->start_date,
+                                    'start_time' => $json_a->start_time,
+                                    'end_date' => $json_a->end_date,
+                                    'end_time' => $json_a->end_time,
+                                    'loop' => $json_a->loop,
+                                    'loop_every' => $json_a->loop_every,
+                                    'loop_on' => $json_a->loop_on,
+                                    'wait_group' => $json_a->wait_group,
+                                    'wait_post' => $json_a->wait_post,
+                                    'randomGroup' => $json_a->randomGroup,
+                                    'prefix_title' => $json_a->prefix_title,
+                                    'suffix_title' => $json_a->suffix_title,
+                                    'short_link' => $json_a->short_link,
+                                    'check_image' => $json_a->check_image,
+                                    'imgcolor' => $json_a->imgcolor,
+                                    'btnplayer' => $json_a->btnplayer,
+                                    'playerstyle' => $json_a->playerstyle,
+                                    'random_link' => $json_a->random_link,
+                                    'share_type' => $json_a->share_type,
+                                    'share_schedule' => $json_a->share_schedule,
+                                    'account_group_type' => $json_a->account_group_type,
+                                    'txtadd' => $json_a->txtadd,
+                                    'blogid' => $json_a->blogid,
+                                    'blogLink' => $json_a->blogLink,
+                                    'userAgent' => $json_a->userAgent,
+                                    'checkImage' => $json_a->checkImage,
+                                    'ptype' => $json_a->ptype,
+                                    'img_rotate' => $json_a->img_rotate,
+                                    'filter_contrast' => $json_a->filter_contrast,
+                                    'filter_brightness' => $json_a->filter_brightness,
+                                    'post_by_manaul' => $json_a->post_by_manaul,
+                                    'foldlink' => 1,
+                                );
+                                $content = array (
                                     'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
                                     'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                                     'caption' => @$y_other->description,
-                                    'link' => 'https://www.youtube.com/watch?v='.$ytData->yid,
+                                    'link' => $pConent->link,
+                                    'mainlink' => $pConent->link,
                                     'picture' => $image,                            
                                     'vid' => @$ytData->yid,                          
-                            );
-                            /* end data content */
+                                );
+                            }
+                            /*End check for exist video in old link*/
+
                             @iconv_set_encoding("internal_encoding", "TIS-620");
                             @iconv_set_encoding("output_encoding", "UTF-8");   
                             @ob_start("ob_iconv_handler");
