@@ -3408,7 +3408,8 @@ HTML;
             );
             $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
             if(!empty($autoData[0])) {
-                if($autoData[0]->c_value == 1) {
+                $autopost = json_decode($autoData[0]->c_value);
+                if($autopost->autopost == 1) {
                     if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
                     } 
