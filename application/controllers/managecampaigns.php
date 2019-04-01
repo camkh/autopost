@@ -951,12 +951,6 @@ class Managecampaigns extends CI_Controller {
                     $client = new Google_Client();                  
                     $client->setAccessToken($this->session->userdata('access_token'));
                     if($client->isAccessTokenExpired()) {
-                        //$data['isAccessTokenExpired'] = true;
-                        $blink = $this->input->get('blink');
-                        $pid = $this->input->get('pid');
-                        $action = $this->input->get('action');
-                        //$current_url = ;
-                        
                          $currentURL = current_url(); //for simple URL
                          $params = $_SERVER['QUERY_STRING']; //for parameters
                          $fullURL = $currentURL . '?' . $params; //full URL with parameter
