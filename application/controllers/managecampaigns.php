@@ -2804,7 +2804,7 @@ HTML;
                                     'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                                     'caption' => @$y_other->description,
                                     'link' => $pConent->link,
-                                    'mainlink' => $pConent->link,
+                                    'mainlink' => $pConent->mainlink,
                                     'picture' => $image,                            
                                     'vid' => @$ytData->yid,                          
                                 );
