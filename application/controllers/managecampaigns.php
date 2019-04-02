@@ -2986,6 +2986,17 @@ HTML;
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereNext );
                 if(!empty($nextPost[0])) {
                     $data['datapost'] = $nextPost[0];
+                    /*show blog linkA*/
+                    $where_link = array(
+                        'c_name'      => 'blog_linkA',
+                        'c_key'     => $log_id,
+                    );
+                    $data['bloglinkA'] = false;
+                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                    if (!empty($query_blog_link[0])) {
+                        $data['bloglinkA'] = json_decode($query_blog_link[0]->c_value);
+                    }
+                    /*End show blog link*/
                     // $p_id = $nextPost[0]->p_id;
                     // $yid = $nextPost[0]->yid;
                     // $p_conent = json_decode($nextPost[0]->p_conent);

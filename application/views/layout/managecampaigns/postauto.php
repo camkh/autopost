@@ -23,23 +23,13 @@ function generateRandomString($length = 10) {
     }
     return $randomString;
 }
-if(!empty($bloglinkA[0])) {
+
+if(!empty($bloglinkA)) {
     $bLink = array();
     foreach ($bloglinkA as $key => $bloglink) {
-        // echo '<pre>'; 
-        // print_r($bloglink);                               
-        // echo '</pre>';   
-        $twoDaysAgo = new DateTime(date('Y-m-d H:i:s', strtotime('-1 days')));
-        $dateModify = new DateTime(date('Y-m-d H:i:s', strtotime($bloglink->date)));
-        /*if video date is >= before yesterday*/
-        //today
-        if($dateModify < $twoDaysAgo) {
-            if($bloglink->status ==1) {
-                $bLink[] = $bloglink;
-            }
-        } else if($dateModify > $twoDaysAgo) {
+        if($bloglink->status ==1) {
             $bLink[] = $bloglink;
-        }                  
+        }                 
     }
     if(!empty($bLink)) {
         $brand = mt_rand(0, count($bLink) - 1);
@@ -62,6 +52,12 @@ if(!empty($bloglinkA[0])) {
 $blogLinkID = !empty($this->input->get('blog_link_id')) ? $this->input->get('blog_link_id') : @$bLinkID;
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 $blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid : $blogLinkID;
+if(!empty($this->input->get('action'))) {
+    if($this->input->get('action') =='bloglink') {
+        $blogPostID = $bLinkID;
+    }
+}
+
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
