@@ -157,17 +157,48 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
         }
         <?php if(!empty($this->input->get('startpost'))):?>
             <?php if(!empty($createNewBlog)):?>
-                createblog();
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                  timeleft -= 1;
+                  if(timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    createblog();
+                  }
+                }, 1000);
             <?php endif;?>
             <?php if(empty($createNewBlog)):?>
+                 var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
                 checkBloggerPost();
+              }
+            }, 1000);
             <?php endif;?>
         <?php endif;?>
         <?php if(!empty($this->input->get('start'))):?>
-            checkBloggerPost();
+            var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
+                checkBloggerPost();
+              }
+            }, 1000);
         <?php endif;?>
         <?php if(!empty($this->input->get('glogin'))):?>
-            glogin();
+            var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
+                glogin();
+              }
+            }, 1000);
         <?php endif;?>
     </script>    
     <div class="page-header">
