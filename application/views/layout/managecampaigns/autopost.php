@@ -63,9 +63,10 @@ if(!empty($bloglinkA[0])) {
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 if(!empty($autopost->templateLink)) {
     $setTemplate = 1;
-    $btemplate = str_replace('/\\/', "&bsol;&bsol;", trim($autopost->templateLink));
-    $btemplate = str_replace(' ', "&lt;SP&gt;", $btemplate);
-    $btemplate = str_replace("/\n/", "&lt;br&gt;", $btemplate);
+    //$btemplate = trim($autopost->templateLink);
+    // $btemplate = str_replace('/\\/', "&bsol;&bsol;", trim($autopost->templateLink));
+    // $btemplate = str_replace(' ', "&lt;SP&gt;", $btemplate);
+    // $btemplate = str_replace("/\n/", "&lt;br&gt;", $btemplate);
 } else {
     $setTemplate = 0;
 }
