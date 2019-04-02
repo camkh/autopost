@@ -936,7 +936,30 @@ class Managecampaigns extends CI_Controller {
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
                 if(!empty($nextPost[0])) {
                     $p_id = $nextPost[0]->p_id;
-                    redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $bid . '&action=postblog&blink='.$blogLink); 
+                    //redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $bid . '&action=postblog&blink='.$blogLink); 
+                    if(empty($post_by_manaul)) {
+                        /*post by Google API*/
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 30 );</script>';
+                    } else {
+                        /*get blog link from database*/
+                        $where_link = array(
+                            'c_name'      => 'blog_linkA',
+                            'c_key'     => $log_id,
+                        );
+                        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
+                        if (!empty($query_blog_link[0])) {
+                            $data = json_decode($query_blog_link[0]->c_value);
+                            $big = array();
+                            foreach ($data as $key => $blog) {
+                                if($blog->status ==1) {
+                                    $big[] = $blog->bid;
+                                }                                
+                            }
+                            $brand = mt_rand(0, count($big) - 1);
+                            $blogRand = $big[$brand];
+                        }
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>';  
+                    }
                 }                              
             }
         }
@@ -3201,6 +3224,7 @@ HTML;
             $titleExcept = $this->input->post('titleExcept');
             $bloggerTemplate = $this->input->post('bloggerTemplate');
             $posttype = $this->input->post('posttype');
+            $fbUserId = $this->session->userdata ( 'sid' );
             $autopost = 'autopost';
             $whereAuto = array(
                 'c_name'      => $autopost,
