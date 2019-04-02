@@ -63,6 +63,7 @@ if(!empty($bloglinkA[0])) {
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 if(!empty($autopost->templateLink)) {
     $btemplate = str_replace('/\\/', '&bsol;&bsol;', $autopost->templateLink);
+    $btemplate = str_replace('/ /', '&lt;SP&gt;', $btemplate);
 }
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
