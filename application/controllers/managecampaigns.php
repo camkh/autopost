@@ -2446,6 +2446,20 @@ HTML;
         $sid = $this->session->userdata ( 'sid' );
         $ytData = $this->youtubeChannel($ytID,$max);
         if(!empty($ytData)) {
+        if(!empty($this->session->userdata('access_token'))) {
+                $this->load->library('google_api');
+                $client = new Google_Client();                  
+                $client->setAccessToken($this->session->userdata('access_token'));
+                if($client->isAccessTokenExpired()) {
+                     $currentURL = current_url(); //for simple URL
+                     $params = $_SERVER['QUERY_STRING']; //for parameters
+                     $fullURL = $currentURL . '?' . $params; //full URL with parameter
+                    echo $fullURL;
+                    $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
+                    redirect($setUrl);
+                    exit();
+                }
+            }
             foreach ($ytData as $key => $ytArr) {
                 $dataContent          = new stdClass();
                 $dataContent->title    = $ytArr['snippet']['title'];
