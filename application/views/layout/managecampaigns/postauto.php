@@ -146,13 +146,37 @@ $blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid :
         }
         <?php if(!empty($this->input->get('action'))):?>
             <?php if($this->input->get('action') =='generate'):?>
-                postToBlogAds();
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                  //document.getElementById("progressBar").value = 10 - timeleft;
+                  timeleft -= 1;
+                  if(timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    postToBlogAds();
+                  }
+                }, 1000);
             <?php endif;?>
             <?php if($this->input->get('action') =='bloglink'):?>
-                postToBlogLink();
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                  //document.getElementById("progressBar").value = 10 - timeleft;
+                  timeleft -= 1;
+                  if(timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    postToBlogLink();
+                  }
+                }, 1000);
             <?php endif;?>
             <?php if($this->input->get('action') =='createblog'):?>
-                createblog();
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                  //document.getElementById("progressBar").value = 10 - timeleft;
+                  timeleft -= 1;
+                  if(timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    createblog();
+                  }
+                }, 1000);
             <?php endif;?>
         <?php endif;?>
     </script>    
@@ -243,8 +267,8 @@ $blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid :
                 var values = $('#autopost').serialize();
                 $.ajax({
                     url: "<?php echo base_url();?>managecampaigns/setting",
-                    type: "post",
                     data: values ,
+                    type: "post",
                     success: function (response) {
                        alert('Saved!');
                     },
