@@ -229,6 +229,9 @@
                             var str = $("#codeB").text();
                             runcode(str);
                         }
+                    },
+                    error: function(){
+                        window.location.reload(); 
                     }
                 })
             }
