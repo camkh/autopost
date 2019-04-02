@@ -1864,13 +1864,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         if(!empty($bLink)) {
                             $brand = mt_rand(0, count($bLink) - 1);
                             $blogRand = $bLink[$brand];
+                        } else {
+                            $blogRand = false;
                         }
-                    }
-                    if(!empty($bLink)) {
-                        $brand = mt_rand(0, count($bLink) - 1);
-                        $blogRand = @$bLink[$brand];
-                    } else {
-                        $blogRand = false;
                     }
                     /*End show blog link*/
                     if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
