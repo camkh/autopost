@@ -1870,7 +1870,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $blogRand = $bLink[$brand];
                     /*End show blog link*/
                     if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$blogRand.'";}, 30 );</script>';
+                        if(!empty($blogRand)) {
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$blogRand.'";}, 30 );</script>';
+                        } else {
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost=1";}, 30 );</script>';
+                        }
                     }
                     /*end check before share*/
                     $sharePost->conent = $pConent;
