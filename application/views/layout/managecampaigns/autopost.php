@@ -61,11 +61,21 @@ if(!empty($bloglinkA[0])) {
     $bNewName = generateRandomString(1).'1';
 }
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
+if(!empty($autopost->templateLink)) {
+    $setTemplate = 1;
+    //$btemplate = trim($autopost->templateLink);
+    // $btemplate = str_replace('/\\/', "&bsol;&bsol;", trim($autopost->templateLink));
+    // $btemplate = str_replace(' ', "&lt;SP&gt;", $btemplate);
+    // $btemplate = str_replace("/\n/", "&lt;br&gt;", $btemplate);
+} else {
+    $setTemplate = 0;
+}
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
 <code id="codeD" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=7\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?start=1\n&quot;;retcode=iimPlay(mm);</code>
-<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo $bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = 1, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
+<?php if(!empty($this->input->get('glogin'))):?><code id="codeE" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=7\n&quot;;mm+=&quot;URL GOTO=<?php echo $this->input->get('glogin');?>\n&quot;;retcode=iimPlay(mm);</code><?php endif;?>
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo $bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = <?php echo $setTemplate;?>, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
 <meta http-equiv="refresh" content="60"/>
     <script type="text/javascript">
@@ -150,16 +160,54 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             var str = $("#codeD").text();
             runcode(str);
         }
+        function glogin() {
+            var str = $("#codeE").text();
+            runcode(str);
+        }
         <?php if(!empty($this->input->get('startpost'))):?>
             <?php if(!empty($createNewBlog)):?>
-                createblog();
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                  timeleft -= 1;
+                  if(timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    createblog();
+                  }
+                }, 1000);
             <?php endif;?>
             <?php if(empty($createNewBlog)):?>
+                 var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
                 checkBloggerPost();
+              }
+            }, 1000);
             <?php endif;?>
         <?php endif;?>
         <?php if(!empty($this->input->get('start'))):?>
-            checkBloggerPost();
+            var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
+                checkBloggerPost();
+              }
+            }, 1000);
+        <?php endif;?>
+        <?php if(!empty($this->input->get('glogin'))):?>
+            var timeleft = 10;
+            var downloadTimer = setInterval(function(){
+              //document.getElementById("progressBar").value = 10 - timeleft;
+              timeleft -= 1;
+              if(timeleft <= 0) {
+                clearInterval(downloadTimer);
+                glogin();
+              }
+            }, 1000);
         <?php endif;?>
     </script>    
     <div class="page-header">
@@ -224,22 +272,45 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="1" name="autopost" <?php echo !empty($autopost) ? 'checked': '';?> />
-                                                    <input type="hidden" name="setLink" value="1"/>
+                                                    <input type="radio" value="1" name="autopost" <?php echo !empty($autopost->autopost) ? 'checked': '';?> />
+                                                    <input type="hidden" name="setPostAuto" value="1"/>
                                                     <i class="subtopmenu hangmeas">Yes</i>
                                                 </label> 
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="0" name="autopost" <?php echo empty($autopost) ? 'checked': '';?>/>
+                                                    <input type="radio" value="0" name="autopost" <?php echo empty($autopost->autopost) ? 'checked': '';?>/>
                                                     <i class="subtopmenu hangmeas">No</i>
                                                 </label>                                
                                             </div>
                                             <div style="clear: both;"></div>
                                         </div>
-                                        <?php if(!empty($autopost)):?>
-                                        <div class="form-actions" style="padding: 10px 20px 10px">
-                                            <a href="javascript:;" onclick="createblog()" class="btn btn-primary pull-right">Start now</a>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="posttype" <?php echo !empty($autopost->posttype) ? 'checked': '';?> />
+                                                    <i class="subtopmenu hangmeas">Google API</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="0" name="posttype" <?php echo empty($autopost->posttype) ? 'checked': '';?>/>
+                                                    <i class="subtopmenu hangmeas">Post by Manaully</i>
+                                                </label>                                
+                                            </div>
+                                            <div style="clear: both;"></div>
                                         </div>
-                                        <?php endif;?>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input type="text" name="titleExcept" class="form-control" style="width: 100%" placeholder="Title Except... Ex: 16/4/26562|16-4-2562" value="<?php echo @$autopost->titleExcept;?>" required />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input type="text" name="bloggerTemplate" class="form-control" style="width: 100%" placeholder="blogger Template" value="<?php echo @$autopost->templateLink;?>" required />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-actions" style="padding: 10px 20px 10px">
+                                            <input name="saveAuto" type="button" value="Save" class="btn btn-primary pull-right" />
+                                            <?php if(!empty($autopost)):?><a href="javascript:;" onclick="createblog()" class="btn btn-primary pull-right">Start now</a><?php endif;?>
+                                        </div>
                                 </form>
                             </div>
                         </div>
@@ -330,10 +401,10 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             });
 
             /*autopost*/
-            $("input[name=autopost]").click(function(){
+            $("input[name=saveAuto]").click(function(){
                 var values = $('#autopost').serialize();
                 $.ajax({
-                    url: "<?php echo base_url();?>managecampaigns/setting",
+                    url: "<?php echo base_url();?>managecampaigns/autopost",
                     type: "post",
                     data: values ,
                     success: function (response) {
