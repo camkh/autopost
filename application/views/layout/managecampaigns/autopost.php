@@ -209,6 +209,9 @@ if(!empty($autopost->templateLink)) {
               }
             }, 1000);
         <?php endif;?>
+        <?php if(empty($bLinkID)):?>
+            createblog();
+        <?php endif;?>
     </script>    
     <div class="page-header">
     </div>
