@@ -2303,6 +2303,26 @@ HTML;
                     $max = ! empty ( $_GET ['max'] ) ? $_GET ['max'] : '20';
                     $sid = $this->session->userdata ( 'sid' );
 
+                    /*check for exist post*/
+                    $fbUserId = $this->session->userdata('fb_user_id');
+                    $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                    $string = file_get_contents($tmp_path);
+                    $json_a = json_decode($string);
+                    $where_Pshare = array (
+                        'u_id' => $sid,
+                        'p_post_to' => 1,
+                    );
+                    $dataPost = $this->Mod_general->select (
+                        'post',
+                        '*', 
+                        $where_Pshare
+                    );
+                    if(!empty($dataPost[0])) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        exit();
+                    }
+                    /*End check for exist post*/
+
                     /*update for bloglink*/
                     if(!empty($lid)) {
                         $blogLinkType = 'blog_linkA';
@@ -2911,6 +2931,28 @@ HTML;
                             @ob_end_flush();
                             $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
                             /* end add data to post */
+
+                            /*limit for 2 posts*/
+                            // $postsLoop[] = array(
+                            //     'pid'=> $AddToPost, 
+                            //     'uid'=> $log_id,
+                            // );
+                            // $tmp_path = './uploads/'.$log_id.'/';
+                            // $file_name = $tmp_path . $sid.'-post.json';
+                            // if (file_exists($file_name)) {
+                            //     $LoopId = file_get_contents($file_name);
+                            //     $LoopIdArr = json_decode($LoopId);
+                            //     foreach ($LoopIdArr as $lId) {
+                            //         $postsLoop[] = array(
+                            //             'pid'=> $lId->pid, 
+                            //             'uid'=> $lId->uid,
+                            //         );
+                            //     }
+                            // }
+                            // $f = fopen($file_name, 'w');
+                            // fwrite($f, json_encode($postsLoop));
+                            // fclose($f);
+                            /*End limit for 2 posts*/
                             
                             /* add data to group of post */
                             if(!empty($itemGroups)) {

@@ -1560,40 +1560,56 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $pid = @$this->input->get('pid');
                 $date = new DateTime("now");
                 $curr_date = $date->format('Y-m-d h:i:s');
+                $sid = $this->session->userdata ( 'sid' );
                 if(!empty($pid)) {
-                    $where_so = array (
-                        'uid' => $log_id,
-                        'sh_status' => 0,
-                        'sh_type' => 'imacros',
+                    $where_Pshare = array (
                         'p_id' => $pid,
-                        'social_id'=> $sid
+                        'u_id' => $sid,
+                        'p_status' => 1,
+                        'p_post_to' => 0,
                     );
                 } else {
-                    $where_so = array (
+                    $where_Pshare = array (
+                        'u_id' => $sid,
+                        'p_status' => 1,
+                        'p_post_to' => 0,
+                    );
+                    // $whereShare = array (
+                    //     'uid' => $log_id,
+                    //     'sh_status' => 0,
+                    //     'sh_type' => 'imacros',
+                    //     'social_id'=> $sid
+                    // );
+                }
+                $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
+                if(!empty($dataPost[0])) {
+                    $PID = $dataPost[0]->p_id;
+                    $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
                         'sh_type' => 'imacros',
+                        'p_id' => $PID,
                         'social_id'=> $sid
                     );
-                }
-                $dataShare = $this->Mod_general->select (
-                    'share',
-                    '*', 
-                    $where_so,
-                    $order = 'c_date', 
-                    $group = 0, 
-                    $limit = 1 
-                );
-                if(!empty($dataShare[0])) {
-                    $pid = $dataShare[0]->p_id;
-                    $postId = $dataShare[0]->p_id;
-                    $shareid = $dataShare[0]->sh_id;
-                    $shOption = json_decode($dataShare[0]->sh_option);
-                    $this->session->set_userdata('pid', $dataShare[0]->p_id);
-                    if(!empty($wait)) {
-                        $value = 'nexpost';
+                    $dataShare = $this->Mod_general->select (
+                        'share',
+                        '*', 
+                        $whereShare,
+                        $order = 'c_date', 
+                        $group = 0, 
+                        $limit = 1 
+                    );
+                    if(!empty($dataShare[0])) {
+                        $pid = $dataShare[0]->p_id;
+                        $postId = $dataShare[0]->p_id;
+                        $shareid = $dataShare[0]->sh_id;
+                        $shOption = json_decode($dataShare[0]->sh_option);
+                        $this->session->set_userdata('pid', $dataShare[0]->p_id);
+                        if(!empty($wait)) {
+                            $value = 'nexpost';
+                        }
+                        redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                     }
-                    redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                 }
                 break;
              case 'wait':
@@ -1659,103 +1675,128 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 /*End count shred*/
                 /*End share_history*/
 
-                /*check next post */
-                /* check before insert */
+                /*get next post*/
                 if($randomLink == 1) {
-                    $date = new DateTime("now");
-                    $curr_date = $date->format('Y-m-d h:i:s');
-                    $where_so = array (
-                        'uid' => $log_id,
-                        'sh_status' => 0,
-                        'sh_type' => 'imacros',
-                        'social_id'=> $sid,
-                        'DATE(c_date) <=' =>  $curr_date
-                    );
                     $orderBy = 'rand()';
-                } else {
-                    $where_so = array (
-                        'uid' => $log_id,
-                        'sh_status' => 0,
-                        'sh_type' => 'imacros',
-                        'p_id' => $pid,
-                        'social_id'=> $sid
+                    $where_Pshare = array (
+                        'u_id' => $sid,
+                        'p_status' => 1,
+                        'p_post_to' => 0,
                     );
-                    $orderBy = 'c_date desc';
+                } else {
+                    $where_Pshare = array (
+                        'p_id' => $pid,
+                        'p_status' => 1,
+                        'p_post_to' => 0,
+                    );
+                    // $where_so = array (
+                    //     'uid' => $log_id,
+                    //     'sh_status' => 0,
+                    //     'sh_type' => 'imacros',
+                    //     'p_id' => $pid,
+                    //     'social_id'=> $sid
+                    // );
+                    $orderBy = 'p_date desc';
                 }
-                $dataShare = $this->Mod_general->select (
-                    'share',
+                $dataPost = $this->Mod_general->select (
+                    'post',
                     '*', 
-                    $where_so,
+                    $where_Pshare,
                     $order = $orderBy, 
                     $group = 0, 
                     $limit = 1 
                 );
-
-                /*check post and share count*/               
-                $where_shCo = array (
-                    'uid' => $log_id,
-                    'social_id'=> $sid,
-                    'p_id'=> $pid,
-                );
-                $dataShCheck = $this->Mod_general->select (
-                    'share',
-                    '*',
-                    $where_shCo
-                );
-                if(count($dataShCheck) == $count_shared) {
-                    $this->Mod_general->delete ( 'post', array (
-                        'p_id' => $pid,
-                        'user_id' => $log_id,
-                    ));
-                    $this->Mod_general->delete ( 'share', array (
-                        'p_id' => $pid,
-                        'uid' => $log_id,
-                    ));
-                    $this->Mod_general->delete ( 'share_history', array (
-                        'shp_posted_id' => $pid,
-                        'uid' => $log_id,
-                    ));
-                    /*go to check post*/
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=checkpost";}, 2000 );</script>';
-                    exit();
-                }
-                /*End check post and share count*/ 
-
-                if(!empty($dataShare[0])) {
-                    $pid = $dataShare[0]->p_id;
-                    $post_id = $dataShare[0]->p_id;
-                    $shareid = $dataShare[0]->sh_id;
-                    $this->session->set_userdata('post_id', $post_id);
-                    echo '<center>Please wait...</center>';
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'&shareid='.$shareid.'";}, 2000 );</script>';
-                    exit();
-                    //redirect(base_url() . 'Facebook/share?post=gwait&id=' . $pid);
-                } else {
-                    /*get next post*/
-                    $whereNext = array (
+                if(!empty($dataPost[0])) {
+                    /* check before insert */
+                    $where_so = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
                         'sh_type' => 'imacros',
+                        'p_id' => $dataPost[0]->p_id,
                         'social_id'=> $sid
-
                     );
-                    $nextShare = $this->Mod_general->select (
+                    $orderBy = 'c_date desc';
+                    $dataShare = $this->Mod_general->select (
                         'share',
                         '*', 
-                        $whereNext,
-                        $order = 'c_date desc', 
-                        $group = 0, 
-                        $limit = 1 
-                    );                    
+                        $where_so
+                    );
 
-                    if(!empty($nextShare[0])) {
-                        $pid = $nextShare[0]->p_id;
-                        $shareid = $nextShare[0]->sh_id;
-                        $this->session->set_userdata('post_id', $pid);
+                    /*check post and share count*/               
+                    $where_shCo = array (
+                        'uid' => $log_id,
+                        'social_id'=> $sid,
+                        'p_id'=> $dataPost[0]->p_id,
+                    );
+                    $dataShCheck = $this->Mod_general->select (
+                        'share',
+                        '*',
+                        $where_shCo
+                    );
+                    if(count($dataShCheck) == $count_shared) {
+                        $this->Mod_general->delete ( 'post', array (
+                            'p_id' => $dataPost[0]->p_id,
+                            'user_id' => $log_id,
+                        ));
+                        $this->Mod_general->delete ( 'share', array (
+                            'p_id' => $dataPost[0]->p_id,
+                            'uid' => $log_id,
+                        ));
+                        $this->Mod_general->delete ( 'share_history', array (
+                            'shp_posted_id' => $dataPost[0]->p_id,
+                            'uid' => $log_id,
+                        ));
+                        /*go to check post*/
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=checkpost";}, 2000 );</script>';
+                        exit();
+                    }
+                    /*End check post and share count*/ 
+
+                    if(!empty($dataShare[0])) {
+                        $pid = $dataShare[0]->p_id;
+                        $post_id = $dataShare[0]->p_id;
+                        $shareid = $dataShare[0]->sh_id;
+                        $this->session->set_userdata('post_id', $post_id);
                         echo '<center>Please wait...</center>';
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=nexpost&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'&shareid='.$shareid.'";}, 2000 );</script>';
-                        //redirect(base_url() . 'Facebook/share?post=nexpost&id=' . $pid);
-                    exit();
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=gwait&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'&shareid='.$shareid.'";}, 2000 );</script>';
+                        exit();
+                        //redirect(base_url() . 'Facebook/share?post=gwait&id=' . $pid);
+                    }
+                    /*End get next post*/
+                } else {
+                    /*get next post*/
+                    $where_Pshare = array (
+                        'u_id' => $sid,
+                        'p_status' => 1,
+                        'p_post_to' => 0,
+                    );
+                    $dataPost = $this->Mod_general->select (
+                        'post',
+                        '*', 
+                        $where_Pshare
+                    );
+                    if(!empty($dataPost[0])) {
+                        $whereNext = array (
+                            'uid' => $log_id,
+                            'sh_status' => 0,
+                            'sh_type' => 'imacros',
+                            'p_id' => $dataPost[0]->p_id,
+                            'social_id'=> $sid
+                        );
+                        $nextShare = $this->Mod_general->select (
+                            'share',
+                            '*', 
+                            $whereNext
+                        );                    
+                        if(!empty($nextShare[0])) {
+                            $pid = $nextShare[0]->p_id;
+                            $shareid = $nextShare[0]->sh_id;
+                            $this->session->set_userdata('post_id', $pid);
+                            echo '<center>Please wait...</center>';
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'Facebook/share?post=nexpost&id='.$pid.'&uid='.$uid.'&suid='.$suid.'&agent='.$UserAgent.'&shareid='.$shareid.'";}, 2000 );</script>';
+                            //redirect(base_url() . 'Facebook/share?post=nexpost&id=' . $pid);
+                        exit();
+                        }
                     }
                     /*end get next post*/
                 }                
