@@ -1120,7 +1120,8 @@ class Managecampaigns extends CI_Controller {
                                     if(empty($pConent->mainlink)) {
                                         $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
                                         if(!empty($blogData['error'])) {
-                                            redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$vid);
+                                            //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
+                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id=";}, 30 );</script>';
                                             exit();
                                         }
                                         $link = @$blogData->url;
@@ -1189,7 +1190,8 @@ class Managecampaigns extends CI_Controller {
                                             $dataContent->label    = 'blink';
                                             $DataBlogLink = $this->postBlogger($dataContent);
                                             if(!empty($DataBlogLink['error'])) {
-                                                redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                                                //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
                                                 exit();
                                             }
                                             $link = $DataBlogLink->url;
