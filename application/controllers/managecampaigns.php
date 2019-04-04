@@ -1019,6 +1019,15 @@ class Managecampaigns extends CI_Controller {
                 );
                 $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
                 if(!empty($getPost[0])) {
+                    $photo = array(
+                        'https://lh3.googleusercontent.com/-S2xe5PHDH7S6Zg4KzKyERsg9oEuVwPYOW-gIaof4Xitston7KLtpH9F-JlxHEWhZbudA8bkE6HGWrYFtJ10uZdLDg5jQLcv3nAKK1VlzDXhGwB2YMU6m4NaoCIDV5hIp5MmVCzctSwpP_lg2rhG1XKMBxvD25FjEa4qgzzNfjD_v-xpMUPC0-FD2u9_SwJRwZCukm7cYAjv99eA1PILj2tgOF7CJWRUKp5bgEJcHHHiby9Qac479FMWYbJDPQl0a2tSP26aKZiIilPQOCWFGmBjFU_Je1IjQJrcSdz_a-yFbqRqUjViq1AOgIsv6qhmT5vbSkTIRYccdBqu5-4NlH7JGBzIlAst4tDQk8fjCLcHA0FvumJPoACEL60DzueJIFDUBRL6auJivvic5OfAM8lQRA8ndmiVxvxzPO14PxVI_ShlKu25ELfRejf6Jf0rdwcxxzwFnlW47gJRoKbQnE0sKSFVCuHvUmJ8FRAnThMhWleN-tV7zn7AHGSdffaRCfj-8ui_hNaLwzGf1bejKtAEudToYNLqCRs045lEXqvMPc_7WyAhN3pkgq1R32DJEw9lDYxPpVn6m2Rf9xlKO-_cuMUNvGFUHUveUhL8rfkHFsYRdEd0arAhcnVBpT7TcGzX6qoUaMY1LCJwJv30h3DU4zRxRQz57jStn5WEIdTjQfM2sHhIsmQXWM29jy1yTK3jXE4NJuXWgSh3Zmppy6Q_Ig=w568-h757-no',
+                        'https://lh3.googleusercontent.com/2l01VH5XU5Dwc1GF9qMuc7vNHv0ZZ_MZXF5TY-4CgiiJNyZ-EGPvpdeRCGOime4oFCxQzELZ43fz-3SCjjJalIHsG-vf2Fq-JfpdoQRnerO76EU08_tUs942crf96A4L03GDguHtEqDVNugYfjDs96PxAVrhZCTadF8nFVSrnzvn0dNgUL6iAXH3-sOnCufYdgpsw8xDoEqx1tfTNyBcr7ipzqwjW8CkAWMqu3AAogYC_lsGx99kHjLjpPBY9wt-VLplSPy4SOtul7XUF1K7y-643sM0T6quKyVP9kAKJlj8tT8WoZA792k0Mi0Q_mQTnc5ow_Q1_TKhvhs-ApCurUWYoJR-znRbjYnKUwjYhlj6xZnRxOP0OhwKNPg3Gdd5n7SthKLYOco_3s9IjPZSzJYorCgHmGvYN721AxnIcGoDMv9J-tmW-3X1CGzhNkSV4drFggbcy6dp9oRdx0RvUxMxclFNr1l0ZND-yu0d1XaYYYEfwUjCRfYeNbBB4sdZjc9bnLGBRGguJ7yFkbtui2Q_QBHrG8PgGvMwgWPE1MyECJgHJYW2jZzxCfY0RFfwkrnRR1b6kQhXVqtxEhRVhcCyMk0qV0Xl-Uns7m-NW8EA2yEQqOutc1T4rHAq4ITjnF9sHGqLVmbA8tf3Xz8Ui3hWM6_1p30=w1024-h576-no',
+                        'https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no',
+                        'https://preykabbas.files.wordpress.com/2011/03/sovanaphumi-air-106.jpg',
+                        'https://preykabbas.files.wordpress.com/2011/02/e19e80e19eb6e19e9ae19e91e19f85e2808be19e9be19f81e19e84e2808be19e94e19f92e19e9ae19eb6e19e9fe19eb6e19e91e19ea2e19e84e19f92e19e82e19e9a9.jpg'
+                    );
+                    $brand = mt_rand(0, count($photo) - 1);
+                    $imgRand = $photo[$brand];
                 /*End get post from post id*/
                     $pConent = json_decode($getPost[0]->p_conent);
                     $pOption = json_decode($getPost[0]->p_schedule);
@@ -1046,7 +1055,7 @@ class Managecampaigns extends CI_Controller {
                         if(!empty($nextPost[0])) {
                             $p_id = $nextPost[0]->p_id;
                             $autopost = $this->input->get('autopost');
-                            echo '<div style="background-image:url(https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no);background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background: #000 center center no-repeat; background-size: 100%;"><center>Please wait...</center></div>';
+                            echo '<div style="background-image:url('.$imgRand.');background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background: #000 center center no-repeat; background-size: 100%;"><center>Please wait...</center></div>';
                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>'; 
                         }
                     }
@@ -1057,38 +1066,48 @@ class Managecampaigns extends CI_Controller {
                     $imgur = false;        
                     if(!empty($vid)) {
                         $imgUrl = $picture;
-                        
+                        if(empty($imgUrl)) {
+                            $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
+                        }
+
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
                         }
                         $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
+
                         $file_title = basename($imgUrl);
                         $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
 
-                        if (!preg_match('/ytimg.com/', $fileName)) {
+
+                        if (!preg_match('/ytimg.com/', $imgUrl)) {
                             $imgUrl = $picture;
                         }    
-
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                            copy($imgUrl, $fileName);      
-                            $param = array(
-                                'btnplayer'=>$pOption->btnplayer,
-                                'playerstyle'=>$pOption->playerstyle,
-                                'imgcolor'=>$pOption->imgcolor,
-                                'txtadd'=>$pOption->txtadd,
-                                'filter_brightness'=>$pOption->filter_brightness,
-                                'filter_contrast'=>$pOption->filter_contrast,
-                                'img_rotate'=>$pOption->img_rotate,
-                            );
-                            if(!empty($pOption->foldlink)) {
-                                $image = $pConent->picture;
+
+                            if (!preg_match('/imgur.com/', $fileName)) {
+                                copy($imgUrl, $fileName);      
+                                $param = array(
+                                    'btnplayer'=>$pOption->btnplayer,
+                                    'playerstyle'=>$pOption->playerstyle,
+                                    'imgcolor'=>$pOption->imgcolor,
+                                    'txtadd'=>$pOption->txtadd,
+                                    'filter_brightness'=>$pOption->filter_brightness,
+                                    'filter_contrast'=>$pOption->filter_contrast,
+                                    'img_rotate'=>$pOption->img_rotate,
+                                );
+                                if(!empty($pOption->foldlink)) {
+                                    $image = $pConent->picture;
+                                } else {
+                                    $image = $this->mod_general->uploadMedia($fileName,$param);
+                                }  
                             } else {
-                                $image = $this->mod_general->uploadMedia($fileName,$param);
-                            }                            
+                                $image = $imgUrl;
+                            }                          
                         } else {
                             $image = $picture;
                         }
+
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
                             @unlink($fileName);
@@ -1098,13 +1117,39 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($pOption->foldlink)) {
                                     $link = @$pConent->mainlink;
                                 } else {
-                                    $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
-                                    $link = @$blogData->url; 
+                                    if(empty($pConent->mainlink)) {
+                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                                        if(!empty($blogData['error'])) {
+                                            redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$vid);
+                                            exit();
+                                        }
+                                        $link = @$blogData->url;
+                                        /*update post*/
+                                        if(!empty($link)) {
+                                            $updateMainLink = array('p_id' => $pid);
+                                            $content = array (
+                                                'name' => $pConent->name,
+                                                'message' => $pConent->message,
+                                                'caption' => $pConent->caption,
+                                                'link' => $pConent->link,
+                                                'mainlink' => $link,
+                                                'picture' => @$image,                            
+                                            );
+                                            $dataPostInstert = array (
+                                                Tbl_posts::conent => json_encode ( $content ),
+                                            );
+                                            $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $updateMainLink);
+                                        }
+                                        /*End update post*/ 
+                                    } else {
+                                        $link = @$pConent->mainlink;
+                                    }
                                 }                                
                                 $mainlink = $link; 
                                 /*End Post to Blogger first*/
 
                                 /*blog link*/
+
                                 if(!empty($link)) {
                                     if(!empty($blink) && $blink == 1) {
                                         //set blog link by ID
@@ -1129,7 +1174,7 @@ class Managecampaigns extends CI_Controller {
                                                 $blogRand = $big[$brand];
                                             }
                                         }
-                                         
+
                                         if(!empty($blogRand)) {
                                             $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
                                             $title = (string) $title;
@@ -1143,6 +1188,10 @@ class Managecampaigns extends CI_Controller {
                                             $dataContent->bodytext = $bodytext;
                                             $dataContent->label    = 'blink';
                                             $DataBlogLink = $this->postBlogger($dataContent);
+                                            if(!empty($DataBlogLink['error'])) {
+                                                redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                                                exit();
+                                            }
                                             $link = $DataBlogLink->url;
                                         }
                                     }
@@ -1215,13 +1264,15 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($nextPost[0])) {
                         $p_id = $nextPost[0]->p_id;
                         $autopost = $this->input->get('autopost');
+                        $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
+                            $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
                         if(count($postsLoop)>5) {
+                           //echo $showHTHM;
                             //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
-                            echo '<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url(https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr></tbody></table></div></div>';
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
+                            die;
                         } else {
-                            echo '<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url(https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr></tbody></table></div></div>';
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
+                            //echo $showHTHM;
+                            die;
                         } 
                     } else {
                         if(!empty($autopost)) {
@@ -3500,7 +3551,26 @@ HTML;
         /*End add blog link by Imacros*/
         $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
         $string = file_get_contents($tmp_path);
-        $data['json_a'] = json_decode($string);
+        $data['json_a'] = $json_a = json_decode($string);
+
+        /*check for exist post*/
+        if(!empty($this->input->get('start')) || !empty($this->input->get('startpost'))) {
+            $sid = $this->session->userdata ( 'sid' );
+            $where_Pshare = array (
+                'u_id' => $sid,
+                'p_post_to' => 1,
+            );
+            $dataPost = $this->Mod_general->select (
+                'post',
+                '*', 
+                $where_Pshare
+            );
+            if(!empty($dataPost[0])) {
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                exit();
+            }
+        }
+        /*End check for exist post*/
 
         $this->load->view ( 'managecampaigns/autopost', $data );
     }

@@ -711,8 +711,11 @@ public function get_video_id($param, $videotype = '')
             return $getpost;
             die;
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-            return false;
+            $data = array(
+                'error'=> true,
+                'message'=> $exc->getTraceAsString(),
+            );
+            return $data;
             //echo $exc->getTraceAsString();
         }
     }

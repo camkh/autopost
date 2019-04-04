@@ -184,6 +184,9 @@
                     <?php else:?>
                     load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
                 <?php endif;?>
+                    window.setTimeout( function(){
+                       var id = setInterval(frame, <?php echo $styleA;?>);
+                    }, 1 * 60 * 1000);
                 } else {
                   width++; 
                   elem.style.width = width + '%'; 

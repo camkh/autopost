@@ -16,14 +16,14 @@
         return $data;
     }
 	?>
+<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet">
 <style>
 	.butt,.butt:hover {color: #fff}
     .radio-inline{}
     .error {color: red}
     #blockuis{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
-    .khmer {font-family: 'Hanuman', serif;font-size: 30px}
+    .khmer {font-family: 'Hanuman', serif!important;font-size: 30px}
 </style>
-<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"> 
 <div style="display:none;text-align:center;font-size:20px;color:white" id="blockuis">
     <div id="loaderimg" class=""><img align="middle" valign="middle" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif"/>
     </div>
@@ -109,11 +109,19 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<?php if(!empty($this->input->get('m'))):
-		if($this->input->get('m') == 'runout_post'):?>
+		<?php if(!empty($this->input->get('m'))):?>
+			<?php if($this->input->get('m') == 'blog_main_error'):?>
+				<div class="alert alert-danger fade in khmer"> 
+				 <strong>មានបញ្ហា!</strong> ប្លុកធំ (<a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID=<?php echo @$this->input->get('bid');?>"><?php echo @$this->input->get('bid');?></a>) ជាមួយនិង email: <?php echo $this->session->userdata ( 'gemail' );?> <br/>មានបញ្ហា សូមឆែកមើល User Permissions ម្ដងទៀត . <br/>ឬអាចមកពីប៉ុស្តិ៍ច្រើនពេក សូមរង់ចាំ១ម៉ោងក្រោយ សឹមសាកម្ដងទៀត</div>
+			<?php endif;?>
+			<?php if($this->input->get('m') == 'blog_link_error'):?>
+				<div class="alert alert-danger fade in khmer"> 
+				 <strong>មានបញ្ហា!</strong> ប្លុក Link (<a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID=<?php echo @$this->input->get('bid');?>"><?php echo @$this->input->get('bid');?></a>) ជាមួយនិង email: <?php echo $this->session->userdata ( 'gemail' );?> <br/>មានបញ្ហា សូមឆែកមើល User Permissions ម្ដងទៀត . <br/>ឬអាចមកពីប៉ុស្តិ៍ច្រើនពេក សូមរង់ចាំ១ម៉ោងក្រោយ សឹមសាកម្ដងទៀត</div>
+			<?php endif;?>
+			<?php if($this->input->get('m') == 'runout_post'):?>
 			<div class="alert alert-danger fade in khmer"> 
 				 <strong>អស់ហើយ!</strong> អស់ប៉ុស្តិ៍ហើយ សូមដាក់បន្ថែមថ្មីទៀត . </div>
-		<?php endif;
+			<?php endif;
 	endif;?>
 	</div>
 	<div class="col-md-12">
