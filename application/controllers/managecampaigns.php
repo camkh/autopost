@@ -955,6 +955,14 @@ class Managecampaigns extends CI_Controller {
                                     $big[] = $blog->bid;
                                 }                                
                             }
+                            if(empty($big)) {
+                                $currentURL = current_url(); //for simple URL
+                                 $params = $_SERVER['QUERY_STRING']; //for parameters
+                                 $fullURL = $currentURL . '?' . $params;
+                                $setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                                //redirect($setUrl);
+                                exit();
+                            }
                             $brand = mt_rand(0, count($big) - 1);
                             $blogRand = $big[$brand];
                         }

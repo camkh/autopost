@@ -70,12 +70,13 @@ if(!empty($autopost->templateLink)) {
 } else {
     $setTemplate = 0;
 }
+$backto = @urlencode($this->input->get('backto'));
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
 <code id="codeD" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=15\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?start=1\n&quot;;retcode=iimPlay(mm);</code>
 <?php if(!empty($this->input->get('glogin'))):?><code id="codeE" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$json_a->gemail;?>\n';mm+=&quot;WAIT SECONDS=15\n&quot;;mm+=&quot;URL GOTO=<?php echo $this->input->get('glogin');?>\n&quot;;retcode=iimPlay(mm);</code><?php endif;?>
-<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo @$bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = <?php echo $setTemplate;?>, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;,bid = &quot;<?php echo @$bLinkID;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = <?php echo $setTemplate;?>, tempfolder = &quot;<?php echo $btemplate;?>&quot;,backto=&quot;<?php echo @$backto;?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
 <meta http-equiv="refresh" content="60"/>
     <script type="text/javascript">
@@ -210,6 +211,9 @@ if(!empty($autopost->templateLink)) {
             }, 1000);
         <?php endif;?>
         <?php if(empty($bLinkID)):?>
+            createblog();
+        <?php endif;?>
+        <?php if(!empty($this->input->get('createblog'))):?>
             createblog();
         <?php endif;?>
     </script>    
