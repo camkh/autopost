@@ -959,7 +959,8 @@ class Managecampaigns extends CI_Controller {
                                 $currentURL = current_url(); //for simple URL
                                  $params = $_SERVER['QUERY_STRING']; //for parameters
                                  $fullURL = $currentURL . '?' . $params;
-                                $setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
                                 //redirect($setUrl);
                                 exit();
                             }
@@ -1129,6 +1130,7 @@ class Managecampaigns extends CI_Controller {
                                         $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
+                                            $p_id = $this->input->get('pid');
                                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id=";}, 30 );</script>';
                                             exit();
                                         }
@@ -1179,6 +1181,16 @@ class Managecampaigns extends CI_Controller {
                                                         $big[] = $blog->bid;
                                                     }                                
                                                 }
+
+                                                $currentURL = current_url(); //for simple URL
+                                                 $params = $_SERVER['QUERY_STRING']; //for parameters
+                                                 $fullURL = $currentURL . '?' . $params;
+                                                 echo $fullURL;
+                                                 die;
+                                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                                                //redirect($setUrl);
+                                                exit();
                                                 $brand = mt_rand(0, count($big) - 1);
                                                 $blogRand = $big[$brand];
                                             }
