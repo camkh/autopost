@@ -2447,50 +2447,6 @@ HTML;
                         exit();
                     }
                     /*End check for exist post*/
-
-                    /*update for bloglink*/
-                    if(!empty($lid)) {
-                        $blogLinkType = 'blog_linkA';
-                        if (!empty($lid)) {
-                            $whereLinkA = array(
-                                'c_name'      => $blogLinkType,
-                                'c_key'     => $log_id,
-                            );
-                            $queryLinkData = $this->Mod_general->select('au_config', '*', $whereLinkA);
-                            /* check before insert */
-                            if (!empty($queryLinkData[0])) {
-                                $bdata = json_decode($queryLinkData[0]->c_value);
-                                $found = false;
-                                $jsondata = array();
-                                foreach ($bdata as $key => $bvalue) {
-                                    $pos = strpos($bvalue->bid, $lid);
-                                    if ($pos === false) {
-                                        $jsondata[] = array(
-                                            'bid' => $bvalue->bid,
-                                            'title' => $bvalue->title,
-                                            'status' => $bvalue->status,
-                                            'date' => @$bvalue->date
-                                        );
-                                    } else {
-                                       $jsondata[] = array(
-                                            'bid' => $bvalue->bid,
-                                            'title' => $bvalue->title,
-                                            'status' => 1,
-                                            'date' => date('Y-m-d H:i:s')
-                                        ); 
-                                    }
-                                } 
-                                $data_blog = array(
-                                    'c_value'      => json_encode($jsondata),
-                                );
-                                $WhereLinkA = array(
-                                    'c_key'     => $log_id,
-                                    'c_name'      => $blogLinkType
-                                );
-                                $lastID = $this->Mod_general->update('au_config', $data_blog,$WhereLinkA);
-                            }
-                        }
-                    }
                     
                     /*check video exist*/
                     $checkYtExist = $this->mod_general->select ( 
@@ -2558,7 +2514,7 @@ HTML;
                             }
                             $ytID = $ytRandID;                
                         }
-                        $this->getYoutubeVideos($ytID,$max,$lid);
+                        $this->getYoutubeVideos($ytID,$max);
                         //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
                         //exit();
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/ajax?lid='.$lid.'&p=autopostblog";}, 30 );</script>';
@@ -2580,11 +2536,64 @@ HTML;
                     die;
                     // $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
                      break;
+                case 'getyoutube':
+                    echo '<meta http-equiv="refresh" content="300"/>';
+                    /*update youtube video*/
+                    $where_yt = array(
+                        'c_name'      => 'youtubeChannel',
+                        'c_key'     => $log_id,
+                    );
+                    $query_yt = $this->Mod_general->select('au_config', '*', $where_yt);
+                    if (!empty($query_yt[0])) {
+                        $data = json_decode($query_yt[0]->c_value);
+                        $ytid = array();
+                        $chID = array();
+                        $chStatus = array();
+                        $inputYt = array();
+                        foreach ($data as $key => $config) {
+                            $inputYt[] = array(
+                                'ytid'=> $config->ytid,
+                                'ytname' => $config->ytname,
+                                'date' => strtotime("now"),
+                                'status' => 0,
+                            );
+                            $chID[] = $config->ytid;
+                            if($config->status == 1) {
+                                $chStatus[] = $config->status;
+                            }
+                            if($config->status == 0) {
+                                $ytid[] = $config->ytid;
+                            }
+                        }                                
+
+                        /*check channel update*/
+                        if(count($chID) == count($chStatus)) {
+                            $data_yt = array(
+                                'c_value'      => json_encode($inputYt)
+                            );
+                            $whereYT = array(
+                                'c_key'     => $log_id,
+                                'c_name'      => 'youtubeChannel'
+                            );
+                            $this->Mod_general->update('au_config', $data_yt,$whereYT);
+                        }
+                        $brand = mt_rand(0, count($ytid) - 1);
+                        $ytRandID = $ytid[$brand];                                
+                        /*End check channel update*/
+                        $ytID = $ytRandID; 
+                        $currentURL = current_url(); //for simple URL
+                         $params = $_SERVER['QUERY_STRING']; //for parameters
+                         $fullURL = $currentURL . '?' . $params; //full URL with parameter
+                        $setUrl = base_url() . 'managecampaigns/account?backto='. urlencode($fullURL);
+                        $this->getYoutubeVideos($ytID,20,$setUrl);
+                    }
+                    /*End update youtube video*/
+                    break;
 			}
 		}
 	}
 
-    public function getYoutubeVideos($ytID,$max)
+    public function getYoutubeVideos($ytID,$max,$backto='')
     {
         $getData = false;
         $log_id = $this->session->userdata ( 'user_id' );
@@ -2599,9 +2608,12 @@ HTML;
                      $currentURL = current_url(); //for simple URL
                      $params = $_SERVER['QUERY_STRING']; //for parameters
                      $fullURL = $currentURL . '?' . $params; //full URL with parameter
-                    echo $fullURL;
                     $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
-                    redirect($setUrl);
+                    if(!empty($backto)) {
+                        redirect($backto);
+                    } else {
+                        redirect($setUrl);
+                    }
                     exit();
                 }
             }
@@ -2868,11 +2880,10 @@ HTML;
                     'y_uid' => $log_id,
                     'y_status' => 0,
                 ),
-                0, 
+                $order = "y_date DESC", 
                 0, 
                 2
             );
-           
            /*get group*/
            $wGroupType = array (
                     'gu_grouplist_id' => $json_a->account_group_type,
