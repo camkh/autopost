@@ -22,32 +22,33 @@ function generateRandomString($length = 10) {
     }
     return $randomString;
 }
+
 if(!empty($bloglinkA[0])) {
     $bLink = array();
     foreach ($bloglinkA as $key => $bloglink) {
+        if($bloglink->meta_value ==1) {
+            $bLink[] = $bloglink->object_id;
+        }
         // echo '<pre>'; 
         // print_r($bloglink);                               
         // echo '</pre>';   
-        $twoDaysAgo = new DateTime(date('Y-m-d H:i:s', strtotime('-1 days')));
-        $dateModify = new DateTime(date('Y-m-d H:i:s', strtotime($bloglink->date)));
-        /*if video date is >= before yesterday*/
-        //today
-        if($dateModify < $twoDaysAgo) {
-            if($bloglink->status ==1) {
-                $bLink[] = $bloglink;
-            }
-        } else if($dateModify > $twoDaysAgo) {
-            $bLink[] = $bloglink;
-        }                  
+        // $twoDaysAgo = new DateTime(date('Y-m-d H:i:s', strtotime('-1 days')));
+        // $dateModify = new DateTime(date('Y-m-d H:i:s', strtotime($bloglink->date)));
+        // /*if video date is >= before yesterday*/
+        // //today
+        // if($dateModify < $twoDaysAgo) {
+        //     if($bloglink->c_value ==1) {
+        //         $bLink[] = $bloglink;
+        //     }
+        // } else if($dateModify > $twoDaysAgo) {
+        //     $bLink[] = $bloglink;
+        // }                  
     }
     if(!empty($bLink)) {
         $brand = mt_rand(0, count($bLink) - 1);
         $blogRand = $bLink[$brand];
-        $bName = $blogRand->title;
-        $bLinkID = $blogRand->bid;
-        $bint = (int) filter_var($bName, FILTER_SANITIZE_NUMBER_INT);
-        $bArr = explode($bint, $bName);
-        $bNewName = $bArr[0]. ($bint + 1);
+        $bName = generateRandomString(1).'1';
+        $bLinkID = $blogRand;
         $createNewBlog = false;
     } else {
         $createNewBlog = true;
@@ -260,13 +261,13 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             foreach ($bloglinkA as $key => $linkA):?>
                                         <tr>
                                             <td><?php echo $key;?></td>
-                                            <td><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->bid;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->bid;?></a></td>
-                                            <td style="width: 50%"><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->bid;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->title;?></a></td>
-                                            <td><span class="label label-success"><?php echo $linkA->status;?></span></td>
+                                            <td><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
+                                            <td style="width: 50%"><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
+                                            <td><span class="label label-success"><?php echo $linkA->meta_value;?></span></td>
                                             <td>
                                                 <ul class="table-controls">
                                                     <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
-                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkA->bid;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkA->meta_id;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
                                                 </ul>
                                             </td>
                                         </tr>

@@ -937,37 +937,45 @@ class Managecampaigns extends CI_Controller {
                 if(!empty($nextPost[0])) {
                     $p_id = $nextPost[0]->p_id;
                     //redirect(base_url() . 'managecampaigns/yturl?pid='.$p_id.'&bid=' . $bid . '&action=postblog&blink='.$blogLink); 
+                    /*get blog link from database*/
+                    $guid = $this->session->userdata ('guid');
+                    $blogLinkType = 'blog_linkA';
+                    $whereLinkA = array(
+                        'meta_key'      => $blogLinkType . '_'. $guid,
+                    );
+                    $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    if (empty($queryLinkData[0])) {
+                        $big = array();
+                        foreach ($data as $key => $blog) {
+                            if($blog->meta_value ==1) {
+                                $big[] = $blog->object_id;
+                            }                                
+                        }
+                        if(empty($big)) {
+                            $currentURL = current_url(); //for simple URL
+                             $params = $_SERVER['QUERY_STRING']; //for parameters
+                             $fullURL = $currentURL . '?' . $params;
+                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                            //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                            //redirect($setUrl);
+                            exit();
+                        }
+                        $brand = mt_rand(0, count($big) - 1);
+                        $blogRand = $big[$brand];
+                    } else {
+                        $currentURL = current_url(); //for simple URL
+                         $params = $_SERVER['QUERY_STRING']; //for parameters
+                         $fullURL = $currentURL . '?' . $params;
+                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                        exit();
+                    }
+                    /*End get blog link from database*/
+
                     if(empty($post_by_manaul)) {
                         /*post by Google API*/
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 30 );</script>';
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 3000 );</script>';
                     } else {
-                        /*get blog link from database*/
-                        $where_link = array(
-                            'c_name'      => 'blog_linkA',
-                            'c_key'     => $log_id,
-                        );
-                        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                        if (!empty($query_blog_link[0])) {
-                            $data = json_decode($query_blog_link[0]->c_value);
-                            $big = array();
-                            foreach ($data as $key => $blog) {
-                                if($blog->status ==1) {
-                                    $big[] = $blog->bid;
-                                }                                
-                            }
-                            if(empty($big)) {
-                                $currentURL = current_url(); //for simple URL
-                                 $params = $_SERVER['QUERY_STRING']; //for parameters
-                                 $fullURL = $currentURL . '?' . $params;
-                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
-                                //redirect($setUrl);
-                                exit();
-                            }
-                            $brand = mt_rand(0, count($big) - 1);
-                            $blogRand = $big[$brand];
-                        }
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>';  
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 3000 );</script>';  
                     }
                 }                              
             }
@@ -1167,31 +1175,40 @@ class Managecampaigns extends CI_Controller {
                                         if(!empty($blog_link_id)) {
                                              $blogRand = $blog_link_id;
                                         } else {
+
                                             /*get blog link from database*/
-                                            $where_link = array(
-                                                'c_name'      => 'blog_linkA',
-                                                'c_key'     => $log_id,
+                                            $guid = $this->session->userdata ('guid');
+                                            $blogLinkType = 'blog_linkA';
+                                            $whereLinkA = array(
+                                                'meta_key'      => $blogLinkType . '_'. $guid,
                                             );
-                                            $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                                            if (!empty($query_blog_link[0])) {
-                                                $data = json_decode($query_blog_link[0]->c_value);
+                                            $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                                            if (empty($queryLinkData[0])) {
                                                 $big = array();
                                                 foreach ($data as $key => $blog) {
-                                                    if($blog->status ==1) {
-                                                        $big[] = $blog->bid;
+                                                    if($blog->meta_value ==1) {
+                                                        $big[] = $blog->object_id;
                                                     }                                
                                                 }
-
+                                                if(empty($big)) {
+                                                    $currentURL = current_url(); //for simple URL
+                                                     $params = $_SERVER['QUERY_STRING']; //for parameters
+                                                     $fullURL = $currentURL . '?' . $params;
+                                                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                                                    //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                                                    //redirect($setUrl);
+                                                    exit();
+                                                }
+                                                $brand = mt_rand(0, count($big) - 1);
+                                                $blogRand = $big[$brand];
+                                            } else {
                                                 $currentURL = current_url(); //for simple URL
                                                  $params = $_SERVER['QUERY_STRING']; //for parameters
                                                  $fullURL = $currentURL . '?' . $params;
                                                  echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
-                                                //redirect($setUrl);
                                                 exit();
-                                                $brand = mt_rand(0, count($big) - 1);
-                                                $blogRand = $big[$brand];
                                             }
+                                            /*End get blog link from database*/
                                         }
 
                                         if(!empty($blogRand)) {
@@ -1283,6 +1300,41 @@ class Managecampaigns extends CI_Controller {
                     $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
                     if(!empty($nextPost[0])) {
                         $p_id = $nextPost[0]->p_id;
+
+                        /*get blog link from database*/
+                        $guid = $this->session->userdata ('guid');
+                        $blogLinkType = 'blog_linkA';
+                        $whereLinkA = array(
+                            'meta_key'      => $blogLinkType . '_'. $guid,
+                        );
+                        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                        if (empty($queryLinkData[0])) {
+                            $big = array();
+                            foreach ($data as $key => $blog) {
+                                if($blog->meta_value ==1) {
+                                    $big[] = $blog->object_id;
+                                }                                
+                            }
+                            if(empty($big)) {
+                                $currentURL = current_url(); //for simple URL
+                                 $params = $_SERVER['QUERY_STRING']; //for parameters
+                                 $fullURL = $currentURL . '?' . $params;
+                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                                //redirect($setUrl);
+                                exit();
+                            }
+                            $brand = mt_rand(0, count($big) - 1);
+                            $blogRand = $big[$brand];
+                        } else {
+                            $currentURL = current_url(); //for simple URL
+                             $params = $_SERVER['QUERY_STRING']; //for parameters
+                             $fullURL = $currentURL . '?' . $params;
+                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                            exit();
+                        }
+                        /*End get blog link from database*/
+
                         $autopost = $this->input->get('autopost');
                         $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
                             $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
@@ -3102,14 +3154,15 @@ HTML;
                 if(!empty($nextPost[0])) {
                     $data['datapost'] = $nextPost[0];
                     /*show blog linkA*/
-                    $where_link = array(
-                        'c_name'      => 'blog_linkA',
-                        'c_key'     => $log_id,
-                    );
                     $data['bloglinkA'] = false;
-                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                    if (!empty($query_blog_link[0])) {
-                        $data['bloglinkA'] = json_decode($query_blog_link[0]->c_value);
+                    $guid = $this->session->userdata ('guid');
+                    $blogLinkType = 'blog_linkA';
+                    $whereLinkA = array(
+                        'meta_key'      => $blogLinkType . '_'. $guid,
+                    );
+                    $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    if (!empty($queryLinkData[0])) {
+                        $data['bloglinkA'] = $queryLinkData;
                     }
                     /*End show blog link*/
                     // $p_id = $nextPost[0]->p_id;
@@ -3265,14 +3318,14 @@ HTML;
         }
 
         /*show blog linkA*/
-        $where_link = array(
-            'c_name'      => 'blog_linkA',
-            'c_key'     => $log_id,
+        $guid = $this->session->userdata ('guid');
+        $blogLinkType = 'blog_linkA';
+        $whereLinkA = array(
+            'meta_key'      => $blogLinkType . '_'. $guid,
         );
-        $data['bloglinkA'] = false;
-        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-        if (!empty($query_blog_link[0])) {
-            $data['bloglinkA'] = json_decode($query_blog_link[0]->c_value);
+        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+        if (!empty($queryLinkData[0])) {
+            $data['bloglinkA'] = $queryLinkData;
         }
         /*End show blog link*/
 
@@ -3670,14 +3723,15 @@ HTML;
         /*End show blog link*/
 
         /*show blog linkA*/
-        $where_link = array(
-            'c_name'      => 'blog_linkA',
-            'c_key'     => $log_id,
-        );
         $data['bloglinkA'] = false;
-        $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-        if (!empty($query_blog_link[0])) {
-            $data['bloglinkA'] = json_decode($query_blog_link[0]->c_value);
+        $guid = $this->session->userdata ('guid');
+        $wLinkA = array(
+            'meta_key'      => 'blog_linkA_'. $guid,
+        );
+        $queryBlinkA = $this->Mod_general->select('meta', '*', $wLinkA);
+        /* check before insert */
+        if (!empty($queryBlinkA[0])) {
+            $data['bloglinkA'] = $queryBlinkA;
         }
         /*End show blog link*/
 
@@ -3799,6 +3853,17 @@ HTML;
                     $lastID = $this->Mod_general->update('au_config', $data_insert,$where);
                     redirect(base_url() . 'managecampaigns/setting?m=del_success');
                     break;
+                case 'blog_linkA':
+                    $guid = $this->session->userdata ('guid');
+                    $blogLinkType = 'blog_linkA';
+                    $this->mod_general->delete(
+                        'meta', 
+                        array(
+                            'meta_id'=>$delId,
+                            'meta_key'=> $blogLinkType . '_'. $guid
+                        )
+                    );
+                    break;
                 
                 default:
                     $where_del = array(
@@ -3836,61 +3901,81 @@ HTML;
             $blogID    = trim($this->input->post('blogID'));
             $blogType    = trim($this->input->post('blogtype'));
             if (!empty($blogID)) {
-                $where_blog = array(
-                    'c_name'      => $blogType,
-                    'c_key'     => $log_id,
-                );
-                $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
-                /* check before insert */
-                if (empty($query_blog_exist)) {
-                    $jsondata[] = array(
-                        'bid' => $blogID,
-                        'title' => $blogTitle,
-                        'status' => 1,
-                        'date' => date('Y-m-d H:i:s')
-                    );
-                    $data_blog = array(
-                        'c_name'      => $blogType,
-                        'c_value'      => json_encode($jsondata),
-                        'c_key'     => $log_id,
-                    );
-                    $lastID = $this->Mod_general->insert('au_config', $data_blog);
-                } else { 
-                    $bdata = json_decode($query_blog_exist[0]->c_value);
-                    $found = false;
-                    $jsondata = array();
-                    foreach ($bdata as $key => $bvalue) {
-                        $jsondata[] = array(
-                            'bid' => $bvalue->bid,
-                            'title' => $bvalue->title,
-                            'status' => $bvalue->status,
-                            'date' => $bvalue->date
+                switch ($blogType) {
+                    case 'blog_linkA':
+                        $whereLinkA = array(
+                            'object_id'     => $blogID,
                         );
-                        $pos = strpos($bvalue->bid, $blogID);
-                        if ($pos === false) {
-                        } else {
-                           $found = true; 
+                        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                        /* check before insert */
+                        if (empty($queryLinkData[0])) {
+                            $data_blog = array(
+                                'meta_key'      => $blogType . '_'. $guid,
+                                'object_id'      => $blogID,
+                                'meta_value'     => 1,
+                            );
+                            $lastID = $this->Mod_general->insert('meta', $data_blog);
                         }
-                    }          
-                    if(empty($found)) {
-                        $jsondataNew[] = array(
-                            'bid' => $blogID,
-                            'title' => $blogTitle,
-                            'status' => 1,
-                            'date' => date('Y-m-d H:i:s')
-                        );
-                        $dataAdd = array_merge($jsondata, $jsondataNew);
-                        $data_blog = array(
-                            'c_value'      => json_encode($dataAdd),
-                        );
-                        $where = array(
+                        break;
+                    
+                    default:
+                        $where_blog = array(
+                            'c_name'      => $blogType,
                             'c_key'     => $log_id,
-                            'c_name'      => $blogType
                         );
-                        $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
-                    }                   
+                        $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
+                        /* check before insert */
+                        if (empty($query_blog_exist)) {
+                            $jsondata[] = array(
+                                'bid' => $blogID,
+                                'title' => $blogTitle,
+                                'status' => 1,
+                                'date' => date('Y-m-d H:i:s')
+                            );
+                            $data_blog = array(
+                                'c_name'      => $blogType,
+                                'c_value'      => json_encode($jsondata),
+                                'c_key'     => $log_id,
+                            );
+                            $lastID = $this->Mod_general->insert('au_config', $data_blog);
+                        } else { 
+                            $bdata = json_decode($query_blog_exist[0]->c_value);
+                            $found = false;
+                            $jsondata = array();
+                            foreach ($bdata as $key => $bvalue) {
+                                $jsondata[] = array(
+                                    'bid' => $bvalue->bid,
+                                    'title' => $bvalue->title,
+                                    'status' => $bvalue->status,
+                                    'date' => $bvalue->date
+                                );
+                                $pos = strpos($bvalue->bid, $blogID);
+                                if ($pos === false) {
+                                } else {
+                                   $found = true; 
+                                }
+                            }          
+                            if(empty($found)) {
+                                $jsondataNew[] = array(
+                                    'bid' => $blogID,
+                                    'title' => $blogTitle,
+                                    'status' => 1,
+                                    'date' => date('Y-m-d H:i:s')
+                                );
+                                $dataAdd = array_merge($jsondata, $jsondataNew);
+                                $data_blog = array(
+                                    'c_value'      => json_encode($dataAdd),
+                                );
+                                $where = array(
+                                    'c_key'     => $log_id,
+                                    'c_name'      => $blogType
+                                );
+                                $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
+                            }                   
+                        }
+                        /* end check before insert */
+                        break;
                 }
-                /* end check before insert */
             }
             redirect(base_url() . 'managecampaigns/setting?m=add_success');
         }
@@ -4133,6 +4218,7 @@ HTML;
 
         /*add blog link by Imacros*/
         if (!empty($this->input->get('blog_link_a'))) {
+            $guid = $this->session->userdata ('guid');
             $bLinkTitle = trim($this->input->get('title'));
             $bLinkID    = trim($this->input->get('bid'));
             $status    = trim($this->input->get('status'));
@@ -4140,63 +4226,25 @@ HTML;
             $jsondata = array();
             if (!empty($bLinkID)) {
                 $whereLinkA = array(
-                    'c_name'      => $blogLinkType,
-                    'c_key'     => $log_id,
+                    'object_id'     => $bLinkID,
                 );
-                $queryLinkData = $this->Mod_general->select('au_config', '*', $whereLinkA);
+                $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
                 /* check before insert */
                 if (empty($queryLinkData[0])) {
-                    $jsondata[] = array(
-                        'bid' => $bLinkID,
-                        'title' => $bLinkTitle,
-                        'status' => 1,
-                        'date' => date('Y-m-d H:i:s')
-                    );
                     $data_blog = array(
-                        'c_name'      => $blogLinkType,
-                        'c_value'      => json_encode($jsondata),
-                        'c_key'     => $log_id,
+                        'meta_key'      => $blogLinkType . '_'. $guid,
+                        'object_id'      => $bLinkID,
+                        'meta_value'     => 1,
                     );
-                    $lastID = $this->Mod_general->insert('au_config', $data_blog);
+                    $lastID = $this->Mod_general->insert('meta', $data_blog);
                 } else {
-                    $bdata = json_decode($queryLinkData[0]->c_value);
-                    $found = false;
-                    $jsondata = array();
-                    if(!empty($queryLinkData[0])) {
-                        foreach ($bdata as $key => $bvalue) {
-                            $jsondata[] = $bvalue;
-                            $pos = strpos($bvalue->bid, $bLinkID);
-                            if ($pos === false) {
-                            } else {
-                                $found = true; 
-                                $bLinkID = !empty($bLinkID) ? $bLinkID : $bvalue->bid;
-                                $bLinkTitle = !empty($bLinkTitle) ? $bLinkTitle : $bvalue->title;
-                                $status = !empty($status) ? $status : $bvalue->status;
-                                $jsondata[] = array(
-                                    'bid' => $bLinkID,
-                                    'title' => $bLinkTitle,
-                                    'status' => $status,
-                                    'date' => date('Y-m-d H:i:s')
-                                );
-                            }
-                        }
-                    }
-                    if (!empty($this->input->get('add'))) {
-                        $jsondata[] = array(
-                            'bid' => $bLinkID,
-                            'title' => $bLinkTitle,
-                            'status' => $status,
-                            'date' => date('Y-m-d H:i:s')
-                        );
-                    }
+                    $whereBLId = array(
+                        'meta_id' => $queryLinkData[0]->meta_id
+                    );
                     $data_blog = array(
-                        'c_value'      => json_encode($jsondata),
+                        'meta_value'     => $status,
                     );
-                    $where = array(
-                        'c_key'     => $log_id,
-                        'c_name'      => $blogLinkType
-                    );
-                    $lastID = $this->Mod_general->update('au_config', $data_blog,$where); 
+                    $lastID = $this->Mod_general->update('meta', $data_blog,$whereBLId); 
                     // $whereBlink = array(
                     //     'c_key'     => $log_id,
                     //     'c_name'      => $blogLinkType

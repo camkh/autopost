@@ -25,20 +25,18 @@ function generateRandomString($length = 10) {
 }
 
 if(!empty($bloglinkA)) {
+
     $bLink = array();
     foreach ($bloglinkA as $key => $bloglink) {
-        if($bloglink->status ==1) {
-            $bLink[] = $bloglink;
+        if($bloglink->meta_value ==1) {
+            $bLink[] = $bloglink->object_id;
         }                 
     }
     if(!empty($bLink)) {
         $brand = mt_rand(0, count($bLink) - 1);
         $blogRand = $bLink[$brand];
-        $bName = $blogRand->title;
-        $bLinkID = $blogRand->bid;
-        $bint = (int) filter_var($bName, FILTER_SANITIZE_NUMBER_INT);
-        $bArr = explode($bint, $bName);
-        $bNewName = $bArr[0]. ($bint + 1);
+        $bNewName = generateRandomString(1).'1';
+        $bLinkID = $blogRand;
         $createNewBlog = false;
     } else {
         $createNewBlog = true;
