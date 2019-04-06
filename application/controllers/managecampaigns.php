@@ -2584,8 +2584,8 @@ HTML;
                         $currentURL = current_url(); //for simple URL
                          $params = $_SERVER['QUERY_STRING']; //for parameters
                          $fullURL = $currentURL . '?' . $params; //full URL with parameter
-                        $setUrl = base_url() . 'managecampaigns/account?backto='. urlencode($fullURL);
-                        $this->getYoutubeVideos($ytID,20);
+                        $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
+                        $this->getYoutubeVideos($ytID,20,$setUrl);
                     }
                     /*End update youtube video*/
                     break;
