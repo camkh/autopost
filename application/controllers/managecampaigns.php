@@ -4198,6 +4198,9 @@ HTML;
                 //     //exit();
                 // }
             }
+            if (!empty($this->input->get('backto'))) {
+                redirect($this->input->get('backto'));
+            }
         }
         /*End add blog link by Imacros*/
         if (!empty($this->input->get('backto'))) {
