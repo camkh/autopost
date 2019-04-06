@@ -49,7 +49,7 @@ if(!empty($bloglinkA)) {
     $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
-if(empty($bLinkID)) {
+if(empty($bLinkID) && empty($this->input->get('createblog'))) {
     $currentURL = current_url(); //for simple URL
     $params = $_SERVER['QUERY_STRING']; //for parameters
     $fullURL = $currentURL . '?' . $params;
