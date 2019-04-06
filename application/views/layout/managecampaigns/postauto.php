@@ -49,6 +49,13 @@ if(!empty($bloglinkA)) {
     $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
+if(empty($bLinkID)) {
+    $currentURL = current_url(); //for simple URL
+    $params = $_SERVER['QUERY_STRING']; //for parameters
+    $fullURL = $currentURL . '?' . $params;
+    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+    exit();
+}
 $blogLinkID = !empty($this->input->get('blog_link_id')) ? $this->input->get('blog_link_id') : @$bLinkID;
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 $blogPostID = ($this->input->get('action') =='generate') ? $staticdata->blogid : $blogLinkID;

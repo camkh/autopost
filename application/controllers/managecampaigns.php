@@ -1185,8 +1185,6 @@ class Managecampaigns extends CI_Controller {
                                                 $currentURL = current_url(); //for simple URL
                                                  $params = $_SERVER['QUERY_STRING']; //for parameters
                                                  $fullURL = $currentURL . '?' . $params;
-                                                 echo $fullURL;
-                                                 die;
                                                  echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
                                                 //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
                                                 //redirect($setUrl);

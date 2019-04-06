@@ -60,6 +60,13 @@ if(!empty($bloglinkA[0])) {
     $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
+if(empty($bLinkID)) {
+    $currentURL = current_url(); //for simple URL
+    $params = $_SERVER['QUERY_STRING']; //for parameters
+    $fullURL = $currentURL . '?' . $params;
+    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+    exit();
+}
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 if(!empty($autopost->templateLink)) {
     $setTemplate = 1;
