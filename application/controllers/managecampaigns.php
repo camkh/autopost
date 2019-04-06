@@ -944,9 +944,9 @@ class Managecampaigns extends CI_Controller {
                         'meta_key'      => $blogLinkType . '_'. $guid,
                     );
                     $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                    if (empty($queryLinkData[0])) {
+                    if (!empty($queryLinkData[0])) {
                         $big = array();
-                        foreach ($data as $key => $blog) {
+                        foreach ($queryLinkData as $key => $blog) {
                             if($blog->meta_value ==1) {
                                 $big[] = $blog->object_id;
                             }                                
@@ -1183,9 +1183,9 @@ class Managecampaigns extends CI_Controller {
                                                 'meta_key'      => $blogLinkType . '_'. $guid,
                                             );
                                             $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                                            if (empty($queryLinkData[0])) {
+                                            if (!empty($queryLinkData[0])) {
                                                 $big = array();
-                                                foreach ($data as $key => $blog) {
+                                                foreach ($queryLinkData as $key => $blog) {
                                                     if($blog->meta_value ==1) {
                                                         $big[] = $blog->object_id;
                                                     }                                
@@ -1308,9 +1308,9 @@ class Managecampaigns extends CI_Controller {
                             'meta_key'      => $blogLinkType . '_'. $guid,
                         );
                         $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                        if (empty($queryLinkData[0])) {
+                        if (!empty($queryLinkData[0])) {
                             $big = array();
-                            foreach ($data as $key => $blog) {
+                            foreach ($queryLinkData as $key => $blog) {
                                 if($blog->meta_value ==1) {
                                     $big[] = $blog->object_id;
                                 }                                
