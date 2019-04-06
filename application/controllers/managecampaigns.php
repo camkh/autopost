@@ -2585,7 +2585,7 @@ HTML;
                          $params = $_SERVER['QUERY_STRING']; //for parameters
                          $fullURL = $currentURL . '?' . $params; //full URL with parameter
                         $setUrl = base_url() . 'managecampaigns/account?backto='. urlencode($fullURL);
-                        $this->getYoutubeVideos($ytID,20,$setUrl);
+                        $this->getYoutubeVideos($ytID,20);
                     }
                     /*End update youtube video*/
                     break;
