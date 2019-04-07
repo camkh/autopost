@@ -2536,7 +2536,7 @@ HTML;
                     // $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
                      break;
                 case 'getyoutube':
-                    echo '<meta http-equiv="refresh" content="300"/>';
+                    echo '<meta http-equiv="refresh" content="120"/>';
                     /*update youtube video*/
                     $where_yt = array(
                         'c_name'      => 'youtubeChannel',
