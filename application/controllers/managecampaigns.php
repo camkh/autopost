@@ -856,7 +856,7 @@ class Managecampaigns extends CI_Controller {
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
-                            'mainlink' => @$link[$i],
+                            'mainlink' => '',
                             'picture' => @$thumb[$i],                            
                             'vid' => @$vid,                          
                     );
