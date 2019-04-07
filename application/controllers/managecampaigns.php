@@ -973,9 +973,9 @@ class Managecampaigns extends CI_Controller {
 
                     if(empty($post_by_manaul)) {
                         /*post by Google API*/
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 3000 );</script>';
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 300 );</script>';
                     } else {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 3000 );</script>';  
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 300 );</script>';  
                     }
                 }                              
             }
@@ -2685,6 +2685,7 @@ HTML;
                             'ytname' => $ytex->ytname,
                             'date' => $ytex->date,
                             'status' => $ytex->status,
+                            'order' => @$ytex->order,
                         );
                     } else {
                        $inputYt[] = array(
@@ -2692,6 +2693,7 @@ HTML;
                             'ytname' => $ytex->ytname,
                             'date' => strtotime("now"),
                             'status' => 1,
+                            'order' => @$ytex->order,
                         );
                     }
                 }
@@ -3401,6 +3403,7 @@ HTML;
                                 'ytname' => $ytex->ytname,
                                 'date' => $ytex->date,
                                 'status' => $ytex->status,
+                                'order' => @$ytex->order,
                             );
                         }
                     }
@@ -3508,6 +3511,7 @@ HTML;
                     'ytname' => $ytname,
                     'date' => strtotime("now"),
                     'status' => 0,
+                    'order' => 0,
                 );
                 $data_yt = array(
                     'c_name'      => $ytID,
@@ -3525,6 +3529,7 @@ HTML;
                         'ytname' => $ytex->ytname,
                         'date' => $ytex->date,
                         'status' => $ytex->status,
+                        'order' => 0,
                     );
                     $pos = strpos($ytex->ytid, $ytid);
                     if ($pos === false) {
@@ -3539,6 +3544,7 @@ HTML;
                         'ytname' => $ytname,
                         'date' => strtotime("now"),
                         'status' => 0,
+                        'order' => 0,
                     );
 
                     $dataYtAdd = array_merge($inputYt, $ytDataNew);
