@@ -994,7 +994,6 @@ class Managecampaigns extends CI_Controller {
                          $currentURL = current_url(); //for simple URL
                          $params = $_SERVER['QUERY_STRING']; //for parameters
                          $fullURL = $currentURL . '?' . $params; //full URL with parameter
-                        echo $fullURL;
                         $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
                         redirect($setUrl);
                         exit();
@@ -4269,6 +4268,10 @@ HTML;
             }
             if (!empty($this->input->get('backto'))) {
                 redirect($this->input->get('backto'));
+            }
+            if (empty($this->input->get('backto')) && !empty($bLinkID)) {
+                //http://localhost/autopost/facebook/shareation?post=getpost
+                redirect(base_url() . 'facebook/shareation?post=getpost');
             }
         }
         /*End add blog link by Imacros*/
