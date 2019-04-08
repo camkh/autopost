@@ -3172,9 +3172,9 @@ HTML;
                     $whereLinkA = array(
                         'meta_key'      => $blogLinkType . '_'. $guid,
                     );
-                    $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                    if (!empty($queryLinkData[0])) {
-                        $data['bloglinkA'] = $queryLinkData;
+                    $bLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    if (!empty($bLinkData[0])) {
+                        $data['bloglinkA'] = $bLinkData;
                     }
                     /*End show blog link*/
                     // $p_id = $nextPost[0]->p_id;
