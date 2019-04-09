@@ -113,6 +113,10 @@
 			$message = $this->input->get('spam_fb');
 			$mArr = explode('until ', $message);
 			?>
+			<audio autoplay hidden>
+		     <source src="<?php echo base_url();?>uploads/sound/error.wav" type="audio/mpeg">
+		                If you're reading this, audio isn't supported. 
+		    </audio>
 			<div class="alert alert-danger fade in khmer"> 
 			 <strong>ហ្វេសប៊ុកអ្នកបិទមួយរយៈ!</strong> គឺបិទរហូតដល់ <?php echo @$mArr[1];?><br/>
 			 <?php echo @$message;?>
