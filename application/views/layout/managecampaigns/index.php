@@ -128,6 +128,10 @@
 				 <strong>មានបញ្ហា!</strong> ប្លុក Link (<a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID=<?php echo @$this->input->get('bid');?>"><?php echo @$this->input->get('bid');?></a>) ជាមួយនិង email: <?php echo $this->session->userdata ( 'gemail' );?> <br/>មានបញ្ហា សូមឆែកមើល User Permissions ម្ដងទៀត . <br/>ឬអាចមកពីប៉ុស្តិ៍ច្រើនពេក សូមរង់ចាំ១ម៉ោងក្រោយ សឹមសាកម្ដងទៀត</div>
 			<?php endif;?>
 			<?php if($this->input->get('m') == 'runout_post'):?>
+			<audio autoplay hidden>
+		     <source src="<?php echo base_url();?>uploads/sound/runout.mp3" type="audio/mpeg">
+		                If you're reading this, audio isn't supported. 
+		    </audio>
 			<div class="alert alert-danger fade in khmer"> 
 				 <strong>អស់ហើយ!</strong> អស់ប៉ុស្តិ៍ហើយ សូមដាក់បន្ថែមថ្មីទៀត . </div>
 			<?php endif;

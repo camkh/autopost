@@ -297,7 +297,7 @@ class Managecampaigns extends CI_Controller {
                     echo date('H');
                     echo '<br/>';
                     if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
-                       echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
+                       echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     } else {
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                     }
