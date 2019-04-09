@@ -240,14 +240,30 @@ class Managecampaigns extends CI_Controller {
 
         /*delete spam url*/
         if($this->input->get('spam_url')) {
-            
             $fbUserId = $this->session->userdata ( 'sid' );
-            $whereSpam = array (
+            $url = $this->input->get('spam_url');
+            /*check spam link*/
+            $getUrl =  @parse_url($url)["host"];
+            $whereLinkSpam = array (
                 'user_id' => $log_id,
-                'u_id' => $fbUserId
+                'u_id' => $fbUserId,
             );
-            $this->Mod_general->delete('post', $whereSpam);
-            /*get blog id*/
+            $spamLink = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereLinkSpam );
+            if(!empty($spamLink[0])) {
+                foreach ($spamLink as $key => $sLink) {
+                    $content = json_decode($sLink->p_conent);
+                    $getLink =  @parse_url($content->link)["host"];
+                    if($getLink == $getUrl) {
+                        $whereSpam = array (
+                            'user_id' => $log_id,
+                            'p_id' => $sLink->p_id
+                        );
+                        $this->Mod_general->delete('post', $whereSpam);
+                    }
+                }
+            }
+            /*End check spam link*/
+
             $this->load->library ( 'html_dom' );
             $html = file_get_html ( $this->input->get('spam_url') );
             $title = $html->find ( 'title', 0 )->innertext;

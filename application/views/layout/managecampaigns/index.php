@@ -109,6 +109,15 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
+		<?php if(!empty($this->input->get('spam_fb'))):
+			$message = $this->input->get('spam_fb');
+			$mArr = explode('until ', $message);
+			?>
+			<div class="alert alert-danger fade in khmer"> 
+			 <strong>ហ្វេសប៊ុកអ្នកបិទមួយរយៈ!</strong> គឺបិទរហូតដល់ <?php echo @$mArr[1];?><br/>
+			 <?php echo @$message;?>
+			</div>
+		<?php endif;?>
 		<?php if(!empty($this->input->get('m'))):?>
 			<?php if($this->input->get('m') == 'blog_main_error'):?>
 				<div class="alert alert-danger fade in khmer"> 
