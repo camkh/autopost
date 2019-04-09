@@ -51,13 +51,13 @@ if(empty($bLinkID) && empty($this->input->get('createblog'))) {
     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
     exit();
 }
-$btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
+//$btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
+$setTemplate = 0;
 if(!empty($autopost->templateLink)) {
     $setTemplate = 1;
-    //$btemplate = trim($autopost->templateLink);
-    // $btemplate = str_replace('/\\/', "&bsol;&bsol;", trim($autopost->templateLink));
-    // $btemplate = str_replace(' ', "&lt;SP&gt;", $btemplate);
-    // $btemplate = str_replace("/\n/", "&lt;br&gt;", $btemplate);
+    $btemplate = trim($autopost->templateLink);
+    $btemplate = preg_replace("/\//",'&bsol;&bsol;',trim($btemplate));
+    $btemplate = preg_replace('/\s+/', '&lt;SP&gt;', $btemplate);
 } else {
     $setTemplate = 0;
 }
