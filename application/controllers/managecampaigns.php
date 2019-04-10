@@ -267,7 +267,7 @@ class Managecampaigns extends CI_Controller {
             $this->load->library ( 'html_dom' );
             $html = file_get_html ( $this->input->get('spam_url') );
             $title = $html->find ( 'title', 0 )->innertext;
-            $backURL = urlencode(base_url().'managecampaigns?m=runout_post');
+            $backURL = urlencode(base_url().'facebook/shareation?post=getpost');
             $blID = false;
             if(!empty($title)) {
                 $bArr = explode('blid-', $title);
