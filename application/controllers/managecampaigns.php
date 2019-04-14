@@ -861,10 +861,12 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
-                    if(!empty( $foldlink )) {
+                    if(empty( $foldlink )) {
+                        $mainlink = '';
                         $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
                     } else {
                         $vid = $this->Mod_general->get_video_id($link[$i]);
+                        $mainlink = $link[$i];
                     }                    
                     $vid = $vid['vid']; 
                     $content = array (
@@ -872,7 +874,7 @@ class Managecampaigns extends CI_Controller {
                             'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
-                            'mainlink' => '',
+                            'mainlink' => $mainlink,
                             'picture' => @$thumb[$i],                            
                             'vid' => @$vid,                          
                     );
