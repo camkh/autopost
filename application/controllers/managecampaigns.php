@@ -273,11 +273,15 @@ class Managecampaigns extends CI_Controller {
                 $bArr = explode('blid-', $title);
                 if(!empty($bArr[1])) {
                     $blID = true;
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bArr[1].'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
+                    if(preg_match('|', $bArr[1])) {
+                        $bArrA = explode(' | ', $bArr[1]);
+                    }
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bArrA[0].'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
+                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.$bArr[1].'&backto='.$backURL.'";}, 30 );</script>';
                 }
             }
             if(empty($blID)) {
-                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
             }
             /*End get blog id*/
             //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=runout_post";}, 30 );</script>';
@@ -3579,6 +3583,49 @@ HTML;
             redirect(base_url() . 'managecampaigns/setting?m=add_success_yt#YoutubeChannel');
         }
         /*End youtube channel*/
+
+        /*get blog spam url*/
+        if(!empty($this->input->get('changeblogurl')) && empty($this->input->get('bid'))) {
+            // $blogLinkType = 'blog_linkA';
+            // $whereLinkA = array(
+            //     'c_name'      => $blogLinkType,
+            //     'c_key'     => $log_id,
+            // );
+            // $queryLinkData = $this->Mod_general->select('au_config', '*', $whereLinkA);
+            // /* check before insert */
+            // if (!empty($queryLinkData[0])) {
+            //     $bdata = json_decode($queryLinkData[0]->c_value);
+            //     $found = false;
+            //     $jsondata = array();
+            //     foreach ($bdata as $key => $bvalue) {
+            //         $pos = strpos($bvalue->status, "2");
+            //         if ($pos === false) {
+            //         } else {
+            //            $found = true; 
+            //            $jsondata[] = array(
+            //                 'bid' => $bvalue->bid
+            //             );
+            //         }
+            //     } 
+            // }
+
+            $guid = $this->session->userdata ('guid');
+            $blogLinkType = 'blog_linkA';
+            $whereLinkA = array(
+                'meta_key'      => $blogLinkType . '_'. $guid,
+            );
+            $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+            $big = array();
+            if (!empty($queryLinkData[0])) {
+                foreach ($queryLinkData as $key => $blog) {
+                    if($blog->meta_value ==2) {
+                        $big[] = $blog->object_id;
+                    }                                
+                }
+            }
+            $data['blogspam'] = $big;
+        }
+        /*End get blog spam url*/
         
         /*add blog link by Imacros*/
         if (!empty($this->input->get('blog_link_a'))) {

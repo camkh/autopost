@@ -44,7 +44,7 @@ if(!empty($bloglinkA[0])) {
     $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
-if(empty($bLinkID) && empty($this->input->get('createblog'))) {
+if(empty($bLinkID) && empty($this->input->get('createblog')) && empty($this->input->get('changeblogurl'))) {
     $currentURL = current_url(); //for simple URL
     $params = $_SERVER['QUERY_STRING']; //for parameters
     $fullURL = $currentURL . '?' . $params;
@@ -64,6 +64,17 @@ if(!empty($autopost->templateLink)) {
 $backto = @$this->input->get('backto');
 $backto = str_replace('blog;_link_id', 'blog_link_id', $backto);
 $gemail = $this->session->userdata ('gemail');
+
+if(!empty($this->input->get('changeblogurl'))) {
+    if(!empty($this->input->get('bid'))) {
+        $bLinkID = $this->input->get('bid');
+    } else {
+        $spamRan = mt_rand(0, count($blogspam) - 1);
+        $spamid = $blogspam[$spamRan];
+        $bLinkID = $spamid;
+    }
+}
+
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>
@@ -108,8 +119,15 @@ $gemail = $this->session->userdata ('gemail');
                 })
             }
         }
+        function changeBlogURL() {
+            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/changeBlogURL");
+        }
         function createblog() {
-            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
+            <?php if(count($bloglinkA)> 95 ):?>
+                window.setTimeout( function(){window.location = "<?php echo base_url();?>managecampaigns/autopost?changeblogurl=1&bid=0&backto=<?php echo $backto;?>";}, 3000 );
+            <?php else :?>
+                load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
+            <?php endif;?>
         }
         function checkBloggerPost(gettype) {
             <?php if($isAccessTokenExpired):?>
@@ -208,6 +226,9 @@ $gemail = $this->session->userdata ('gemail');
         <?php endif;?>
         <?php if(!empty($this->input->get('createblog'))):?>
             createblog();
+        <?php endif;?>
+        <?php if(!empty($this->input->get('changeblogurl'))):?>
+            changeBlogURL();
         <?php endif;?>
     </script>    
     <div class="page-header">

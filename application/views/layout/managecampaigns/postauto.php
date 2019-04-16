@@ -198,7 +198,8 @@ $backto = @urlencode($this->input->get('backto'));
                             <div class="widget-content">
                                 <?php if(!empty($datapost)):
                                     $p_id = $datapost->p_id;
-                                    $p_title = preg_replace('/\s+/', '<sp>', $datapost->p_name);
+                                    $linkTitle = $datapost->p_name.' -blid-'.$blogLinkID;
+                                    $p_title = preg_replace('/\s+/', '<sp>', $linkTitle);
                                     $yid = $datapost->yid;
                                     $p_conent = json_decode($datapost->p_conent);
                                     $bTitle = $p_conent->name;
