@@ -270,13 +270,15 @@ class Managecampaigns extends CI_Controller {
             $backURL = urlencode(base_url().'facebook/shareation?post=getpost');
             $blID = false;
             if(!empty($title)) {
-                $bArr = explode('blid-', $title);
+                $bArr = @explode('blid-', $title);
                 if(!empty($bArr[1])) {
                     $blID = true;
-                    if(preg_match('|', $bArr[1])) {
-                        $bArrA = explode(' | ', $bArr[1]);
+                    $bids = $bArr[1];
+                    $bArrA = @explode('|', $bArr[1]);
+                    if(!empty($bArrA[0])) {
+                        $bids = $bArrA[0];
                     }
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bArrA[0].'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bids.'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
                     //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.$bArr[1].'&backto='.$backURL.'";}, 30 );</script>';
                 }
             }
