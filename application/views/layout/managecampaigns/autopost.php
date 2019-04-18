@@ -53,6 +53,7 @@ if(empty($bLinkID) && empty($this->input->get('createblog')) && empty($this->inp
 }
 //$btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 $setTemplate = 0;
+$btemplate = 0;
 if(!empty($autopost->templateLink)) {
     $setTemplate = 1;
     $btemplate = trim($autopost->templateLink);
