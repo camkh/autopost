@@ -239,7 +239,7 @@ class Managecampaigns extends CI_Controller {
         /*End breadcrumb*/
 
         /*delete spam url*/
-        if($this->input->get('spam_url')) {
+        if(!empty($this->input->get('spam_url'))) {
             $fbUserId = $this->session->userdata ( 'sid' );
             $url = $this->input->get('spam_url');
             /*check spam link*/
