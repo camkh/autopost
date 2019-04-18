@@ -278,8 +278,8 @@ class Managecampaigns extends CI_Controller {
                     if(!empty($bArrA[0])) {
                         $bids = $bArrA[0];
                     }
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bids.'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
-                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.$bArr[1].'&backto='.$backURL.'";}, 30 );</script>';
+                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/setting?blog_link_a=1&bid='.$bids.'&title=&status=2&backto='.$backURL.'";}, 30 );</script>';
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.$bids.'&backto='.$backURL.'";}, 30 );</script>';
                 }
             }
             if(empty($blID)) {
