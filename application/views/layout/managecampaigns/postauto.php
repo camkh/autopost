@@ -213,7 +213,7 @@ $backto = @urlencode($this->input->get('backto'));
                                     <form class="form-horizontal row-border" id="mainblog" method="post">
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <input id="btitle" type="text" name="btitle" class="form-control" style="width: 100%" placeholder="Channel ID" value="<?php echo !empty($bTitle) ? $bTitle : '';?>" required />
+                                                <input id="btitle" type="text" name="btitle" class="form-control" style="width: 100%" placeholder="Channel ID" value="<?php echo !empty($bTitle) ? $bTitle : '';?> <?php if($this->input->get('action') == 'bloglink'):?> -blid-<?php echo $blogLinkID;?><?php endif;?>" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
