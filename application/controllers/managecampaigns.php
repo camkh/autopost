@@ -4342,7 +4342,8 @@ HTML;
             if (!empty($this->input->get('backto'))) {
                 redirect($this->input->get('backto'));
             }
-            if (empty($this->input->get('backto')) && !empty($bLinkID)) {
+            //if (empty($this->input->get('backto')) && !empty($bLinkID)) {
+            if (empty($this->input->get('backto'))) {
                 //http://localhost/autopost/facebook/shareation?post=getpost
                 redirect(base_url() . 'facebook/shareation?post=getpost');
             }
