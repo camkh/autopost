@@ -318,7 +318,7 @@
                                                     value="<?php echo $value['gid']; ?>||<?php echo $value['title'];?>||<?php echo $value['members'];?>" /><input type="hidden" id="itemid"
                                                     name="itemidall[]" class="uniform"
                                                     value="<?php echo $value['gid']; ?>||<?php echo $value['title'];?>||<?php echo $value['members'];?>" /></td>
-                                                <td style="width:135px">fb.com/<?php echo $value['gid']; ?></td>
+                                                <td style="width:135px">http://fb.com/<?php echo $value['gid']; ?></td>
                                                 <td><?php echo $value['title'];?></td>
                                                 <td style="width:100px"><?php echo $value['members'];?></td> 
                                             </tr>
@@ -395,8 +395,8 @@
                     dataUser += '<tr>';
                     dataUser += '<td style="width:10px" class="checkbox-column">';
                     dataUser += '<input type="hidden" id="itemid" name="itemidall[]" class="uniform" value="' + obj[i].gid + '||' + obj[i].gname + '||" /><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="' + obj[i].gid + '||' + obj[i].gname + '||" /></td>';
-                    dataUser += '<td style="width:135px"><a href="www.fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gid + '</a></td>';
-                    dataUser += '<td><a href="www.fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gname + '</a></td>';
+                    dataUser += '<td style="width:135px"><a href="http://fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gid + '</a></td>';
+                    dataUser += '<td><a href="http://fb.com/' + obj[i].gid + '" target="_blank">' + obj[i].gname + '</a></td>';
                     dataUser += '<td style="width:100px">0</td>';
                     dataUser += '</tr>';
                 }

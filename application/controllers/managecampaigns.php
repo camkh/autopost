@@ -58,6 +58,7 @@ class Managecampaigns extends CI_Controller {
         $client->addScope("https://www.googleapis.com/auth/userinfo.profile");
         $client->addScope("https://picasaweb.google.com/data/");
         $client->addScope("https://www.googleapis.com/auth/blogger");
+        $client->addScope("https://www.googleapis.com/auth/blogger.readonly");
         $client->addScope("https://www.googleapis.com/auth/drive");
         $client->addScope("https://www.googleapis.com/auth/plus.me");
         $client->addScope("https://www.googleapis.com/auth/plus.login");
@@ -1359,7 +1360,7 @@ class Managecampaigns extends CI_Controller {
                         /*End get blog link from database*/
 
                         $autopost = $this->input->get('autopost');
-                        $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Koulen" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
+                        $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
                             $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
                         if(count($postsLoop)>5) {
                            //echo $showHTHM;
@@ -1414,9 +1415,7 @@ class Managecampaigns extends CI_Controller {
         /*prepare post*/
         $this->load->library('google_api');
         $client = new Google_Client();
-        $client->setAccessToken($this->session->userdata('access_token'));
-        $service = new Google_Service_Blogger($client);
-        $posts   = new Google_Service_Blogger_Post();        
+        $client->setAccessToken($this->session->userdata('access_token'));    
         return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
@@ -3764,6 +3763,65 @@ HTML;
             }
 
         $this->load->view ( 'managecampaigns/waiting', $data );
+    }
+
+    public function getblog($value='')
+    {
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $gemail = $this->session->userdata ('gemail');
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Admin Area :: Setting';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('blog post', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Setting', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        /*prepare post*/
+        //$this->load->library('google_api');
+        //$client = new Google_Client();
+        //$client->setAccessToken($this->session->userdata('access_token'));
+        //$service = new Google_Service_Blogger($client);
+        //$blogs = new Google_Service_Blogger_Blog();
+
+
+        //$getBlog = $service->blogs->listByUser('self');
+        //$getBlog = $service->blogs->listByUser($this->session->userdata('guid'));
+        // echo '<pre>';
+        // print_r($getBlog);
+        // echo '</pre>';
+
+        if ($this->input->post('submit')) {
+            $id = $this->input->post('bid');
+            $guid = $this->session->userdata ('guid');
+            $blogType    = 'blog_linkA';
+            foreach ($id as $key => $blogID) {
+                if(!empty($blogID)) {
+                    $whereLinkA = array(
+                        'object_id'     => $blogID,
+                    );
+                    $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    /* check before insert */
+                    if (empty($queryLinkData[0])) {
+                        $data_blog = array(
+                            'meta_key'      => $blogType . '_'. $guid,
+                            'object_id'      => $blogID,
+                            'meta_value'     => 1,
+                        );
+                        $lastID = $this->Mod_general->insert('meta', $data_blog);
+                    }
+                }
+            }
+            redirect(base_url() . 'managecampaigns/setting?m=add_success_blogLink');
+        }
+        $this->load->view ( 'managecampaigns/getblog', $data );
     }
 
     public function setting()
