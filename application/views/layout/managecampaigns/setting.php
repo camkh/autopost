@@ -62,7 +62,7 @@ if(!empty($bloglinkA[0])) {
 $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var bname = &quot;<?php echo $bNewName;?>&quot;, homeUrl = &quot;<?php echo base_url();?>&quot;, template = 1, tempfolder = &quot;<?php echo $btemplate;?>&quot;;</code>
+<code id="examplecode5" style="width:300px;overflow:hidden;display:none">var codedefault2=&quot;SET !EXTRACT_TEST_POPUP NO\n SET !TIMEOUT_PAGE 300\n SET !ERRORIGNORE YES\n SET !TIMEOUT_STEP 0.1\n&quot;;var wm=Components.classes[&quot;@mozilla.org/appshell/window-mediator;1&quot;].getService(Components.interfaces.nsIWindowMediator);var window=wm.getMostRecentWindow(&quot;navigator:browser&quot;);var homeUrl = &quot;<?php echo base_url();?>&quot;;</code>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
     <script type="text/javascript">
         function runcode(codes) {
@@ -102,6 +102,9 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
         }
         function createblog() {
             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/autoCreateBlogger");
+        }
+        function getbloglink() {
+            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/getbloglink");
         }
         function checkBloggerPost(gettype) {
             $.ajax({        
@@ -144,7 +147,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
             <div class="row">
                     <!-- body -->
                     <div class="col-md-4">
-                        <a href="javascript:;" onclick="checkBloggerPost()" class="btn btn-primary pull-right">Start now</a>
+                        <a href="javascript:;" onclick="javascript:checkBloggerPost()" class="btn btn-primary pull-right">Start now</a>
                         <form class="form-horizontal row-border" action="" method="post"> 
                             <div class="row">
                                 <div class="col-md-12">
@@ -242,7 +245,9 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Blog Link</h4>
                                 <div class="toolbar no-padding">
-                                    <div class="btn-group"> <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
+                                    <div class="btn-group"> 
+                                        <a href="javascript:;" onclick="getbloglink()" class="btn btn-xs btn-primary">Get Blog Link auto</a>
+                                        <span class="btn btn-xs widget-collapse"><i class="icon-angle-down"></i></span> </div>
                                 </div>
                             </div>
                             <div class="widget-content">
