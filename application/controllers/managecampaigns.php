@@ -998,9 +998,13 @@ class Managecampaigns extends CI_Controller {
 
                     if(empty($post_by_manaul)) {
                         /*post by Google API*/
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 300 );</script>';
+                        $setUrl = base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1';
+                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 300 );</script>';
+                        redirect($setUrl); 
                     } else {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 300 );</script>';  
+                        $setUrl = base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand;
+                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 300 );</script>'; 
+                            redirect($setUrl); 
                     }
                 }                              
             }
@@ -1312,71 +1316,73 @@ class Managecampaigns extends CI_Controller {
                         /*End update youtube if autopost*/
                     }                    
 
-
-                    
+                    $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">1</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$getPost[0]->p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">0</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
+                            $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
+                    echo $showHTHM;
+                    exit();
 
                     /*check next post*/
-                    $whereNext = array (
-                        'user_id' => $log_id,
-                        'u_id' => $fbUserId,
-                        'p_post_to' => 1,
-                    );
-                    $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
-                    if(!empty($nextPost[0])) {
-                        $p_id = $nextPost[0]->p_id;
+                    // $whereNext = array (
+                    //     'user_id' => $log_id,
+                    //     'u_id' => $fbUserId,
+                    //     'p_post_to' => 1,
+                    // );
+                    // $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
+                    // if(!empty($nextPost[0])) {
+                    //     $p_id = $nextPost[0]->p_id;
 
-                        /*get blog link from database*/
-                        $guid = $this->session->userdata ('guid');
-                        $blogLinkType = 'blog_linkA';
-                        $whereLinkA = array(
-                            'meta_key'      => $blogLinkType . '_'. $guid,
-                        );
-                        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                        if (!empty($queryLinkData[0])) {
-                            $big = array();
-                            foreach ($queryLinkData as $key => $blog) {
-                                if($blog->meta_value ==1) {
-                                    $big[] = $blog->object_id;
-                                }                                
-                            }
-                            if(empty($big)) {
-                                $currentURL = current_url(); //for simple URL
-                                 $params = $_SERVER['QUERY_STRING']; //for parameters
-                                 $fullURL = $currentURL . '?' . $params;
-                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
-                                //redirect($setUrl);
-                                exit();
-                            }
-                            $brand = mt_rand(0, count($big) - 1);
-                            $blogRand = $big[$brand];
-                        } else {
-                            $currentURL = current_url(); //for simple URL
-                             $params = $_SERVER['QUERY_STRING']; //for parameters
-                             $fullURL = $currentURL . '?' . $params;
-                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                            exit();
-                        }
-                        /*End get blog link from database*/
+                    //     /*get blog link from database*/
+                    //     $guid = $this->session->userdata ('guid');
+                    //     $blogLinkType = 'blog_linkA';
+                    //     $whereLinkA = array(
+                    //         'meta_key'      => $blogLinkType . '_'. $guid,
+                    //     );
+                    //     $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    //     if (!empty($queryLinkData[0])) {
+                    //         $big = array();
+                    //         foreach ($queryLinkData as $key => $blog) {
+                    //             if($blog->meta_value ==1) {
+                    //                 $big[] = $blog->object_id;
+                    //             }                                
+                    //         }
+                    //         if(empty($big)) {
+                    //             $currentURL = current_url(); //for simple URL
+                    //              $params = $_SERVER['QUERY_STRING']; //for parameters
+                    //              $fullURL = $currentURL . '?' . $params;
+                    //              echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                    //             //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
+                    //             //redirect($setUrl);
+                    //             exit();
+                    //         }
+                    //         $brand = mt_rand(0, count($big) - 1);
+                    //         $blogRand = $big[$brand];
+                    //     } else {
+                    //         $currentURL = current_url(); //for simple URL
+                    //          $params = $_SERVER['QUERY_STRING']; //for parameters
+                    //          $fullURL = $currentURL . '?' . $params;
+                    //          echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                    //         exit();
+                    //     }
+                    //     /*End get blog link from database*/
 
-                        $autopost = $this->input->get('autopost');
-                        $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
-                            $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
-                        if(count($postsLoop)>5) {
-                           //echo $showHTHM;
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
-                            die;
-                        } else {
-                            echo $showHTHM;
-                            die;
-                        } 
-                    } else {
-                        if(!empty($autopost)) {
-                            redirect(base_url() . 'facebook/shareation?post=getpost');
-                        } else {
-                            redirect(base_url() . 'managecampaigns?m=post_success&post_by_manaul=' . @$post_by_manaul);
-                        }                        
-                    }
+                    //     $autopost = $this->input->get('autopost');
+                    //     $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">'.count($nextPost).'</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">'.count($postsLoop).'</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
+                    //         $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>';
+                    //     if(count($postsLoop)>5) {
+                    //        //echo $showHTHM;
+                    //         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                    //         die;
+                    //     } else {
+                    //         echo $showHTHM;
+                    //         die;
+                    //     } 
+                    // } else {
+                    //     if(!empty($autopost)) {
+                    //         redirect(base_url() . 'facebook/shareation?post=getpost');
+                    //     } else {
+                    //         redirect(base_url() . 'managecampaigns?m=post_success&post_by_manaul=' . @$post_by_manaul);
+                    //     }                        
+                    // }
                     /*End check next post*/
                 }                
             }
