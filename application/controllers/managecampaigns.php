@@ -542,8 +542,8 @@ class Managecampaigns extends CI_Controller {
         $fbUserId = $this->session->userdata ( 'sid' );
         if(empty($access_token)) {
             $setUrl = base_url() . 'managecampaigns/account' . '?back='. urlencode(current_url());
-            redirect($setUrl);
-            exit();
+            //redirect($setUrl);
+            //exit();
         }
         if(!empty($this->input->get('renew'))) {
             $setUrl = base_url() . 'managecampaigns/account?renew=1' . '?back='. urlencode(current_url());
@@ -551,8 +551,8 @@ class Managecampaigns extends CI_Controller {
             exit();
         }
         if(empty($this->session->userdata ( 'sid' ))) {
-            redirect(base_url() . 'managecampaigns');
-            exit();
+            //redirect(base_url() . 'managecampaigns');
+            //exit();
         }
 
         if(!empty($this->session->userdata('access_token'))) {
@@ -562,7 +562,7 @@ class Managecampaigns extends CI_Controller {
             if($client->isAccessTokenExpired()) {
                 if(empty($this->input->get('action')) && empty($this->input->get('bid'))) {
                     $setUrl = base_url() . 'managecampaigns/account?renew=1' . '?back='. urlencode(current_url());
-                    redirect($setUrl);
+                    //redirect($setUrl);
                 } 
             }
         }
@@ -1027,6 +1027,13 @@ class Managecampaigns extends CI_Controller {
                         redirect($setUrl);
                         exit();
                     }
+                } else {
+                    $currentURL = current_url(); //for simple URL
+                     $params = $_SERVER['QUERY_STRING']; //for parameters
+                     $fullURL = $currentURL . '?' . $params; //full URL with parameter
+                    $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
+                    redirect($setUrl);
+                    exit();
                 }
                 $bid = $this->input->get('bid');
                 $pid = $this->input->get('pid');
@@ -3713,7 +3720,6 @@ HTML;
         $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
         $string = file_get_contents($tmp_path);
         $data['json_a'] = $json_a = json_decode($string);
-
         /*check for exist post*/
         if(!empty($this->input->get('start')) || !empty($this->input->get('startpost'))) {
             $sid = $this->session->userdata ( 'sid' );

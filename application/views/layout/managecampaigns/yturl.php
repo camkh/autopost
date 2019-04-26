@@ -729,7 +729,7 @@
             var myVar = setInterval(function() { 
                 var timeNow = new Date().getTime();
                 if(timeNow > token_time) { 
-                    $('#cropModal').modal('show');
+                    //$('#cropModal').modal('show');
                 }    
                 //closeOnLoad("<?php echo base_url();?>managecampaigns");
             }, 500);
