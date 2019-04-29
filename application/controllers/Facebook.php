@@ -1899,42 +1899,23 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $where_so = array (
                     'p_id' => $pid,
                 );
-                $data['post'] = $this->Mod_general->select ('post','*', $where_so, $order = 0, $group = 0, $limit = 1 );
+                $data['post'] = $dataPost = $this->Mod_general->select ('post','*', $where_so, $order = 0, $group = 0, $limit = 1 );
                 /*get option from post*/
                 if(!empty($data['post'][0])) {
                     $pConent = json_decode($data['post'][0]->p_conent);                
                     $pSchedule = json_decode($data['post'][0]->p_schedule);
 
                     /*check before share*/
+                    $fbUserId = $this->session->userdata ( 'sid' );
+                    $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                    $string = file_get_contents($tmp_path);
+                    $data['json_a'] = $json_a = json_decode($string);
+
                     /*show blog linkA*/
-                    $where_link = array(
-                        'c_name'      => 'blog_linkA',
-                        'c_key'     => $log_id,
-                    );
-                    $data['bloglinkA'] = false;
-                    $query_blog_link = $this->Mod_general->select('au_config', '*', $where_link);
-                    $bLink = array();
-                    if (!empty($query_blog_link[0])) {
-                        $bloglinkA = json_decode($query_blog_link[0]->c_value);
-                        foreach ($bloglinkA as $key => $bloglink) {
-                            if($bloglink->status ==1) {
-                                $bLink[] = $bloglink;
-                            }
-                        }
-                        if(!empty($bLink)) {
-                            $brand = mt_rand(0, count($bLink) - 1);
-                            $blogRand = $bLink[$brand];
-                        } else {
-                            $blogRand = false;
-                        }
-                    }
                     /*End show blog link*/
                     if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
-                        if(!empty($blogRand)) {
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?lid='.$blogRand->bid.'";}, 30 );</script>';
-                        } else {
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost=1";}, 30 );</script>';
-                        }
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        exit();
                     }
                     /*end check before share*/
                     $sharePost->conent = $pConent;

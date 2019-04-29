@@ -1208,42 +1208,15 @@ class Managecampaigns extends CI_Controller {
                                     if(!empty($blink) && $blink == 1) {
                                         //set blog link by ID
                                         if(!empty($blog_link_id)) {
-                                             $blogRand = $blog_link_id;
+                                            $blogRand = $blog_link_id;
                                         } else {
-
-                                            /*get blog link from database*/
-                                            $guid = $this->session->userdata ('guid');
-                                            $blogLinkType = 'blog_linkA';
-                                            $whereLinkA = array(
-                                                'meta_key'      => $blogLinkType . '_'. $guid,
-                                            );
-                                            $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                                            if (!empty($queryLinkData[0])) {
-                                                $big = array();
-                                                foreach ($queryLinkData as $key => $blog) {
-                                                    if($blog->meta_value ==1) {
-                                                        $big[] = $blog->object_id;
-                                                    }                                
-                                                }
-                                                if(empty($big)) {
-                                                    $currentURL = current_url(); //for simple URL
-                                                     $params = $_SERVER['QUERY_STRING']; //for parameters
-                                                     $fullURL = $currentURL . '?' . $params;
-                                                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                                    //$setUrl = base_url() . 'managecampaigns/autopost?createblog=1&backto='. urlencode($fullURL);
-                                                    //redirect($setUrl);
-                                                    exit();
-                                                }
-                                                $brand = mt_rand(0, count($big) - 1);
-                                                $blogRand = $big[$brand];
-                                            } else {
+                                            $blogRand = $this->getBlogLink();
+                                            if(empty($blogRand)) {
                                                 $currentURL = current_url(); //for simple URL
-                                                 $params = $_SERVER['QUERY_STRING']; //for parameters
-                                                 $fullURL = $currentURL . '?' . $params;
-                                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                                exit();
+                                                $params = $_SERVER['QUERY_STRING']; //for parameters
+                                                $fullURL = $currentURL . '?' . $params;
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
                                             }
-                                            /*End get blog link from database*/
                                         }
 
                                         if(!empty($blogRand)) {
@@ -1402,6 +1375,35 @@ class Managecampaigns extends CI_Controller {
         }
         /*End Post to blogger*/
         $this->load->view ( 'managecampaigns/yturl', $data );
+    }
+
+    public function getBlogLink()
+    {
+        /*get blog link from database*/
+        $guid = $this->session->userdata ('guid');
+        $blogLinkType = 'blog_linkA';
+        $whereLinkA = array(
+            'meta_key'      => $blogLinkType . '_'. $guid,
+        );
+        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+        if (!empty($queryLinkData[0])) {
+            $big = array();
+            foreach ($queryLinkData as $key => $blog) {
+                if($blog->meta_value ==1) {
+                    $big[] = $blog->object_id;
+                }                                
+            }
+            if(empty($big)) {
+                $blogRand = false;
+            } else {
+                $brand = mt_rand(0, count($big) - 1);
+                $blogRand = $big[$brand];  
+            }
+        } else {
+            $blogRand = false;
+        }
+        /*End get blog link from database*/
+        return $blogRand;
     }
 
     public function blogData()
