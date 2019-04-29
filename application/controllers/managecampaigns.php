@@ -1243,7 +1243,7 @@ class Managecampaigns extends CI_Controller {
                                     /*End blog link*/
 
                                     /*update post*/
-                                    if(!empty($link)) {
+                                    if(!empty($link) && (!preg_match('/youtube.com/', $link) || !preg_match('/youtu.be/', $link))) {
                                         $whereUp = array('p_id' => $pid);
                                         $content = array (
                                             'name' => $pConent->name,

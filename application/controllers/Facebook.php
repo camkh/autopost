@@ -1908,8 +1908,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     /*check before share*/
                     $fbUserId = $this->session->userdata ( 'sid' );
                     $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
-                    $string = file_get_contents($tmp_path);
-                    $data['json_a'] = $json_a = json_decode($string);
+                    $string = @file_get_contents($tmp_path);
+                    $data['json_a'] = $json_a = @json_decode($string);
 
                     /*show blog linkA*/
                     /*End show blog link*/
