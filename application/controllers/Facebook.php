@@ -1906,8 +1906,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $pSchedule = json_decode($data['post'][0]->p_schedule);
 
                     /*check before share*/
-                    $fbUserId = $this->session->userdata ( 'sid' );
-                    $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                    $fbuids = $this->session->userdata('fb_user_id');
+                    $tmp_path = './uploads/'.$log_id.'/'. $fbuids . '_tmp_action.json';
                     $string = @file_get_contents($tmp_path);
                     $data['json_a'] = $json_a = @json_decode($string);
 
