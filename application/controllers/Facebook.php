@@ -1914,7 +1914,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     /*show blog linkA*/
                     /*End show blog link*/
                     if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
-                        echo $dataPost[0]->p_id;
+                        echo $fbUserId;
                         echo '<br/>';
                         echo $json_a->blogid;
                         echo '<br/>';
