@@ -1166,7 +1166,7 @@ class Managecampaigns extends CI_Controller {
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
                                 /*End upload photo first*/
-                                if(!empty($pOption->foldlink)) {
+                                if(!empty($pOption->foldlink) && !preg_match('/youtu/', $pConent->link)) {
                                     $link = @$pConent->mainlink;
                                 } else {
                                     if(empty($pConent->mainlink)) {
@@ -1243,7 +1243,7 @@ class Managecampaigns extends CI_Controller {
                                     /*End blog link*/
 
                                     /*update post*/
-                                    if(!empty($link) && (!preg_match('/youtube.com/', $link) || !preg_match('/youtu.be/', $link))) {
+                                    if(!empty($link) && !preg_match('/youtu/', $link)) {
                                         $whereUp = array('p_id' => $pid);
                                         $content = array (
                                             'name' => $pConent->name,
