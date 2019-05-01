@@ -1914,13 +1914,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     /*show blog linkA*/
                     /*End show blog link*/
                     if(preg_match('/youtube.com/', $pConent->link) || preg_match('/youtu.be/', $pConent->link)) {
-                        echo $fbUserId;
-                        echo '<br/>';
-                        echo $json_a->blogid;
-                        echo '<br/>';
-                        echo $json_a->blogLink;
-
-                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
                         exit();
                     }
                     /*end check before share*/
