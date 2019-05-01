@@ -88,12 +88,13 @@ var otherOnline = [
 {"name":"BS","online":"djspuafipc"},
 {"name":"SrL","online":"aq1vp1eotq"},
 {"name":"R","online":"cg5tms2uhr"},
+{"name":"KHun","online":"egofkf08xp"},
+{"name":"KHoun","online":"h4tsxsdii1"},
 {"name":"pengraklek.com","online":"von9995p84"},
 {"name":"02","online":"mmx6oo8wu5"},
 {"name":"03","online":"35482phk88"},
 {"name":"04","online":"kl9j6m7lo5"},
 {"name":"05","online":"azsdu97oge"},
-{"name":"06","online":"djspuafipc"},
 {"name":"07","online":"5pok49g7xj"},
 {"name":"BB","online":"55vfmrfk3z"},
 {"name":"08","online":"6m0b3kzsmd"},
@@ -103,6 +104,9 @@ var otherOnline = [
 {"name":"12","online":"tnei4ubws0"},
 {"name":"13","online":"ygakythr9m"},
 {"name":"14","online":"s5m7grrbvu"},
+{"name":"15","online":"06hhaq6ahz"},
+{"name":"16","online":"1omb95880q"},
+{"name":"17","online":"uz46982ien"},
 {"name":"News 1","online":"186p1xd648"},
 ];
 var items = ["FF5647","FF3CAE","EA49FF","5D5BFF","62C0FF","00E08A","00E309","FF8537","FF000F","FD0044","E9A100","7CBA00","40C200","FE3EFF","C78FFF","72D8FF","007F23","00C61A","157200","3A6F00","647A00","D7D900","E37A00","DC3A00","DD0017","DD0067","C2008B","740057","940052","A1001C","9C1400","9D4A00","845D00","5E6400"];
@@ -115,7 +119,7 @@ setOnline();
 //$('#content').remove();
 setInterval(function(){
     setOnline();
-}, 60000);
+}, 300000);
     
 
      var random = myImages[Math.floor(Math.random() * myImages.length)];
