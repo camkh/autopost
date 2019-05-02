@@ -1616,17 +1616,22 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
                     $string = file_get_contents($tmp_path);
                     $json_a = json_decode($string);
-                    $where_Pshare = array (
-                        'u_id' => $sid,
-                        'p_post_to' => 1,
-                    );
-                    $dataPost = $this->Mod_general->select (
-                        'post',
-                        '*', 
-                        $where_Pshare
-                    );
-                    if(!empty($dataPost[0])) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                    if(empty($pid)) {
+                        $where_Pshare = array (
+                            'u_id' => $sid,
+                            'p_post_to' => 1,
+                        );
+                        $dataPost = $this->Mod_general->select (
+                            'post',
+                            '*', 
+                            $where_Pshare
+                        );
+                        if(!empty($dataPost[0])) {
+                            $pid = $dataPost[0]->p_id;
+                        }
+                    }
+                    if(!empty($pid)) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$pid.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
                         exit();
                     }
                 }
