@@ -562,7 +562,10 @@ class Managecampaigns extends CI_Controller {
             //exit();
         }
         if(!empty($this->input->get('renew'))) {
-            $setUrl = base_url() . 'managecampaigns/account?renew=1' . '?back='. urlencode(current_url());
+            $currentURL = current_url(); //for simple URL
+            $params = $_SERVER['QUERY_STRING']; //for parameters
+            $fullURL = $currentURL . '?' . $params;
+            $setUrl = base_url() . 'managecampaigns/account?renew=1' . '&back='. urlencode($fullURL);
             redirect($setUrl);
             exit();
         }
