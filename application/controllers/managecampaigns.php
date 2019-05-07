@@ -34,7 +34,10 @@ class Managecampaigns extends CI_Controller {
         $this->breadcrumbs->add('Account', base_url().$this->uri->segment(1));
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
-
+        if(!$this->input->get('back')) {
+            $this->session->unset_userdata('back');
+        }
+        
         if(!empty($this->input->get('back'))) {
             $this->session->set_userdata('back', $this->input->get('back'));
         }
@@ -2536,6 +2539,7 @@ HTML;
                             $query_yt = $this->Mod_general->select('au_config', '*', $where_yt);
                             if (!empty($query_yt[0])) {
                                 $data = json_decode($query_yt[0]->c_value);
+
                                 $ytid = array();
                                 $chID = array();
                                 $chStatus = array();
@@ -2576,7 +2580,7 @@ HTML;
                                 $ytRandID = $ytid[$brand];                                
                                 /*End check channel update*/
                             }
-                            $ytID = $ytRandID;                
+                            $ytID = $ytRandID;               
                         }
                         $this->getYoutubeVideos($ytID,$max);
                         //redirect(base_url().'managecampaigns/ajax?gid=&p=autopostblog');
@@ -2662,25 +2666,25 @@ HTML;
         $getData = false;
         $log_id = $this->session->userdata ( 'user_id' );
         $sid = $this->session->userdata ( 'sid' );
+        if(!empty($this->session->userdata('access_token'))) {
+            $this->load->library('google_api');
+            $client = new Google_Client();                  
+            $client->setAccessToken($this->session->userdata('access_token'));
+            if($client->isAccessTokenExpired()) {
+                 $currentURL = current_url(); //for simple URL
+                 $params = $_SERVER['QUERY_STRING']; //for parameters
+                 $fullURL = $currentURL . '?' . $params; //full URL with parameter
+                $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
+                if(!empty($backto)) {
+                    redirect($backto);
+                } else {
+                    redirect($setUrl);
+                }
+                exit();
+            }
+        }
         $ytData = $this->youtubeChannel($ytID,$max);
         if(!empty($ytData)) {
-        if(!empty($this->session->userdata('access_token'))) {
-                $this->load->library('google_api');
-                $client = new Google_Client();                  
-                $client->setAccessToken($this->session->userdata('access_token'));
-                if($client->isAccessTokenExpired()) {
-                     $currentURL = current_url(); //for simple URL
-                     $params = $_SERVER['QUERY_STRING']; //for parameters
-                     $fullURL = $currentURL . '?' . $params; //full URL with parameter
-                    $setUrl = base_url() . 'managecampaigns/autopost?glogin='. urlencode($fullURL);
-                    if(!empty($backto)) {
-                        redirect($backto);
-                    } else {
-                        redirect($setUrl);
-                    }
-                    exit();
-                }
-            }
             foreach ($ytData as $key => $ytArr) {
                 $dataContent          = new stdClass();
                 $dataContent->title    = $ytArr['snippet']['title'];
@@ -2946,7 +2950,7 @@ HTML;
                     'y_uid' => $log_id,
                     'y_status' => 0,
                 ),
-                $order = "y_date DESC", 
+                $order = "RAND()", 
                 0, 
                 2
             );

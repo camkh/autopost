@@ -39,8 +39,16 @@
                     echo "<a href=\"javascript:void(0);\" class=\"list-group-item\"><b> Gender : </b>" . $userData->gender . "</a>";
                     echo "<a href=\"javascript:void(0);\" class=\"list-group-item\"><b>Email : </b>" . $userData->email . "</a>";
                     ?>
+
                             <a class='logout list-group-item' href='https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=<?php echo base_url(); ?>index.php/user_authentication/logout'>Logout</a> 
-                        </div>                   
+                        </div>
+                    <ul class="list-group">
+                        <li class="list-group-item no-padding"> 
+                                <a target="_blank" class="user_name" href="<?php echo $userData->link; ?>" /><img src="<?php echo !empty($this->session->userdata ( 'fb_user_id' )) ? 'https://graph.facebook.com/'.$this->session->userdata ( 'fb_user_id' ).'/picture' : base_url().'themes/layout/blueone/assets/img/logo.png'; ?>" alt="logo" /></li>
+                            </li> 
+                            <a href="javascript:void(0);" class="list-group-item"><?php echo $this->session->userdata ( 'sid' );?> <?php echo !empty($this->session->userdata ( 'fb_user_name' )) ? $this->session->userdata ( 'fb_user_name' ) : ''; ?></a> 
+                            <a href="javascript:void(0);" class="list-group-item"><?php echo $this->session->userdata ( 'user_id' );?></a> 
+                    </ul>                   
                     <?php }?>
                     <!-- end login to google -->
                 </div>

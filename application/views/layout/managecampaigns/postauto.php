@@ -208,6 +208,13 @@ $backto = @urlencode($this->input->get('backto'));
                                     $bContent = str_replace('/\n/g', '<br>', $bContent);
                                     $image = $p_conent->picture;
                                     $vid = $p_conent->vid;
+                                    if(empty($vid)) {
+                                        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $p_conent->link, $matches);
+                                        if (!empty($matches[1])) {
+                                            $content = (!empty($matches[1]) ? $matches[1] : '');
+                                            $vid = $content;
+                                        }
+                                    }
                                     $mainLink = @$p_conent->mainLink;
                                     ?>
                                     <form class="form-horizontal row-border" id="mainblog" method="post">
