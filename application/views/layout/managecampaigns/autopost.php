@@ -70,6 +70,10 @@ if(!empty($this->input->get('changeblogurl'))) {
     if(!empty($this->input->get('bid'))) {
         $bLinkID = $this->input->get('bid');
     } else {
+        if(count($blogspam)) < 1 ) {
+            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 0 );</script>';
+            die;
+        }
         $spamRan = mt_rand(0, count($blogspam) - 1);
         $spamid = $blogspam[$spamRan];
         $bLinkID = $spamid;
