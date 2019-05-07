@@ -34,7 +34,10 @@ class Managecampaigns extends CI_Controller {
         $this->breadcrumbs->add('Account', base_url().$this->uri->segment(1));
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
-
+        if(!$this->input->get('back')) {
+            $this->session->unset_userdata('back');
+        }
+        
         if(!empty($this->input->get('back'))) {
             $this->session->set_userdata('back', $this->input->get('back'));
         }
