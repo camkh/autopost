@@ -2950,7 +2950,7 @@ HTML;
                     'y_uid' => $log_id,
                     'y_status' => 0,
                 ),
-                $order = "y_id RANDOM", 
+                $order = "RAND()", 
                 0, 
                 2
             );
