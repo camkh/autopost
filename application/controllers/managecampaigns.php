@@ -35,7 +35,7 @@ class Managecampaigns extends CI_Controller {
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
         if(!$this->input->get('back')) {
-            $this->session->unset_userdata('back');
+            //$this->session->unset_userdata('back');
         }
         
         if(!empty($this->input->get('back'))) {
