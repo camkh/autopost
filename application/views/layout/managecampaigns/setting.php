@@ -271,7 +271,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             <td><span class="label label-success"><?php echo $linkA->meta_value;?></span></td>
                                             <td>
                                                 <ul class="table-controls">
-                                                    <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?blog_link_a=1&bid=<?php echo $linkA->object_id;?>&title=&status=1" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
                                                     <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkA->meta_id;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
                                                 </ul>
                                             </td>
