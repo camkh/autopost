@@ -3885,6 +3885,14 @@ HTML;
                             'meta_value'     => 1,
                         );
                         $lastID = $this->Mod_general->insert('meta', $data_blog);
+                    } else {
+                        $data_blog = array(
+                            'meta_key'      => $blogType . '_'. $guid,
+                            'object_id'      => $blogID,
+                            'meta_value'     => 1,
+                        );
+                        $setWhere = array('meta_id' => $queryLinkData[0]->meta_id);
+                        $lastID = $this->Mod_general->update('meta', $data_blog,$setWhere);
                     }
                 }
             }
