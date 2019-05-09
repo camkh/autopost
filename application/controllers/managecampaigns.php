@@ -1179,6 +1179,8 @@ class Managecampaigns extends CI_Controller {
                                     if(!$image->success) {
                                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m='.$image->data->error.'";}, 30 );</script>';
                                         die;
+                                    } else {
+                                        $image = $image->data->link;
                                     }
                                 }  
                             } else {

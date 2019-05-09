@@ -1511,11 +1511,7 @@ public function get_video_id($param, $videotype = '')
                     $reply = curl_exec($ch);
                     curl_close($ch);
                     $reply = json_decode($reply);
-                    if(!empty($reply->data->link)) {
-                        return $reply->data->link;
-                    } else {
-                        return $reply;
-                    }
+                    return $reply;
                 }
                 /*End upload*/
             } else {
