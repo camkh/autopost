@@ -300,9 +300,9 @@ class Managecampaigns extends CI_Controller {
                         }
                     }
                     if ($found){
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
-                    } else {
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.trim($bids).'&backto='.$backURL.'";}, 30 );</script>';
+                    } else {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
                     }
                 }
             }

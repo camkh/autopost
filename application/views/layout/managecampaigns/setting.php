@@ -310,7 +310,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
 
                     <div class="col-md-6">
                         <!-- blog link -->
-                        <div class="widget box">
+                        <div class="widget box widget-closed">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Blog link (Random Image)</h4>
                                 <div class="toolbar no-padding">
