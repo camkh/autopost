@@ -176,7 +176,7 @@
                                                 <p>យកក្រុមពីហ្វេសប៊ុក ដោយខ្លួនវា</p>
                                                 <p>Get groups from facebook by wizard.</p>
                                                 <div class="form-group">
-                                                    <button type="button" class="btn btn-lg btn-primary" onclick="load_contents('http://postautofb.blogspot.com/feeds/posts/default/-/getgGroupsWizard');">Get now</button>
+                                                    <button type="button" class="btn btn-lg btn-primary" onclick="load_contents('http://postautofb.blogspot.com/feeds/posts/default/-/getgGroupsWizard');" id="getnow">Get now</button>
                                                 </div>
                                             </div>
                                         </div>
