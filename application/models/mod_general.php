@@ -1514,7 +1514,7 @@ public function get_video_id($param, $videotype = '')
                     if(!empty($reply->data->link)) {
                         return $reply->data->link;
                     } else {
-                        return false;
+                        return $reply;
                     }
                 }
                 /*End upload*/
