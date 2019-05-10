@@ -2615,7 +2615,7 @@ HTML;
                     /*End check video exist*/ 
                      break;
                  case 'online':
-                    $id = ! empty ( $_GET ['id'] ) ? $_GET ['id'] : '';
+                    $id = ! empty ($this->input->get('id')) ? $this->input->get('id') : '';
                     $url = 'https://whos.amung.us/stats/data/?jtdrz87p&k='.$id.'&list=recents&max=1';
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

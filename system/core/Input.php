@@ -571,7 +571,7 @@ class CI_Input {
 
 		// Unset globals for securiy.
 		// This is effectively the same as register_globals = off
-		foreach (array($_GET, $_POST, $_COOKIE) as $global)
+		foreach (array(@$_GET, @$_POST, $_COOKIE) as $global)
 		{
 			if ( ! is_array($global))
 			{
@@ -601,7 +601,7 @@ class CI_Input {
 		}
 		else
 		{
-			if (is_array($_GET) AND count($_GET) > 0)
+			if (is_array(@$_GET) AND count(@$_GET) > 0)
 			{
 				foreach ($_GET as $key => $val)
 				{
