@@ -224,6 +224,7 @@
     if(!empty($socialList)):
      foreach ($socialList as $value):
     	$content = json_decode($value->p_conent);
+    	var_dump($content);
     	$links = $content->link;
     	$picture = @$content->picture;
     	if (!@preg_match('/http/', @$picture)):
