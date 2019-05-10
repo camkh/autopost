@@ -226,14 +226,13 @@
     	$content = json_decode($value->p_conent);
     	$links = $content->link;
     	$picture = @$content->picture;
-    	if (!preg_match('/http/', @$picture)):
+    	if (!@preg_match('/http/', @$picture)):
     		preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $links, $matches);
             if (!empty($matches[1])):
                 $picture = (!empty($matches[1]) ? $matches[1] : '');
                 $picture = 'https://i.ytimg.com/vi/'.$picture.'/hqdefault.jpg';
             endif;
     	endif;
-
      ?>
                                     <tr>
 								<td class="checkbox-column"><input type="checkbox" id="itemid"
