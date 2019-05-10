@@ -1318,6 +1318,7 @@ class Managecampaigns extends CI_Controller {
                                     'message' => $pConent->message,
                                     'caption' => $pConent->caption,
                                     'link' => $pConent->link,
+                                    'mainlink' => $mainlink,
                                     'picture' => @$image,                            
                                 );
                                 $dataPostInstert = array (

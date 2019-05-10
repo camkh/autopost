@@ -224,13 +224,23 @@
     if(!empty($socialList)):
      foreach ($socialList as $value):
     	$content = json_decode($value->p_conent);
+    	$links = $content->link;
+    	$picture = $content->picture;
+    	if (!preg_match('/http/', $picture)):
+    		preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $links, $matches);
+            if (!empty($matches[1])):
+                $picture = (!empty($matches[1]) ? $matches[1] : '');
+                $picture = 'https://i.ytimg.com/vi/'.$picture.'/hqdefault.jpg';
+            endif;
+    	endif;
+
      ?>
                                     <tr>
 								<td class="checkbox-column"><input type="checkbox" id="itemid"
 									name="itemid[]" class="uniform"
 									value="<?php echo $value->{Tbl_posts::id}; ?>" /></td>
 								<td><a
-									href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><img src="<?php echo $content->picture; ?>" style="width: 80px;float: left;margin-right: 5px"> <?php echo $value->{Tbl_posts::name}; ?></a>
+									href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><img src="<?php echo @$picture; ?>" style="width: 80px;float: left;margin-right: 5px"> <?php echo $value->{Tbl_posts::name}; ?></a>
 								</td>
 								<td class="hidden-xs">
         <?php echo $value->{Tbl_posts::p_date}; ?>
@@ -238,7 +248,7 @@
 								<td class="hidden-xs" style="width:300px;overflow: auto;">
    										<?php echo $content->link;?>
    										<?php if(!empty($this->input->get('post_by_manaul'))):?>
-   											<textarea style="height: 40px;" id="copy-text" type="text" name="glink" class="form-control" onClick="copyText(this);"><?php echo $value->{Tbl_posts::name}; ?>&#13;&#10;<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p><?php echo $content->message;?></p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/<?php echo $content->vid;?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div></textarea>
+   											<textarea style="height: 40px;" id="copy-text" type="text" name="glink" class="form-control" onClick="copyText(this);"><?php echo $value->{Tbl_posts::name}; ?>&#13;&#10;<img class="thumbnail noi" style="text-align:center" src="'.$picture.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p><?php echo $content->message;?></p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><iframe width="100%" height="280" src="https://www.youtube.com/embed/<?php echo $content->vid;?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div></textarea>
    										<?php endif;?>
                                         </td>
 								<td>
