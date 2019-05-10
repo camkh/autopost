@@ -1175,12 +1175,12 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($pOption->foldlink)) {
                                     $image = $pConent->picture;
                                 } else {
-                                    $image = $this->mod_general->uploadMedia($fileName,$param);
-                                    if(!$image->success) {
+                                    $images = $this->mod_general->uploadMedia($fileName,$param);
+                                    if(!$images->success) {
                                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m='.$image->data->error.'";}, 30 );</script>';
                                         die;
                                     } else {
-                                        $image = $image->data->link;
+                                        $image = $images->data->link;
                                     }
                                 }  
                             } else {
@@ -1319,7 +1319,7 @@ class Managecampaigns extends CI_Controller {
                                     'caption' => $pConent->caption,
                                     'link' => $pConent->link,
                                     'mainlink' => $mainlink,
-                                    'picture' => @$image,                            
+                                    'picture' => @$image,                
                                 );
                                 $dataPostInstert = array (
                                     Tbl_posts::conent => json_encode ( $content ),
