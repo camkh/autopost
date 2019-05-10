@@ -293,16 +293,16 @@ class Managecampaigns extends CI_Controller {
                     if (!empty($query_blog_exist[0])) {
                         $blogAds = json_decode($query_blog_exist[0]->c_value);
                         foreach ($blogAds as $key => $valueb) {
-                            if (!preg_match('/'.$valueb->bid.'/', $bids)) {
+                            if (preg_match('/'.$valueb->bid.'/', $bids)) {
                                 $found = true;
                             }
                             $blogAd[] =  $valueb->bid;
                         }
                     }
                     if ($found){
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.trim($bids).'&backto='.$backURL.'";}, 30 );</script>';
-                    } else {
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
+                    } else {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?changeblogurl=1&bid='.trim($bids).'&backto='.$backURL.'";}, 30 );</script>';
                     }
                 }
             }
