@@ -1145,7 +1145,6 @@ class Managecampaigns extends CI_Controller {
                         if(empty($imgUrl)) {
                             $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
                         }
-var_dump($picture);
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
@@ -1160,7 +1159,6 @@ var_dump($picture);
                             $imgUrl = $picture;
                         }    
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-
                             if (!@preg_match('/imgur.com/', $fileName)) {
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
@@ -1176,11 +1174,8 @@ var_dump($picture);
                                     $image = $pConent->picture;
                                 } else {
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
-                                    var_dump($images);
                                     if(!$images->success) {
-                                        var_dump($images);
-                                        die;
-                                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=image&error='.$image->data->error.'";}, 30 );</script>';
+                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=image&error='.$image->data->error.'";}, 30 );</script>';
                                          die;
                                     } else {
                                         $image = $images->data->link;
@@ -1192,7 +1187,7 @@ var_dump($picture);
                                             'caption' => $pConent->caption,
                                             'link' => $pConent->link,
                                             'mainlink' => $pConent->mainlink,
-                                            'picture' => @$image,                            
+                                            'picture' => @$images->data->link,                            
                                         );
                                         $dataPostInstert = array (
                                             Tbl_posts::conent => json_encode ( $content ),
@@ -1237,7 +1232,7 @@ var_dump($picture);
                                                 'caption' => $pConent->caption,
                                                 'link' => $pConent->link,
                                                 'mainlink' => $link,
-                                                'picture' => @$image,                            
+                                                'picture' => $pConent->picture,                            
                                             );
                                             $dataPostInstert = array (
                                                 Tbl_posts::conent => json_encode ( $content ),
@@ -1301,7 +1296,7 @@ var_dump($picture);
                                             'caption' => $pConent->caption,
                                             'link' => $link,
                                             'mainlink' => $mainlink,
-                                            'picture' => @$image,                            
+                                            'picture' => $pConent->picture,                            
                                         );
                                         $dataPostInstert = array (
                                             Tbl_posts::conent => json_encode ( $content ),
@@ -1321,7 +1316,7 @@ var_dump($picture);
                                     'caption' => $pConent->caption,
                                     'link' => $pConent->link,
                                     'mainlink' => $mainlink,
-                                    'picture' => @$image,                
+                                    'picture' => $pConent->picture,                
                                 );
                                 $dataPostInstert = array (
                                     Tbl_posts::conent => json_encode ( $content ),
