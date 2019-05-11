@@ -1174,28 +1174,11 @@ class Managecampaigns extends CI_Controller {
                                     $image = $pConent->picture;
                                 } else {
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
-                                    if(!$images->success) {
-                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=image&error='.$image->data->error.'";}, 30 );</script>';
-                                         die;
+                                    if(!$images) {
+                                        $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                                        $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
                                     } else {
-                                        $image = $images->data->link;
-                                        /*update post*/
-                                        $whereUp = array('p_id' => $pid);
-                                        $content = array (
-                                            'name' => $pConent->name,
-                                            'message' => $pConent->message,
-                                            'caption' => $pConent->caption,
-                                            'link' => $pConent->link,
-                                            'mainlink' => $pConent->mainlink,
-                                            'picture' => @$images->data->link,                            
-                                        );
-                                        $dataPostInstert = array (
-                                            Tbl_posts::conent => json_encode ( $content ),
-                                            'p_post_to' => 2,
-                                            'yid' => $vid,
-                                        );
-                                        $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                                        /*End update post*/
+                                        $image = @$images; 
                                     }
                                 }  
                             } else {
@@ -1207,6 +1190,23 @@ class Managecampaigns extends CI_Controller {
 
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
+                            /*update post*/
+                            $whereUp = array('p_id' => $pid);
+                            $content = array (
+                                'name' => $pConent->name,
+                                'message' => $pConent->message,
+                                'caption' => $pConent->caption,
+                                'link' => $pConent->link,
+                                'mainlink' => $pConent->mainlink,
+                                'picture' => @$images->data->link,                            
+                            );
+                            $dataPostInstert = array (
+                                Tbl_posts::conent => json_encode ( $content ),
+                                'p_post_to' => 2,
+                                'yid' => $vid,
+                            );
+                            $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                            /*End update post*/
                             @unlink($fileName);
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
@@ -3071,7 +3071,13 @@ HTML;
                                         'filter_contrast'=>$json_a->filter_contrast,
                                         'img_rotate'=>$json_a->img_rotate,
                                     );
-                                    $image = $this->mod_general->uploadMedia($fileName,$param);                  
+                                    $images = $this->mod_general->uploadMedia($fileName,$param); 
+                                    if(!$images) {
+                                        $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                                        $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                    } else {
+                                        $image = @$images; 
+                                    }                
                                 } else {
                                     $image = $picture;
                                 }
@@ -3287,6 +3293,14 @@ HTML;
         $this->load->view ( 'managecampaigns/postauto', $data );
     }
 
+public function imgtest()
+{
+    $image = $fileName = FCPATH . 'uploads/image/210hqdefault.jpg';
+    $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+    $test = $this->Mod_general->uploadToImgbb($image, $apiKey);
+    var_dump($test);
+    die;
+}
     function time_elapsed_string($datetime, $full = false) {
         $now = new DateTime;
         $ago = new DateTime($datetime);
