@@ -1181,6 +1181,23 @@ class Managecampaigns extends CI_Controller {
                                          die;
                                     } else {
                                         $image = $images->data->link;
+                                        /*update post*/
+                                        $whereUp = array('p_id' => $pid);
+                                        $content = array (
+                                            'name' => $pConent->name,
+                                            'message' => $pConent->message,
+                                            'caption' => $pConent->caption,
+                                            'link' => $pConent->link,
+                                            'mainlink' => $pConent->mainlink,
+                                            'picture' => @$image,                            
+                                        );
+                                        $dataPostInstert = array (
+                                            Tbl_posts::conent => json_encode ( $content ),
+                                            'p_post_to' => 2,
+                                            'yid' => $vid,
+                                        );
+                                        $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                                        /*End update post*/
                                     }
                                 }  
                             } else {
@@ -1192,24 +1209,6 @@ class Managecampaigns extends CI_Controller {
 
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
-                            /*update post*/
-                            $whereUp = array('p_id' => $pid);
-                            $content = array (
-                                'name' => $pConent->name,
-                                'message' => $pConent->message,
-                                'caption' => $pConent->caption,
-                                'link' => $pConent->link,
-                                'mainlink' => $pConent->mainlink,
-                                'picture' => @$image,                            
-                            );
-                            $dataPostInstert = array (
-                                Tbl_posts::conent => json_encode ( $content ),
-                                'p_post_to' => 2,
-                                'yid' => $vid,
-                            );
-                            $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                            /*End update post*/
-
                             @unlink($fileName);
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
