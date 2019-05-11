@@ -1175,7 +1175,9 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($pOption->foldlink)) {
                                     $image = $pConent->picture;
                                 } else {
+                                    var_dump($param);
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
+                                    var_dump($images);
                                     if(!$images->success) {
                                         var_dump($images);
                                         die;
