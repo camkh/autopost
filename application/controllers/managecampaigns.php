@@ -1178,7 +1178,7 @@ class Managecampaigns extends CI_Controller {
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
                                     if(!$images->success) {
                                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m='.$image->data->error.'";}, 30 );</script>';
-                                        die;
+                                         die;
                                     } else {
                                         $image = $images->data->link;
                                     }
