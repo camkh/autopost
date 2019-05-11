@@ -1145,7 +1145,7 @@ class Managecampaigns extends CI_Controller {
                         if(empty($imgUrl)) {
                             $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
                         }
-
+var_dump($picture);
                         $structure = FCPATH . 'uploads/image/';
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
@@ -1175,7 +1175,6 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($pOption->foldlink)) {
                                     $image = $pConent->picture;
                                 } else {
-                                    var_dump($param);
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
                                     var_dump($images);
                                     if(!$images->success) {
