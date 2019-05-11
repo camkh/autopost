@@ -1150,7 +1150,7 @@ class Managecampaigns extends CI_Controller {
                         if (!file_exists($structure)) {
                             mkdir($structure, 0777, true);
                         }
-                        $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                        $imgUrl = @str_replace('maxresdefault', 'hqdefault', $imgUrl);
 
                         $file_title = basename($imgUrl);
                         $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
@@ -1161,8 +1161,8 @@ class Managecampaigns extends CI_Controller {
                         }    
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
 
-                            if (!preg_match('/imgur.com/', $fileName)) {
-                                copy($imgUrl, $fileName);      
+                            if (!@preg_match('/imgur.com/', $fileName)) {
+                                @copy($imgUrl, $fileName);      
                                 $param = array(
                                     'btnplayer'=>$pOption->btnplayer,
                                     'playerstyle'=>$pOption->playerstyle,
@@ -1189,8 +1189,7 @@ class Managecampaigns extends CI_Controller {
                         } else {
                             $image = $picture;
                         }
-// var_dump($image);
-// die;
+
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
                             /*update post*/
