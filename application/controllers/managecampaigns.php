@@ -1177,7 +1177,7 @@ class Managecampaigns extends CI_Controller {
                                 } else {
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
                                     if(!$images->success) {
-                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m='.$image->data->error.'";}, 30 );</script>';
+                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns?m=image&error='.$image->data->error.'";}, 30 );</script>';
                                          die;
                                     } else {
                                         $image = $images->data->link;
@@ -1189,7 +1189,8 @@ class Managecampaigns extends CI_Controller {
                         } else {
                             $image = $picture;
                         }
-
+// var_dump($image);
+// die;
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
                             /*update post*/
