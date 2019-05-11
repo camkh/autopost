@@ -224,10 +224,10 @@
     if(!empty($socialList)):
      foreach ($socialList as $value):
     	$content = json_decode($value->p_conent);
-    	$links = $content->link;
+    	$getLink = $content->link;
     	$picture = @$content->picture;
     	if (!@preg_match('/http/', @$picture)):
-    		preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $links, $matches);
+    		preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $getLink, $matches);
             if (!empty($matches[1])):
                 $picture = (!empty($matches[1]) ? $matches[1] : '');
                 $picture = 'https://i.ytimg.com/vi/'.$picture.'/hqdefault.jpg';
