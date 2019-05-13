@@ -2512,6 +2512,32 @@ HTML;
                  break;
                  case 'autopostblog':
                     //echo '<meta http-equiv="refresh" content="30">';
+                    /*check auto post if set*/
+                    $whereShowAuto = array(
+                        'c_name'      => 'autopost',
+                        'c_key'     => $log_id,
+                    );
+                    $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
+                    if(!empty($autoData[0])) {
+                        $autopost = json_decode($autoData[0]->c_value);
+                        if($autopost->autopost == 1) {
+                            echo date('H');
+                            echo '<br/>';
+                            if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                               echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
+                            } else {
+                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
+                            }
+                            //localhost/autopost/managecampaigns/autopost?start=1
+                        } else {
+                            redirect(base_url().'facebook/shareation?post=getpost');
+                            exit();
+                        }
+                    } else {
+                        redirect(base_url().'facebook/shareation?post=getpost');
+                        exit();
+                    }
+                    /*End check auto post if set*/
                      $dataTy = array();
                     $lid = ! empty ( $_GET ['lid'] ) ? $_GET ['lid'] : '';
                     $max = ! empty ( $_GET ['max'] ) ? $_GET ['max'] : '20';
