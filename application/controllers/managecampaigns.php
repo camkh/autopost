@@ -892,12 +892,13 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
-                    if(empty( $foldlink )) {
-                        $mainlink = '';
+                    if(!empty( $foldlink )) {
+                        
                         $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
+                        $mainlink = $link[$i];
                     } else {
                         $vid = $this->Mod_general->get_video_id($link[$i]);
-                        $mainlink = $link[$i];
+                        $mainlink = '';
                     }                    
                     $vid = $vid['vid']; 
                     $content = array (
