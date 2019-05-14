@@ -1094,8 +1094,9 @@ class Managecampaigns extends CI_Controller {
                 );
                 $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
                 if(!empty($getPost[0])) {
-                    $checkPost = json_decode($getPost[0]->p_conent);
-                    if (!preg_match('/youtu/', $checkPost->link)) {
+                    $pConent = json_decode($getPost[0]->p_conent);
+                    $pOption = json_decode($getPost[0]->p_schedule);
+                    if (!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) {
                         redirect(base_url().'facebook/shareation?post=getpost');
                         //http://localhost/autopost/facebook/shareation?post=getpost
                     }
@@ -1109,8 +1110,6 @@ class Managecampaigns extends CI_Controller {
                     $brand = mt_rand(0, count($photo) - 1);
                     $imgRand = $photo[$brand];
                 /*End get post from post id*/
-                    $pConent = json_decode($getPost[0]->p_conent);
-                    $pOption = json_decode($getPost[0]->p_schedule);
                     $links = $pConent->link;
                     $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
                     $thai_title = $getPost[0]->p_name;
