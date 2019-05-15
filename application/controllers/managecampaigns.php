@@ -318,15 +318,12 @@ class Managecampaigns extends CI_Controller {
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
             if(!empty($postAto)) {
-                $autopost = json_decode($autoData[0]->c_value);
-                if($autopost->autopost == 1) {
-                    if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
-                       echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
-                    } else {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
-                    }
-                    //localhost/autopost/managecampaigns/autopost?start=1
+                if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                   echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
+                } else {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                 }
+                //localhost/autopost/managecampaigns/autopost?start=1
             }
         }
         /*end check auto post*/
