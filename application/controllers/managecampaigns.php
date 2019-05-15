@@ -316,16 +316,10 @@ class Managecampaigns extends CI_Controller {
 
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
-            $whereShowAuto = array(
-                'c_name'      => 'autopost',
-                'c_key'     => $log_id,
-            );
-            $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
-            if(!empty($autoData[0])) {
+            $postAto = $this->Mod_general->getActionPost();
+            if(!empty($postAto)) {
                 $autopost = json_decode($autoData[0]->c_value);
                 if($autopost->autopost == 1) {
-                    echo date('H');
-                    echo '<br/>';
                     if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     } else {
@@ -883,6 +877,7 @@ class Managecampaigns extends CI_Controller {
             $file_tmp_name = $fbuids . '_tmp_action.json';
             $this->json($tmp_path,$file_tmp_name, $schedule);
             /*End save tmp data post*/
+            $postAto = $this->Mod_general->getActionPost();
             if (!empty($link)) {
 
                 for ($i = 0; $i < count($link); $i++) {
@@ -1020,14 +1015,13 @@ class Managecampaigns extends CI_Controller {
                         exit();
                     }
                     /*End get blog link from database*/
-
                     if(empty($post_by_manaul)) {
                         /*post by Google API*/
-                        $setUrl = base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1';
+                        $setUrl = base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost='.$postAto;
                         //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blogLink.'&autopost=1";}, 300 );</script>';
                         redirect($setUrl); 
                     } else {
-                        $setUrl = base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand;
+                        $setUrl = base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost='.$postAto.'&blog_link_id='.$blogRand;
                         //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blogLink.'&autopost=1&blog_link_id='.$blogRand.'";}, 300 );</script>'; 
                             redirect($setUrl); 
                     }
@@ -1223,7 +1217,7 @@ class Managecampaigns extends CI_Controller {
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
                                             $p_id = $this->input->get('pid');
-                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id=";}, 30 );</script>';
+                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id=";}, 30 );</script>';
                                             exit();
                                         }
                                         $link = @$blogData->url;
@@ -1283,7 +1277,7 @@ class Managecampaigns extends CI_Controller {
                                             $DataBlogLink = $this->postBlogger($dataContent);
                                             if(!empty($DataBlogLink['error'])) {
                                                 //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
                                                 exit();
                                             }
                                             $link = $DataBlogLink->url;
@@ -1350,7 +1344,7 @@ class Managecampaigns extends CI_Controller {
                             $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
                         if(count($postsLoop)>5) {
                            //echo $showHTHM;
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost=1&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
                             die;
                         } else {
                             echo $showHTHM;

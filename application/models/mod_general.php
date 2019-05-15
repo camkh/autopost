@@ -1603,5 +1603,24 @@ public function get_video_id($param, $videotype = '')
     function get_bitly_short_url($url, $login, $appkey, $format = 'txt') {
         $connectURL = 'http://api.bit.ly/v3/shorten?login=' . $login . '&apiKey=' . $appkey . '&uri=' . urlencode ( $url ) . '&format=' . $format;
         return $this->curl_get_result ( $connectURL );
+    }
+
+    function getActionPost()
+    {
+        $log_id = $this->session->userdata ( 'user_id' );
+        $sid = $this->session->userdata ( 'sid' );
+        $whereShowAuto = array(
+            'c_name'      => 'autopost',
+            'c_key'     => $log_id,
+        );
+        $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
+        if(!empty($autoData[0])) {
+            $autopost = json_decode($autoData[0]->c_value);
+            if($autopost->autopost == 1) {
+                return $autopost->autopost;
+            }
+        } else {
+            return false;
+        }
     }    
 }
