@@ -1556,6 +1556,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
         /*End if random Link*/
         switch ($action) {
             case 'getpost':
+                $sid = $this->session->userdata ( 'sid' );
+                $fbUserId = $this->session->userdata('fb_user_id');
+                $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                $string = file_get_contents($tmp_path);
+                $json_a = json_decode($string);
                 /*get Post to post*/
                 $pid = @$this->input->get('pid');
                 $date = new DateTime("now");
@@ -1583,6 +1588,10 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
                 if(!empty($dataPost[0])) {
                     $PID = $dataPost[0]->p_id;
+                    if($dataPost[0]->p_post_to == 1) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        exit();
+                    }
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -1610,11 +1619,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                     }
                 } else {
-                    $sid = $this->session->userdata ( 'sid' );
-                    $fbUserId = $this->session->userdata('fb_user_id');
-                    $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
-                    $string = file_get_contents($tmp_path);
-                    $json_a = json_decode($string);
                     if(empty($pid)) {
                         $where_Pshare = array (
                             'u_id' => $sid,
