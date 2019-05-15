@@ -1572,7 +1572,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $where_Pshare = array (
                         'u_id' => $sid,
                         'p_status' => 1,
-                        'p_post_to' => 0,
                     );
                     // $whereShare = array (
                     //     'uid' => $log_id,
