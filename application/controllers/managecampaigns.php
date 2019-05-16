@@ -3045,7 +3045,7 @@ HTML;
                         $PostCheck = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
                         if(empty($PostCheck[0])) {
                             $y_other = json_decode($ytData->y_other);
-                            $title = $y_other->title;
+                            $title = preg_replace("/\//",'-', $y_other->title);
 
                             if(!empty($titleExcept)) {
                                 $arr = explode('|',$titleExcept);
