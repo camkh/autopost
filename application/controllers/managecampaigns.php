@@ -2507,6 +2507,13 @@ HTML;
                  break;
                  case 'autopostblog':
                     //echo '<meta http-equiv="refresh" content="30">';
+                    /*check expires_in*/
+                    if(empty($log_id)) {
+                        $setUrl = base_url().'managecampaigns?m=runout_post';
+                        redirect($setUrl);
+                    }
+                    /*End check expires_in*/
+
                     /*check auto post if set*/
                     $whereShowAuto = array(
                         'c_name'      => 'autopost',
