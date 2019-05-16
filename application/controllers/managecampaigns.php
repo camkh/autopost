@@ -3488,6 +3488,8 @@ public function imgtest()
             $data['ytdata'] = json_decode($ytdata[0]->c_value);
         } 
         /*End show youtube Channel*/
+
+        $data['postAuto'] = $this->Mod_general->getActionPost();
         
         /*delete blog data*/
         if(!empty($this->input->get('del'))) {
@@ -3830,6 +3832,27 @@ public function imgtest()
         /*End check for exist post*/
 
         $this->load->view ( 'managecampaigns/autopost', $data );
+    }
+
+    public function autoaction()
+    {
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Auto Action :: Admin Area';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('blog post', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Setting', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        $this->load->view ( 'managecampaigns/autoaction', $data );
     }
 
     public function waiting()
