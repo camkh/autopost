@@ -203,7 +203,7 @@ if(!empty($this->input->get('glogin'))) {
                     createblog();
                   }
                 }, 1000);
-            <?php endif;endif;?>
+            <?php endif;?>
             <?php if(empty($createNewBlog)):?>
                  var timeleft = 10;
             var downloadTimer = setInterval(function(){
@@ -215,7 +215,7 @@ if(!empty($this->input->get('glogin'))) {
               }
             }, 1000);
             <?php endif;?>
-        <?php endif;?>
+        <?php endif;endif;?>
         <?php if(!empty($postAuto)):
          if(!empty($this->input->get('start'))):?>
             var timeleft = 10;
