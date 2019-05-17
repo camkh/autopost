@@ -3039,9 +3039,7 @@ HTML;
                 $i = 0;
                 $dataPost = true;
                 foreach ($checkYtExist as $key => $ytData) {
-                    $i++;
-                    $contents = $aObj->getpost(1);
-                    $txt = preg_replace('/\r\n|\r/', "\n", $contents["content"][0]["content"]);                   
+                    $i++;               
                     $vid = $ytData->yid; 
                     if(strlen($vid) > 10) {
                         $whereNext = array (
@@ -3110,6 +3108,8 @@ HTML;
                                     $image = $picture;
                                 }
                             /*End upload image so server*/
+                            $contents = $aObj->getpost(1);
+                            $txt = preg_replace('/\r\n|\r/', "\n", $contents["content"][0]["content"]); 
                             $content = array (
                                 'name' => @htmlentities(htmlspecialchars(str_replace(' - YouTube', '', $contents["content"][0]["title"]))),
                                 'message' => @htmlentities(htmlspecialchars(addslashes($txt))),
