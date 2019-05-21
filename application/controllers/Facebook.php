@@ -1588,10 +1588,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
                 if(!empty($dataPost[0])) {
                     $PID = $dataPost[0]->p_id;
-                    if($dataPost[0]->p_post_to == 1) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
-                        exit();
-                    }
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -1625,7 +1621,12 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                             }
                         } else {
-                            redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                            if($dataPost[0]->p_post_to == 0) {
+                                redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                             } else if($dataPost[0]->p_post_to == 1) {
+                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                                exit();
+                            }
                         }
                     }
                 } else {

@@ -1341,7 +1341,7 @@ class Managecampaigns extends CI_Controller {
                             $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
                         if(count($postsLoop)>5) {
                            //echo $showHTHM;
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$getPost[0]->p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
                             die;
                         } else {
                             echo $showHTHM;
@@ -2552,7 +2552,7 @@ HTML;
                     $json_a = json_decode($string);
                     $where_Pshare = array (
                         'u_id' => $sid,
-                        'p_post_to' => 1,
+                        'p_status' => 1,
                     );
                     $dataPost = $this->Mod_general->select (
                         'post',
@@ -2560,7 +2560,8 @@ HTML;
                         $where_Pshare
                     );
                     if(!empty($dataPost[0])) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$dataPost[0]->p_id.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$dataPost[0]->p_id.'";}, 30 );</script>';
                         exit();
                     }
                     /*End check for exist post*/
