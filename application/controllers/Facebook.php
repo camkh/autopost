@@ -1577,6 +1577,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $where_Pshare = array (
                         'u_id' => $sid,
                         'p_status' => 1,
+                        'p_post_to' => 0,
                     );
                     // $whereShare = array (
                     //     'uid' => $log_id,
@@ -1588,6 +1589,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
                 if(!empty($dataPost[0])) {
                     $PID = $dataPost[0]->p_id;
+                    $pConent = json_decode($dataPost[0]->p_conent);
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -1616,17 +1618,29 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         $postAto = $this->Mod_general->getActionPost();
                         if(!empty($postAto)) {
                             if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
-                                redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                                if(!preg_match('/youtu/', $pConent->link)) {
+                                    redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                                } else {
+                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                                    exit();
+                                }
                             } else {
                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                             }
                         } else {
-                            if($dataPost[0]->p_post_to == 0) {
+                            if(!preg_match('/youtu/', $pConent->link)) {
                                 redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
-                             } else if($dataPost[0]->p_post_to == 1) {
+                                exit();
+                            } else {
                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
                                 exit();
                             }
+                            // if($dataPost[0]->p_post_to == 0) {
+                            //     redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                            //  } else if($dataPost[0]->p_post_to == 1) {
+                            //     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                            //     exit();
+                            // }
                         }
                     }
                 } else {
