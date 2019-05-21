@@ -1571,13 +1571,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         'p_id' => $pid,
                         'u_id' => $sid,
                         'p_status' => 1,
-                        'p_post_to' => 0,
                     );
                 } else {
                     $where_Pshare = array (
                         'u_id' => $sid,
                         'p_status' => 1,
-                        'p_post_to' => 0,
                     );
                     // $whereShare = array (
                     //     'uid' => $log_id,
@@ -1586,10 +1584,26 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     //     'social_id'=> $sid
                     // );
                 }
+                $PID = $pid = '';
+                $pData = array();
                 $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
                 if(!empty($dataPost[0])) {
-                    $PID = $dataPost[0]->p_id;
-                    $pConent = json_decode($dataPost[0]->p_conent);
+                    foreach ($dataPost as $ppost) {
+                        if($ppost->p_post_to == 0) {
+                            $PID = $pid = $ppost->p_id;
+                            $pData = $ppost;
+                            break;
+                        }
+                        if($ppost->p_post_to == 1) {
+                            $topost = $ppost->p_id;
+                            $pData = $ppost;
+                            break;
+                        }
+                    }
+                }
+
+                if(!empty($PID)) {
+                    $pConent = json_decode($pData->p_conent);
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -1644,24 +1658,34 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         }
                     }
                 } else {
-                    if(empty($pid)) {
-                        $where_Pshare = array (
-                            'u_id' => $sid,
-                            'p_post_to' => 1,
-                        );
-                        $dataPost = $this->Mod_general->select (
-                            'post',
-                            '*', 
-                            $where_Pshare
-                        );
-                        if(!empty($dataPost[0])) {
-                            $pid = $dataPost[0]->p_id;
-                        }
+                    if(!empty($topost)) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$topost.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                        exit(); 
                     }
-                    if(!empty($pid)) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$pid.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
-                        exit();
-                    }
+                   
+
+
+                    // if(empty($pid)) {
+                    //     $where_Pshare = array (
+                    //         'u_id' => $sid,
+                    //         'p_post_to' => 1,
+                    //     );
+                    //     $dataPost = $this->Mod_general->select (
+                    //         'post',
+                    //         '*', 
+                    //         $where_Pshare
+                    //     );
+                    //     if(!empty($dataPost[0])) {
+                    //         $pid = $dataPost[0]->p_id;
+                    //     }
+                    // }
+                    // if(!empty($pid)) {
+                    //     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$pid.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                    //     exit();
+                    // }
+                }
+                if(empty($dataPost[0])) {
+                    redirect(base_url() . 'managecampaigns?m=runout_post');
                 }
                 break;
              case 'wait':
@@ -1872,7 +1896,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 # code...
                 break;
         }
-        redirect(base_url() . 'managecampaigns?m=runout_post');
+        //redirect(base_url() . 'managecampaigns?m=runout_post');
         
     }
     public function share()
