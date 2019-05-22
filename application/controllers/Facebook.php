@@ -1632,12 +1632,13 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         $postAto = $this->Mod_general->getActionPost();
                         if(!empty($postAto)) {
                             if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
-                                if(!preg_match('/youtu/', $pConent->link)) {
-                                    redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
-                                } else {
-                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
-                                    exit();
-                                }
+                                redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                                // if(!preg_match('/youtu/', $pConent->link)) {
+                                //     redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
+                                // } else {
+                                //     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                                //     exit();
+                                // }
                             } else {
                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                             }
@@ -2142,6 +2143,15 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 'u_id' => $sharePost->social_id,
             );
             $sharePost->posts_list = $this->Mod_general->select ( 'post', '*', $where_so );
+
+            if(preg_match('/youtu/', $sharePost->link)) {
+                $fbUserId = $this->session->userdata('fb_user_id');
+                $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                $string = file_get_contents($tmp_path);
+                $json_a = json_decode($string);
+                $sharePost->json_a = $json_a;
+            }
+            
 
             /*End select post list from user*/
             $data['sharePost'] = $sharePost;
