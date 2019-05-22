@@ -30,6 +30,10 @@ class Home extends CI_Controller
         $licence = $this->session->userdata('licence');
         $user_id = $this->session->userdata('user_id');
         $dataLicence = $this->mod_general->select('licence','*',array('user_id'=>$user_id,'l_status'=>1));
+        $endDateStr = $dataLicence[0]->l_end_date;
+        $yourLicence = date('d-m-Y', $endDateStr);
+        $yourLicenceStr = strtotime($yourLicence);
+        $this->session->set_userdata('licence', $yourLicenceStr);
         /*end get licence*/
         $this->load->theme('layout');
         $data['title'] = 'Facebook Auto Poster 1.0';

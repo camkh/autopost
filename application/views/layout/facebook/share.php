@@ -179,14 +179,20 @@
                   clearInterval(id);
                   //complete here
                   //window.location = "share.php?do=share";
-                    <?php if(!preg_match('/youtu/', $sharePost->link)):?>
-                        <?php if(!empty($this->input->get('agent'))):?>
-                        load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
+                    <?php
+                    $today = time();
+                    if($today<$licence):?>
+                        <?php if(!preg_match('/youtu/', $sharePost->link)):?>
+                            <?php if(!empty($this->input->get('agent'))):?>
+                            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
+                            <?php else:?>
+                            load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
+                            <?php endif;?>
                         <?php else:?>
-                        load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/postToGroupByPost");
+                            window.setTimeout( function(){window.location = "<?php echo base_url();?>managecampaigns/yturl?pid=<?php echo @$pid;?>&bid=<?php echo @$sharePost->json_a->blogid;?>&action=postblog&blink=<?php @$sharePost->json_a->blogLink;?>&autopost=1";}, 0 );
                         <?php endif;?>
                     <?php else:?>
-                        window.setTimeout( function(){window.location = "<?php echo base_url();?>managecampaigns/yturl?pid=<?php echo @$pid;?>&bid=<?php echo @$sharePost->json_a->blogid;?>&action=postblog&blink=<?php @$sharePost->json_a->blogLink;?>&autopost=1";}, 0 );
+                        $('#myModal').modal('show');
                     <?php endif;?>
                     window.setTimeout( function(){
                        var id = setInterval(frame, <?php echo $styleA;?>);

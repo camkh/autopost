@@ -1558,6 +1558,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             case 'getpost':
                 $sid = $this->session->userdata ( 'sid' );
                 $fbUserId = $this->session->userdata('fb_user_id');
+                $licence = $this->session->userdata('licence');
                 $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
                 $string = file_get_contents($tmp_path);
                 $json_a = json_decode($string);
@@ -1566,6 +1567,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $date = new DateTime("now");
                 $curr_date = $date->format('Y-m-d h:i:s');
                 $sid = $this->session->userdata ( 'sid' );
+
+
                 if(!empty($pid)) {
                     $where_Pshare = array (
                         'p_id' => $pid,
@@ -1926,6 +1929,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             redirect(base_url() . 'managecampaigns?back='.urlencode(base_url() . 'Facebook/share?post=nexpost&agent='.$userAgent));
         }
         $this->session->set_userdata('sid', $sid);
+        $data['licence'] = $this->session->userdata('licence');
+
 
         $data['title'] = 'Share to Facebook';
         $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
