@@ -247,7 +247,6 @@
 			        <h4 class="modal-title" id="myModalLabel">Your licence has been expired!</h4>
 			      </div>
 			      <div class="modal-body">
-			      		<h2 class="khmer"></h2>
 			      		<p class="khmer"><span style="color: red">អូ លោកអ្នកផុតកំណត់នៃការប្រើប្រាស់តាំងតែពីថ្ងៃទី <strong><?php echo @$endDate;?></strong> ហើយ</span> សូមបន្តអាយុនៃការប្រើប្រាស់ <a href="<?php echo base_url();?>licence/add" class="btn btn-sm btn-warning pull-right">បន្តអាយុ</a></p>
 			      		<hr/>
 			        	<p>Your licence has been expired since <strong><?php echo @$endDate;?></strong><a href="<?php echo base_url();?>licence/add" class="btn btn-sm btn-warning pull-right">Renew</a></p>
@@ -264,7 +263,7 @@
 			</div>
 			<style type="text/css">
 				#blockui{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
-				.khmer{font-size:20px;font-family: Hanuman, serif!important;}
+				.khmer{font-size:150%;font-family: Hanuman, serif!important;}
 			</style>
 		</body>
 	</html>

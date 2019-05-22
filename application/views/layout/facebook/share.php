@@ -192,7 +192,8 @@
                             window.setTimeout( function(){window.location = "<?php echo base_url();?>managecampaigns/yturl?pid=<?php echo @$pid;?>&bid=<?php echo @$sharePost->json_a->blogid;?>&action=postblog&blink=<?php @$sharePost->json_a->blogLink;?>&autopost=1";}, 0 );
                         <?php endif;?>
                     <?php else:?>
-                        $('#myModal').modal('show');
+                        window.setTimeout( function(){window.location = "<?php echo base_url();?>home/index?m=no-licence&type=error";}, 1000 );
+                        //$('#myModal').modal('show');
                     <?php endif;?>
                     window.setTimeout( function(){
                        var id = setInterval(frame, <?php echo $styleA;?>);
