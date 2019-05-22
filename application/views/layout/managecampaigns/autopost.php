@@ -66,6 +66,7 @@ if(!empty($autopost->templateLink)) {
 }
 $backto = @$this->input->get('backto');
 $backto = str_replace('blog;_link_id', 'blog_link_id', $backto);
+$backto = str_replace('blink;=', 'blink=', $backto);
 $gemail = $this->session->userdata ('gemail');
 
 if(!empty($this->input->get('changeblogurl'))) {
