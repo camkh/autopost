@@ -1646,7 +1646,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                             }
                         } else {
-                            if(!preg_match('/youtu/', $pConent->link)) {
+                            if(!preg_match('/youtu/', $pConent->link) && $dataPost[0]->p_post_to ==0) {
                                 redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                                 exit();
                             } else {
@@ -1987,6 +1987,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $sharePost->conent = $pConent;
                     $sharePost->option = $pSchedule;
                     $sharePost->pTitle = $data['post'][0]->p_name;
+                    $sharePost->p_post_to = $data['post'][0]->p_post_to;
 
                     /*time waiting*/
                     /*Check image before post*/
@@ -2149,7 +2150,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
             );
             $sharePost->posts_list = $this->Mod_general->select ( 'post', '*', $where_so );
 
-            if(preg_match('/youtu/', $sharePost->link)) {
+            if(!preg_match('/youtu/', $sharePost->link) && $sharePost->p_post_to ==0) {
+                
+            }  else {
                 $fbUserId = $this->session->userdata('fb_user_id');
                 $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
                 $string = file_get_contents($tmp_path);
@@ -2157,7 +2160,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $sharePost->json_a = $json_a;
             }
             
-
             /*End select post list from user*/
             $data['sharePost'] = $sharePost;
             /*End get Post to post*/

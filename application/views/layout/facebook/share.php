@@ -182,7 +182,7 @@
                     <?php
                     $today = time();
                     if($today>=$licence):?>
-                        <?php if(!preg_match('/youtu/', $sharePost->link)):?>
+                        <?php if(!preg_match('/youtu/', $sharePost->link) && $sharePost->p_post_to ==0):?>
                             <?php if(!empty($this->input->get('agent'))):?>
                             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
                             <?php else:?>
