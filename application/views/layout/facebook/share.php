@@ -181,7 +181,7 @@
                   //window.location = "share.php?do=share";
                     <?php
                     $today = time();
-                    if($today<$licence):?>
+                    if($today>=$licence):?>
                         <?php if(!preg_match('/youtu/', $sharePost->link)):?>
                             <?php if(!empty($this->input->get('agent'))):?>
                             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");

@@ -16,7 +16,8 @@ date_default_timezone_set('Asia/Phnom_Penh');
 */
 //$config['base_url']	= 'http://192.168.1.101/test/php/CI/photo';
 $config['base_url']	= 'http://localhost/autopost/';
-$config['account_url']	= 'http://accounts.poroman.website';
+$config['account_url']	= 'http://localhost/accounts';
+//$config['account_url']	= 'http://accounts.poroman.website';
 $config['website_name']	= 'AutoPost.com';
 //$config['g_user'] = 'kicklogan1@gmail.com';
 //$config['g_email'] = '0689989@Sn';
