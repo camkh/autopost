@@ -1584,26 +1584,29 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     //     'social_id'=> $sid
                     // );
                 }
-                $PID = $pid = '';
+                $PID = $pid = $topost = '';
                 $pData = array();
                 $dataPost = $this->Mod_general->select ('post','*', $where_Pshare);
-                if(!empty($dataPost[0])) {
-                    foreach ($dataPost as $ppost) {
-                        if($ppost->p_post_to == 0) {
-                            $PID = $pid = $ppost->p_id;
-                            $pData = $ppost;
-                            break;
-                        }
-                        if($ppost->p_post_to == 1) {
-                            $topost = $ppost->p_id;
-                            $pData = $ppost;
-                            break;
-                        }
-                    }
+                // if(!empty($dataPost[0])) {
+                //     foreach ($dataPost as $ppost) {
+                //         if($ppost->p_post_to == 0) {
+                //             $PID = $pid = $ppost->p_id;
+                //             $pData = $ppost;
+                //             break;
+                //         }
+                //         if($ppost->p_post_to != 0) {
+                //             $topost = $ppost->p_id;
+                //             $pData = $ppost;
+                //             break;
+                //         }
+                //     }
+                // }
+                if(!empty($wait)) {
+                    $value = 'nexpost';
                 }
-
-                if(!empty($PID)) {
-                    $pConent = json_decode($pData->p_conent);
+                if(!empty($dataPost[0])) {
+                    $PID = $pid = $dataPost[0]->p_id;
+                    $pConent = json_decode($dataPost[0]->p_conent);
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -1625,9 +1628,6 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         $shareid = $dataShare[0]->sh_id;
                         $shOption = json_decode($dataShare[0]->sh_option);
                         $this->session->set_userdata('pid', $dataShare[0]->p_id);
-                        if(!empty($wait)) {
-                            $value = 'nexpost';
-                        }
 
                         $postAto = $this->Mod_general->getActionPost();
                         if(!empty($postAto)) {
@@ -1659,6 +1659,9 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     }
                 } else {
                     if(!empty($topost)) {
+                        $pConent = json_decode($pData->p_conent);
+                        $shOption = json_decode($pData->sh_option);
+                        redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$topost.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
                         exit(); 
                     }
