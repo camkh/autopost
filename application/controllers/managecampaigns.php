@@ -1152,7 +1152,7 @@ class Managecampaigns extends CI_Controller {
 
                         if (!preg_match('/ytimg.com/', $imgUrl)) {
                             $imgUrl = $picture;
-                        }    
+                        }  
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
                             if (!@preg_match('/imgur.com/', $fileName)) {
                                 @copy($imgUrl, $fileName);      
@@ -1165,7 +1165,7 @@ class Managecampaigns extends CI_Controller {
                                     'filter_contrast'=>$pOption->filter_contrast,
                                     'img_rotate'=>$pOption->img_rotate,
                                 );
-                                if(!empty($pOption->foldlink)) {
+                                if(!empty($pOption->foldlink) && !empty($pConent->picture)) {
                                     $image = $pConent->picture;
                                 } else {
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
@@ -1206,7 +1206,7 @@ class Managecampaigns extends CI_Controller {
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
                                 /*End upload photo first*/
-                                if(!empty($pOption->foldlink) && !preg_match('/youtu/', $pConent->link)) {
+                                if(!empty($pOption->foldlink) && !preg_match('/youtu/', $pConent->link) && !empty($pConent->mainlink)) {
                                     $link = @$pConent->mainlink;
                                 } else {
                                     if(empty($pConent->mainlink)) {
