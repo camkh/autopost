@@ -1244,6 +1244,7 @@ class Managecampaigns extends CI_Controller {
                                                 'link' => $pConent->link,
                                                 'mainlink' => $link,
                                                 'picture' => $pConent->picture,                            
+                                                'vid' => $pConent->vid,                            
                                             );
                                             $dataPostInstert = array (
                                                 Tbl_posts::conent => json_encode ( $content ),
@@ -1308,6 +1309,7 @@ class Managecampaigns extends CI_Controller {
                                             'link' => $link,
                                             'mainlink' => $mainlink,
                                             'picture' => $pConent->picture,                            
+                                            'vid' => $pConent->vid,                            
                                         );
                                         $dataPostInstert = array (
                                             Tbl_posts::conent => json_encode ( $content ),
@@ -1328,6 +1330,7 @@ class Managecampaigns extends CI_Controller {
                                     'link' => $pConent->link,
                                     'mainlink' => $mainlink,
                                     'picture' => $pConent->picture,                
+                                    'vid' => @$pConent->vid,                
                                 );
                                 $dataPostInstert = array (
                                     Tbl_posts::conent => json_encode ( $content ),
