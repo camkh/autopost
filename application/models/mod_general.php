@@ -1376,7 +1376,7 @@ public function get_video_id($param, $videotype = '')
                 /*resize image*/
                 $maxDim = 800;
                 $file_name = $imgName;
-                list($width, $height, $type, $attr) = getimagesize( $file_name );
+                list($width, $height, $type, $attr) = @getimagesize( $file_name );
                 if ( $width < $maxDim || $height < $maxDim ) {
                     $target_filename = $file_name;
                     $ratio = $width/$height;

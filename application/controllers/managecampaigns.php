@@ -1168,6 +1168,21 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($pOption->foldlink) && !empty($pConent->picture)) {
                                     $image = $pConent->picture;
                                 } else {
+                                    if ( ! function_exists( 'exif_imagetype' ) ) {
+                                        function exif_imagetype ( $filename ) {
+                                            if ( ( list($width, $height, $type, $attr) = getimagesize( $filename ) ) !== false ) {
+                                                return $type;
+                                            }
+                                        return false;
+                                        }
+                                    }
+                                    $checkImage = @exif_imagetype($fileName);
+                                    if(empty($checkImage)) {
+                                        $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
+                                        echo '<center class="khmer" style="color:red;">No Image គ្មានរូបភាព</center>';
+                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
+                                                exit();
+                                    }
                                     $images = $this->mod_general->uploadMedia($fileName,$param);
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
@@ -1194,6 +1209,7 @@ class Managecampaigns extends CI_Controller {
                                 'link' => $pConent->link,
                                 'mainlink' => $pConent->mainlink,
                                 'picture' => @$images->data->link,                            
+                                'vid' => @$pConent->vid,                            
                             );
                             $dataPostInstert = array (
                                 Tbl_posts::conent => json_encode ( $content ),
@@ -1338,7 +1354,8 @@ class Managecampaigns extends CI_Controller {
                     }                    
 
                     $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">1</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$getPost[0]->p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">0</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
-                            $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
+                            //$showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
+                        $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'";}, 30 );</script>';
                         echo $showHTHM;
                         exit();
                         // if(count($postsLoop)>5) {
@@ -1839,6 +1856,7 @@ class Managecampaigns extends CI_Controller {
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'picture' => @$thumb[$i],                            
+                            'vid' => '',                            
                     );
                     /* end data content */
                     @iconv_set_encoding("internal_encoding", "TIS-620");
