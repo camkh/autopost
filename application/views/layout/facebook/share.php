@@ -180,8 +180,7 @@
                   //complete here
                   //window.location = "share.php?do=share";
                     <?php
-                    $today = time();
-                    if($today>=$licence):?>
+                    $today = time();?>
                         <?php if(!preg_match('/youtu/', $sharePost->link) && $sharePost->p_post_to ==0):?>
                             <?php if(!empty($this->input->get('agent'))):?>
                             load_contents("http://postautofb.blogspot.com/feeds/posts/default/-/userAgentShareToGroupByID");
@@ -191,10 +190,6 @@
                         <?php else:?>
                             window.setTimeout( function(){window.location = "<?php echo base_url();?>managecampaigns/yturl?pid=<?php echo @$pid;?>&bid=<?php echo @$sharePost->json_a->blogid;?>&action=postblog&blink=<?php @$sharePost->json_a->blogLink;?>&autopost=1";}, 0 );
                         <?php endif;?>
-                    <?php else:?>
-                        window.setTimeout( function(){window.location = "<?php echo base_url();?>home/index?m=no-licence&type=error";}, 1000 );
-                        //$('#myModal').modal('show');
-                    <?php endif;?>
                     window.setTimeout( function(){
                        var id = setInterval(frame, <?php echo $styleA;?>);
                     }, 1 * 60 * 1000);
