@@ -1610,6 +1610,28 @@ class Managecampaigns extends CI_Controller {
 		$dataPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $where_so );
 		$data ['data'] = $dataPost;
 		/* end get post for each user */
+
+        if(!empty($this->input->get('bitly')) && !empty($id)) {
+            $pConent = json_decode($dataPost[0]->p_conent);
+            $updateLink = array('p_id' => $this->input->get('id'));
+            $content = array (
+                'name' => $pConent->name,
+                'message' => $pConent->message,
+                'caption' => $pConent->caption,
+                'link' => $this->input->get('bitly'),
+                'mainlink' => @$pConent->mainlink,
+                'picture' => $pConent->picture,                            
+                'vid' => $pConent->vid,                            
+            );
+            $dataPostInstert = array (
+                Tbl_posts::conent => json_encode ( $content ),
+            );
+            $upLink = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $updateLink);
+            if($upLink) {
+                //http://localhost/autopost/facebook/shareation?post=getpost&pid=2491
+                redirect(base_url() . 'facebook/shareation?post=getpost&pid='.$pid);
+            }
+        }
 		
 		/* get User for each user */
 		$where_u= array (

@@ -1610,6 +1610,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 if(!empty($dataPost[0])) {
                     $PID = $pid = $dataPost[0]->p_id;
                     $pConent = json_decode($dataPost[0]->p_conent);
+                    $pOption = json_decode($dataPost[0]->p_schedule);
+                    if($pOption->short_link==1 && !preg_match('/bit.ly/', $pConent->link)){
+                        //http://localhost/autopost/managecampaigns/autopost?bitly=1&pid=2
+                        redirect(base_url() . 'managecampaigns/autopost?bitly='.urlencode($pConent->link).'&pid='.$pid);
+                    }
                     $whereShare = array (
                         'uid' => $log_id,
                         'sh_status' => 0,
@@ -2073,9 +2078,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $link = $pConent->link . '?s=' . $uniq_id. '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1';
                 
                 //$pLink = $sharePost->link . '&g='.$sharePost->group_id.'&fb='.$this->session->userdata ( 'fb_user_id' ).'&m=1';
-                $link = $this->shorturl($link,$pSchedule->short_link);
+                //bitly shorter
+                //$link = $this->shorturl($link,$pSchedule->short_link);
 
                 /*random link and image*/
+                $sharePost->shorturl = $pSchedule->short_link;
                 if($pSchedule->random_link == 1) {                    
                     $sharePost->link = $this->randomLink($link,$pConent->picture);
                 } else {
@@ -2159,7 +2166,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 $json_a = json_decode($string);
                 $sharePost->json_a = $json_a;
             }
-            
+
             /*End select post list from user*/
             $data['sharePost'] = $sharePost;
             /*End get Post to post*/
