@@ -1701,6 +1701,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                 }
                 break;
              case 'wait':
+                echo '<meta http-equiv="refresh" content="60">';
                 $pid = (int) $this->input->get('id');
                 $sids = (int) $this->input->get('sid');
                 $suid = (int) $this->input->get('suid');
