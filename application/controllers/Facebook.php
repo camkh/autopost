@@ -1611,7 +1611,7 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     $PID = $pid = $dataPost[0]->p_id;
                     $pConent = json_decode($dataPost[0]->p_conent);
                     $pOption = json_decode($dataPost[0]->p_schedule);
-                    if($pOption->short_link==1 && !preg_match('/bit.ly/', $pConent->link)){
+                    if($pOption->short_link==1 && !preg_match('/bit.ly/', $pConent->link) && !preg_match('/youtu/', $pConent->link)  && $dataPost[0]->p_post_to ==0){
                         //http://localhost/autopost/managecampaigns/autopost?bitly=1&pid=2
                         redirect(base_url() . 'managecampaigns/autopost?bitly='.urlencode($pConent->link).'&pid='.$pid);
                     }
