@@ -246,6 +246,9 @@ class Managecampaigns extends CI_Controller {
         if(!empty($this->input->get('spam_url'))) {
             $fbUserId = $this->session->userdata ( 'sid' );
             $url = $this->input->get('spam_url');
+            if(!preg_match('/http:/', $url)) {
+                $url = 'http:'.$url;
+            }
             /*check spam link*/
             $getUrl =  @parse_url($url)["host"];
             $whereLinkSpam = array (
@@ -269,8 +272,8 @@ class Managecampaigns extends CI_Controller {
             /*End check spam link*/
 
             $this->load->library ( 'html_dom' );
-            $html = file_get_html ( $this->input->get('spam_url') );
-            $title = $html->find ( 'title', 0 )->innertext;
+            $html = @file_get_html ($url);
+            $title = @$html->find( 'title', 0 )->innertext;
             $backURL = urlencode(base_url().'facebook/shareation?post=getpost');
             $blID = false;
             if(!empty($title)) {
