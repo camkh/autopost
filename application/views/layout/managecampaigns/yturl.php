@@ -1,6 +1,19 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/wysihtml5.min.js"></script> 
 <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/plugins/blockui/jquery.blockUI.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>themes/layout/blueone/assets/js/jquery.form.js"></script>
+
+<script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/crop-upload/js/jquery.Jcrop.js"></script>
+<script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/crop-upload/js/script.js"></script>
+<link href="<?php echo base_url(); ?>themes/layout/blueone/plugins/crop-upload/css/main.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url(); ?>themes/layout/blueone/plugins/crop-upload/css/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" /> 
+
+<!-- watermaker -->
+<link rel="StyleSheet" href="<?php echo base_url(); ?>themes/layout/blueone/plugins/watermarker/watermarker.css" type="text/css">
+<script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/watermarker/watermarker.js"></script>
+<script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/watermarker/script.js"></script>
+
+<!-- End watermaker -->
 <link href="https://fonts.googleapis.com/css?family=Battambang" rel="stylesheet">
 <?php if ($this->session->userdata('user_type') != 4):
     if(!empty($data)):
@@ -37,11 +50,163 @@
         ul.wysihtml5-toolbar > li{margin:0px 5px -1px 0px!important}
         .khmer {font-family: 'Battambang';font-size: 14px!important;font-weight: 400!important;}
         .counts{color:#ff0000;}
+
+        /*upload file*/
+        .filecontainer{
+    margin: 0;
+}
+
+#postimacros label{
+    display: block;
+    max-width: 200px;
+    margin: 0 auto 15px;
+    text-align: center;
+    word-wrap: break-word;
+    color: #1a4756;
+}
+
+#postimacros .hidden, #uploadImg:not(.hidden) + label{
+    display: none;
+}
+
+#postimacros .file{
+    display: none;
+    margin: 0 auto;
+}
+
+#postimacros .upload{
+    margin-left: 5px;
+    width: 150px;
+    display: block;
+    padding: 2px 5px;
+    border: 0;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    background: #216e69;
+    color: #fff;
+    outline: none;
+    transition: .3s ease-in-out;
+    &:hover, &:focus{
+        background: #1AA39A;
+    }
+    &:active{
+        background: #13D4C8;
+        transition: .1s ease-in-out;
+    }
+
+}
+
+#postimacros img{
+    display: block;
+    margin:0;
+}
+        /*End upload file*/
+
+ /*updad with crop*/   
+ .modal-dialog {
+    z-index: 1050;
+    width: auto!important;
+    padding: 10px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.ui-widget-overlay {
+  opacity: 0.80;
+  filter: alpha(opacity=70);
+}
+.jc-dialog {
+  padding-top: 1em;
+}
+.ui-dialog p tt {
+  color: yellow;
+}
+.jcrop-light .jcrop-selection {
+  -moz-box-shadow: 0px 0px 15px #999;
+  /* Firefox */
+
+  -webkit-box-shadow: 0px 0px 15px #999;
+  /* Safari, Chrome */
+
+  box-shadow: 0px 0px 15px #999;
+  /* CSS3 */
+
+}
+.jcrop-dark .jcrop-selection {
+  -moz-box-shadow: 0px 0px 15px #000;
+  /* Firefox */
+
+  -webkit-box-shadow: 0px 0px 15px #000;
+  /* Safari, Chrome */
+
+  box-shadow: 0px 0px 15px #000;
+  /* CSS3 */
+
+}
+.jcrop-fancy .jcrop-handle.ord-e {
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-w {
+  -webkit-border-top-right-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-nw {
+  -webkit-border-bottom-right-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-ne {
+  -webkit-border-bottom-left-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-sw {
+  -webkit-border-top-right-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-se {
+  -webkit-border-top-left-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-s {
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-top-right-radius: 0px;
+}
+.jcrop-fancy .jcrop-handle.ord-n {
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+}
+.description {
+  margin: 16px 0;
+}
+.jcrop-droptarget canvas {
+  background-color: #f0f0f0;
+}   
+ /*End updad with crop*/       
+        .removediv{
+            top: 0px;
+            right: -30px;
+            width: 32px;
+        }
+        .widgets-refresh {
+            top: 37px;
+            right: -61px;
+            width: 32px;
+        }
+    .imgwrap{position: relative;}
+    .imgwrap .btn{position: absolute;top:0;right: 0}
+
+    /*watermark*/
+    .watermarker-wrapper .watermarker-container .resizer{background-image: url("<?php echo base_url();?>uploads/image/watermark/watermark/resize.png");}
+    .icon {width: 25px}
+    .icon-choose {height: 50px;cursor: pointer;border: 1px solid white;float: left;padding: 5px;}
+    .icon-choose:hover {border: 1px solid red}
+    .water-wrap {margin: 10px 5px 5px 10px;border: 1px solid #eee;padding: 3px}
+    /*End watermark*/
     </style>
+
+    <link rel="StyleSheet" href="<?php echo base_url(); ?>themes/layout/blueone/plugins/image-filter/jquery-ui.css" type="text/css">
+    <script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/image-filter/caman.full.min.js" type="text/javascript"></script>
+    <script src="<?php echo base_url(); ?>themes/layout/blueone/plugins/image-filter/jquery-ui.min.js" type="text/javascript"></script>
     <div class="page-header">
     </div>
     <div class="row">
-        <form method="post" id="validate" class="form-horizontal row-border">
+        <form method="post" id="validate" class="form-horizontal row-border" enctype="multipart/form-data">
             <div class="col-md-12">
                 <div class="widget box">
                     <div class="widget-header">
@@ -85,7 +250,7 @@
                                 </div>
 
                                 <div id="postimacros"​ class="morefield">
-                                    <div class="widget box optionBox" id="post_1">
+                                    <div class="widget box optionBox" id="post_1" data-postid="1">
                                         <div class="widget-header">                                             
                                             <h4><i class="icon-reorder"></i> Post <span class="counts">1</span></h4>
                                             <div class="toolbar no-padding"> 
@@ -109,7 +274,10 @@
                                                                         <td>
                                                                             <div class="form-group" style="margin-bottom: 3px">
                                                                                 <div class="col-md-12"> 
-                                                                                <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
+                                                                                    <div class="input-group"> 
+                                                                                        <span class="input-group-addon"><i style="color: red" class="icon-youtube-sign"></i></span> <input type="text" id="link_1" value="<?php echo @$postLink; ?>" class="form-control post-option" name="link[]" placeholder="URL" onchange="getLink(this);" /> 
+                                                                                    </div>
+                                                                                
                                                                                 <input type="hidden" value="<?php echo @$post_id; ?>" name="postid" id="postID"/>
                                                                                 <input type="hidden" value="" name="vid[]" id="vid_link_1"/>
                                                                                 </div>
@@ -127,8 +295,20 @@
                                                                                 </div>   
                                                                             </div>
                                                                         </td>
-                                                                        <td style="width: 150px;">
-                                                                            <img id="show_link_1" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/>
+                                                                        <td style="width: 150px;" data-id="1">
+                                                                            <div class="imgwrap">
+                                                                                <img id="show_link_1" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:85px;border: 1px solid #CCC;"/>
+                                                                                <a href="javascript:;" class="btn btn-xs btn-inverse" title="Edit Image" onclick="getEitImage(this);"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                                            </div>
+                                                                            <button type="button" class="btn btn-xs btn-primary pull-right" style="margin-left: 5px;width: 150px" onclick="getImage(this);">
+                                                                             <span class="khmer">ដូររូបភាព</span>
+                                                                            </button>
+                                                                            <!-- <div class="filecontainer" id="img_1" data-id='1'>
+                                                                                <div class="input">
+                                                                                    <input name="upload[]" type="file"  class="file" onchange="inputFile(this);" />
+                                                                                    <input value="ប្ដូរូបភាព" class="upload khmer" type="button" onclick="getImage(this);">
+                                                                                </div>
+                                                                            </div> -->
                                                                             <input type="hidden" id="image_link_1" value="<?php echo @$Thumbnail; ?>" class="form-control post-option" name="thumb[]" placeholder="Image url" /> 
                                                                         </td>
                                                                     </tr>
@@ -672,6 +852,7 @@
         </form>
     </div>
     <script>  
+        var num = [];
         var Apps = function () {
             return {
                 init: function () {
@@ -887,7 +1068,7 @@
                 var vid = 'vid_link_' + code;
                 var image_show = 'show_link_' + code;
                 var n = $( ".optionBox" ).length;
-              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /><input type="hidden" id="'+vid+'" value="" class="form-control post-option" name="vid[]" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
+              $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"  data-postid="'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><div class="input-group"><span class="input-group-addon"><i style="color: red" class="icon-youtube-sign"></i></span> <input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><div class="imgwrap"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><a href="javascript:;" class="btn btn-xs btn-inverse" title="Edit Image" onclick="getEitImage(this);"><i class="glyphicon glyphicon-pencil"></i></a></div><button type="button" class="btn btn-xs btn-primary pull-right" style="margin-left: 5px;width: 150px" onclick="getImage(this);"><span class="khmer">ដូររូបភាព</span></button><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /><input type="hidden" id="'+vid+'" value="" class="form-control post-option" name="vid[]" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
                 getEditor(code);
                 updateCount();
@@ -940,7 +1121,99 @@
                 //       }); 
                 // }
             });
+
+            /*upload file*/
+            var options = { 
+                beforeSubmit:  showRequest,  // pre-submit callback 
+                success:       showResponse  // post-submit callback 
+                // other available options: 
+                //url:       url         // override for form's 'action' attribute 
+                //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+                //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+                //clearForm: true        // clear all form fields after successful submit 
+                //resetForm: true        // reset the form after successful submit 
+         
+                // $.ajax options can be used here too, for example: 
+                //timeout:   3000 
+            }; 
+         
+            // bind to the form's submit event 
+            $("body").on("submit", "#upload_form", function(e){
+                e.preventDefault();
+                var form = $(e.target);
+                var id = $(e.target).data('formid');
+                var data = new FormData(form[0]);
+                if($("#image_file").length != 0) {
+                    jQuery.each(jQuery('#image_file')[0].files, function(i, file) {
+                        data.append('image_file', file);
+                    });
+                }
+                $("#blockui").show();
+                $.ajax({
+                    url: form.attr("action"),
+                    type: "POST",
+                    data: data,
+                    dataType: 'JSON',
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr) {
+                        xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                    }
+                }).done(function (data) {
+                    $("#blockui").hide();
+                    if(!data.error) {
+                        if(data.image) {
+                            var setbse = '<?php echo base_url();?>uploads/image/';
+                            $("#uploadFile #image_file").remove();
+                            $("#editimage").remove();
+                            $("#image_link_"+id).val(setbse+data.image);
+                            $("#show_link_"+id).attr("src",setbse+data.image);
+                            $("#imagewater").attr("src",setbse+data.image);
+                            $( "#imageeffect" ).clone().appendTo( ".step3" );
+                            $(".step2").hide();
+                            var image = $('#imagewater').attr('src');
+                            num.push({"mainimage":image,"value":{}});
+                            var pretty = JSON.stringify(num, undefined, 2);
+                            $('#datavalu').val(pretty);
+                            getslider();
+                        }
+                        if(data.upload) {
+                            $("#image_link_"+id).val(data.upload);
+                            $("#show_link_"+id).attr("src",data.upload);
+                            $('#cropModal').modal('hide');
+                        }
+                    }
+                });
+                // $(e.target).ajaxSubmit(options); 
+                // return false; 
+                // $.post( form.attr("action"), form.serialize(), function(res){
+                //     console.log(res);
+                // });
+            });
+            /*end upload file*/
         });
+
+        function getImage(setbtn) {
+            //$('#upload_form')[0].reset();
+            var id = $(setbtn).closest(".optionBox").data('postid');
+            setmodule(id);
+        }
+        function getEitImage(setbtn) {
+            num = [];
+            $("#uploadFile #image_file").remove();
+            var id = $(setbtn).closest(".optionBox").data('postid');
+            var img = $("#show_link_"+id).attr("src");
+            //var img = '<?php echo base_url();?>uploads/image/acd9ad73a5c77ca7d566191e10e0dc98.jpg';
+            setmodule(id);
+            ImageSelectHandler(img);
+            //setmodule(id);
+        }
+        function setmodule(id) {
+            var formhtml = '<form id="upload_form" method="post" data-formid="'+id+'" enctype="multipart/form-data" action="<?php echo base_url();?>managecampaigns/upload" class="form-horizontal row-border" > <input type="hidden" id="x1" name="x1"/> <input type="hidden" id="y1" name="y1"/> <input type="hidden" id="x2" name="x2"/> <input type="hidden" id="y2" name="y2"/> <div class="row" id="uploadFile"> <div class="col-md-12"> <fieldset> <div class="form-group"> <input type="file" name="image_file" id="image_file" onchange="fileSelectHandler()" data-style="fileinput" accept="image/*"/> <div class="error"></div></div></fieldset> </div><div class="step2"> <h2>Step2: Please select a crop region</h2> <img id="preview"/> <div class="info"> <label>File size</label> <input type="text" id="filesize" name="filesize" class="form-control input-width-small" style="display: inline-block;"/> <label>Type</label> <input type="text" id="filetype" name="filetype" class="form-control input-width-small" style="display: inline-block;"/> <label>Image dimension</label> <input type="text" id="filedim" name="filedim" class="form-control input-width-small" style="display: inline-block;"/> <label>W</label> <input type="text" id="w" name="w" class="form-control input-width-small" style="display: inline-block;"/> <label>H</label> <input type="text" id="h" name="h" class="form-control input-width-small" style="display: inline-block;"/> </div><div class="form-group fixed"> <div class="col-md-12"> <input type="submit" value="Upload" class="btn btn-primary pull-right" name="upload"/> </div></div></div><div class="step3"></div></div><div class="row" id="wrap-loading"> <div class="col-md-12"> <div id="loading"></div></div></div></form>';
+            $('#formgenerate').html(formhtml);
+            $('#cropModal').modal('show');
+        }
         function makeid() {
           var text = "";
           var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -1114,16 +1387,38 @@
             alert(11);
           clearInterval(myVar);
         }
+
+        // pre-submit callback 
+function showRequest(formData, jqForm, options) { 
+    $('#uploadFile').hide();
+    $('#wrap-loading').show();
+    $("#loading").html('<center><img src="<?php echo base_url(); ?>assets/img/upload_progress.gif" alt="Uploading...."/></center>');
+    return true; 
+} 
+ 
+// post-submit callback 
+function showResponse(responseText, statusText, xhr, $form)  { 
+    var obj = JSON.parse(responseText);
+    if (!obj.error) {
+        // $("#image-url").val(obj.image);
+        // $("#image-preview").html('<img src="' + obj.image + '" alt="Success...."/>').show();
+        // $("#photoCrop").attr("src",obj.image);
+        // $('#cropModal').modal('hide');
+        // $("#imagepost").val(obj.image);
+        // $('#uploadFile').show();
+        // $('#wrap-loading').hide();
+    }
+}
     </script>
 <!-- crop Modal -->
-<div class="modal fade khmer" id="cropModal" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+<div class="modal fade khmer" id="loginModal" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="cropModalLabel">Please Login again</h4>
+        <h4 class="modal-title" id="loginModalLabel">Please Login again</h4>
       </div>
-      <div class="modal-body bbody">
+      <div class="modal-body">
             <center><p class="khmer" style="color: red;font-size: 18px !important;">សូមមេត្តាចុចប៉ូតុង login ខាងក្រោម ចូលម្ដងទៀត មុននឹងធ្វើការប៉ុស្ដិ៍<br/>
 ព្រោះផុតកំណត់ម៉ោងនៃការប្រើគណនីរបស់ google ហើយ</p>
 <a href="<?php echo base_url();?>managecampaigns/account" target="_blank"><img src="<?php echo base_url();?>themes/layout/img/google.png"/></a><p class="khmer">ដើម្បីកុំឲ្យបាត់ទិន្នន័យដែលអ្នកបានបញ្ចូលហើយ<br/>
@@ -1132,7 +1427,409 @@
       <div class="modal-footer"><button onclick="myStopFunction()" data-dismiss="modal" class="btn btn-default" type="button">Close</button></div>
     </div>
   </div>
+</div>
+
+<!-- crop Modal -->
+<div class="modal fade khmer" id="cropModal" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="cropModalLabel">Upload</h4>
+      </div>
+      <div class="modal-body bbody" id="formgenerate">
+      </div>
+    </div>
+  </div>
 </div> 
+
+<div id="imageeffect">
+    <div class="row">
+                <div class="col-md-8">
+                    <div class="widget box"> <div class="widget-header"> <h4><i class="icon-reorder"></i> Preview</h4> </div> <div class="widget-content"> <div class="imagecontainer"><div class= "image" >
+                        <img src="<?php echo base_url();?>uploads/image/watermark/watermark/picture.jpg" id="imagewater" style="width: 400px;"/>
+                    </div></div>
+        </div> </div>
+
+                <!-- box 2 -->
+                <div class="widget box"> <div class="widget-header"> <h4><i class="icon-reorder"></i> Image filter</h4> </div> <div class="widget-content align-center"> 
+                            <div class="info form-horizontal row-border" style="margin: 0 5px;">
+                                    <div id="blur" type="range">Blur</div> 
+                                  <div id="grayscale" type="range">Grayscale</div> 
+                                  <div id="brightness" type="range">brightness</div>
+                                  <div id="contrast" type="range">contrast</div>
+                                  <div id="rotate" type="range">huerotate</div>
+                                  <div id="invert" type="range">invert</div>
+                                  <div id="opacity" type="range">opacity</div>
+                                  <div id="saturate" type="range">saturate</div>
+                                  <div id="sepia" type="range">sepia</div>
+                                  <div style="clear: both;"></div> 
+                                  <div class="form-group" style="height: 0;opacity: 0;"> <div class="col-md-12"><textarea class="form-control" id="datavalu" name="dataImageEffect" readonly></textarea></div></div>    
+                            </div>     
+                </div> </div>
+                <!-- End box 2 -->
+                </div>
+                <div class="col-md-4">
+                    <div class="widget box"> <div class="widget-header"> <h4><i class="icon-reorder"></i> Watermark</h4> </div> <div class="widget-content"> 
+                            <div class="info form-horizontal row-border" style="margin: 0 5px;">
+                                <div class="form-group">
+                                  <label class="radio-inline" style="margin-left: 5px">
+                                      <input type="radio" value="text" name="watermarkchooser" class="required" />
+                                      <img class="icon" src="<?php echo base_url();?>uploads/image/watermark/icon/text.png">
+                                  </label> 
+                                  <label class="radio-inline">
+                                      <input type="radio" value="shape" name="watermarkchooser" class="required" />
+                                      <img class="icon" src="<?php echo base_url();?>uploads/image/watermark/icon/shape.png">
+                                  </label>
+                                  <label class="radio-inline">
+                                      <input type="radio" value="sticker" name="watermarkchooser" class="required" />
+                                      <img class="icon" src="<?php echo base_url();?>uploads/image/watermark/icon/heart-smiley-icon.png">
+                                  </label>
+                                  <div id="choosetext" class="water-wrap" style="display: none;">
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/comeback.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/houy-ded.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/houy-dung.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/who-wait-for.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/harry-up.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/get-it.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/dont-giveup.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/all.png"/>
+                                    <div style="clear: both;"></div>
+                                  </div>
+                                  <div id="chooseshape" class="water-wrap" style="display: none;">
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/sqare.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/ellipse.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/roundel.png"/>
+                                    <div style="clear: both;"></div>
+                                  </div>
+                                  <div id="choosesticker" class="water-wrap" style="display: none;">
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-right.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-left.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/folded-hand.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/Tongue_Out_Emoji_with_Winking_Eye.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/1.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/Blushing.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/heart-smiley-heart.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes-heart.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/so-good.png"/>
+                                    <div style="clear: both;"></div>
+                                  </div>
+                                </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">X:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="posx"></div> </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">Y:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="posy"></div> </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">Width:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="width"></div> </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">Height:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="height"></div> </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">Mouse X:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="mousex"></div> </div>
+
+                                <div class="form-group"> <label class="col-md-4 control-label">Mouse Y:</label> <div class="col-md-8"><input type="text" name="regular" class="form-control" id="mousey"></div> </div>        
+                            </div>     
+                </div> </div>
+
+
+                </div>
+                <div style="clear: both;"></div>
+                <div class="form-actions"> <input name="step3" value="Ok" class="btn btn-primary pull-right" type="submit"></div>
+    </div>
+</div>
+
+<!-- image watermarker and effect -->
+<script>
+        /*watermarker*/
+        
+        (function(){
+          
+
+            // $(document).on("mousemove",function(event){
+            //     $("#mousex").val(event.pageX);
+            //     $("#mousey").val(event.pageY);
+            // });
+            $(document).on("click","input[name=watermarkchooser]", function(){
+                var value = $(this).val();
+                switch (value) {
+                  case 'text':
+                    $("#chooseshape").slideUp();
+                    $("#choosesticker").slideUp();
+                    $("#choosetext").slideDown();
+                    break;
+                  case 'shape':
+                    $("#choosesticker").hide();
+                    $("#choosetext").hide();
+                    $("#chooseshape").slideDown();
+                    break;
+                  case 'sticker':
+                    $("#chooseshape").hide();
+                    $("#choosetext").hide();
+                    $("#choosesticker").slideDown();
+                    break; 
+                }
+            });
+
+            $(document).on("click",".icon-choose", function(){
+                var value = $(this).attr('src');
+                getwatermark(value);
+            });
+
+
+            $('select[name=watermark]').change(function () {
+                var value = $(this).val();
+                var setnum = make_id(10);
+                if(value!='') {
+                    num.push({"watermark":setnum, "value":{"image":value,"x1":0,"y1":0,"w":0,"h":0}});
+                    setwatermarker(value,setnum);
+                }
+            });
+        })();
+        
+function getattra(e) {
+    $("#singerimageFist").val(e);
+    $("#imageviewFist").html('<img style="width:100%;height:55px;" src="' + e + '"/>');
+}
+function getwatermark(value) {
+  var setnum = make_id(10);
+  if(value!='') {
+      num.push({"watermark":setnum, "value":{"image":value,"x1":0,"y1":0,"w":0,"h":0}});
+      setwatermarker(value,setnum);
+  }
+}
+function setwatermarker(image,setval) {
+    $("#imagewater").watermarker({
+        imagePath: image,
+        removeIconPath: "<?php echo base_url();?>uploads/image/watermark/watermark/close-icon.png",
+        offsetLeft:30,
+        offsetTop: 40,
+        onChange: updateCoords,
+        onInitialize: updateCoords,
+        containerClass: "myContainer imagecontainer",
+        watermarkImageClass: "myImage superImage",      
+        watermarkerClass: "js-watermark-1 js-watermark",
+        watermarkerDataId: setval,
+        data: {id: setval, "class": "superclass", pepe: "pepe"},        
+        onRemove: function(){
+            for (var i = num.length - 1; i >= 0; --i) {
+                if (num[i].watermark == setval) {
+                    num.splice(i,1);
+                }
+            }
+            if(typeof console !== "undefined" && typeof console.log !== "undefined"){
+                console.log("Removing...");
+            }
+        },
+        onDestroy: function(){
+            if(typeof console !== "undefined" && typeof console.log !== "undefined"){
+                console.log("Destroying...");   
+            }
+        }
+    });
+}
+function updateCoords (coords){
+    $("#posx").val(coords.x);
+    $("#posy").val(coords.y);
+    $("#width").val(coords.width);
+    $("#height").val(coords.height);
+    $("#opacity").val(coords.opacity);  
+    for (var i = 0; i < num.length; i++) {
+        if (num[i].watermark == coords.id) {
+            num[i].value = {"image":coords.imagePath,"x1":coords.x,"y1":coords.y,"w":coords.width,"h":coords.height};
+        }
+    }
+
+    // var image = $('#image').attr('src');
+    //var obj={"watermark":{"image":coords.imagePath,"x1":coords.x,"y1":coords.y,"w":coords.width,"h":coords.height}}
+    var pretty = JSON.stringify(num, undefined, 2);
+    $('#datavalu').val(pretty);
+}
+function make_id(length) {
+   var result           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+/*End watermarker*/
+/*filter*/
+function blur() {
+  var blur = $("#blur").slider("value");
+  var grayscale = $("#grayscale").slider("value");
+  var brightness = $("#brightness").slider("value");
+  var contrast = $("#contrast").slider("value");
+  //var rotate = $("#rotate").slider("value");
+  var invert = $("#invert").slider("value");
+  //var opacity = $("#opacity").slider("value");
+  //var saturate = $("#saturate").slider("value");
+  //var sepia = $("#sepia").slider("value");
+  $("#imagewater").css("-webkit-filter", "blur(" + blur + "px)" + "brightness(" + brightness + "%)" + "grayscale(" + grayscale + "%)" + "contrast(" + contrast + "%)" + "invert(" + invert + "%)");
+  $("#imagewater").css("filter", "blur(" + blur + "px)" + "brightness(" + brightness + "%)" + "grayscale(" + grayscale + "%)" + "contrast(" + contrast + "%)" + "invert(" + invert + "%)");
+  for (var i = 0; i < num.length; i++) {
+      if (num[i].mainimage) {
+          num[i].value = {"blur":blur,"grayscale":grayscale,"brightness":brightness,"contrast":contrast,"huerotate":rotate,"invert":invert,"opacity":opacity,"saturate":saturate,"sepia":sepia};
+      }
+  }
+  var pretty = JSON.stringify(num, undefined, 2);
+  $('#datavalu').val(pretty);
+}
+//***********SLIDERS*************//
+
+function getslider() {
+  $("#blur").slider({
+    orientation: "horizontal",
+    min: 0,
+    max: 25,
+    value: 0,
+    slide: blur,
+    change: blur
+  });
+  $("#grayscale").slider({
+    orientation: "horizontal",
+    min: 0,
+    max: 100,
+    value: 0,
+    slide: blur,
+    change: blur
+  });
+  $("#brightness").slider({
+    orientation: "horizontal",
+    min: 100,
+    max: 1000,
+    value: 100,
+    slide: blur,
+    change: blur
+  });
+
+  $("#contrast").slider({
+    orientation: "horizontal",
+    min: 0,
+    max: 1000,
+    value: 100,
+    slide: blur,
+    change: blur
+  });
+  // $("#rotate").slider({
+  //   orientation: "horizontal",
+  //   min: -180,
+  //   max: 180,
+  //   value: 0,
+  //   slide: blur,
+  //   change: blur
+  // });
+
+  // $("#saturate").slider({
+  //   orientation: "horizontal",
+  //   min: 0,
+  //   max: 100,
+  //   value: 1,
+  //   slide: blur,
+  //   change: blur
+  // });
+
+  // $("#sepia").slider({
+  //   orientation: "horizontal",
+  //   min: 0,
+  //   max: 100,
+  //   value: 0,
+  //   slide: blur,
+  //   change: blur
+  // });
+
+  // $("#opacity").slider({
+  //   orientation: "horizontal",
+  //   min: 0,
+  //   max: 100,
+  //   value: 100,
+  //   slide: blur,
+  //   change: blur
+  // });
+
+  $("#invert").slider({
+    orientation: "horizontal",
+    min: 0,
+    max: 100,
+    value: 0,
+    slide: blur,
+    change: blur
+  });
+}
+    </script>
+<style>
+        #image,#myCanvas{
+  float:left;
+}
+
+#blur,#grayscale,#brightness,#contrast,#rotate,#invert,#opacity,#saturate,#sepia{
+    width: 300px;
+    margin: 15px;
+   float:left;
+   font-size: 11px;
+ }
+ 
+ div[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 2px 0;
+}
+
+div[type=range] {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0.7px #000000, 0px 0px 1px #0d0d0d;
+  background: rgba(191, 102, 192, 0.35);
+  border-radius: 9.2px;
+  border: 0.2px solid #010101;
+}
+.ui-slider .ui-slider-handle {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 5px;
+  width: 22px;
+  border-radius: 12px;
+  background: rgba(255, 42, 109, 0.75);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 1.8px;
+}
+
+div[type=range] {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0.7px #000000, 0px 0px 1px #0d0d0d;
+  background: rgba(191, 102, 192, 0.35);
+  border-radius: 9.2px;
+  border: 0.2px solid #010101;
+}
+
+div[type=range] {
+  background: rgba(164, 68, 165, 0.35);
+  border: 0.2px solid #010101;
+  border-radius: 18.4px;
+  box-shadow: 1px 1px 0.7px #000000, 0px 0px 1px #0d0d0d;
+}
+div[type=range] {
+  background: rgba(191, 102, 192, 0.35);
+  border: 0.2px solid #010101;
+  border-radius: 18.4px;
+  box-shadow: 1px 1px 0.7px #000000, 0px 0px 1px #0d0d0d;
+}
+div[type=range] {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 5px;
+  width: 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  height: 1px;
+}
+
+</style>
+<!-- End image watermarker and effect -->
     <?php
  else:
     echo '<div class="alert fade in alert-danger" >

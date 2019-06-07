@@ -1135,7 +1135,7 @@ public function get_video_id($param, $videotype = '')
         
         if (!$this->upload->do_upload()) {
             $error = array('error' => $this->upload->display_errors());
-            
+            var_dump($error);
             $this->load->view('upload_form', $error);
         }
     }
@@ -1500,27 +1500,48 @@ public function get_video_id($param, $videotype = '')
 
                 if(empty($image)) {
                     /*upload to imgur.com*/
-                    $image = file_get_contents($imgName);
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
-                    curl_setopt($ch, CURLOPT_POST, TRUE);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    $reply = curl_exec($ch);
-                    curl_close($ch);
-                    $reply = json_decode($reply);
-                    if($reply->success) {
-                        return $reply->data->link;
-                    } else {
-                        return false;
-                    }
+                    return $this->uploadtoImgur($imgName);
+                    // $image = file_get_contents($imgName);
+                    // $ch = curl_init();
+                    // curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+                    // curl_setopt($ch, CURLOPT_POST, TRUE);
+                    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                    // curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+                    // curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+                    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    // $reply = curl_exec($ch);
+                    // curl_close($ch);
+                    // $reply = json_decode($reply);
+                    // if($reply->success) {
+                    //     return $reply->data->link;
+                    // } else {
+                    //     return false;
+                    // }
                 }
                 /*End upload*/
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+    public function uploadtoImgur($imgName)
+    {
+        $client_id = '51d22a7e4b628e4';
+        $image = file_get_contents($imgName);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $reply = curl_exec($ch);
+        curl_close($ch);
+        $reply = json_decode($reply);
+        if($reply->success) {
+            return $reply->data->link;
         } else {
             return false;
         }

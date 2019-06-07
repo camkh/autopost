@@ -873,6 +873,8 @@ class Managecampaigns extends CI_Controller {
 
             /* end data schedule */  
             /*save tmp data post*/
+            $this->load->library('upload');
+            $target_dir = './uploads/image/';
             $tmp_path = './uploads/'.$log_id.'/';
             $file_tmp_name = $fbuids . '_tmp_action.json';
             $this->json($tmp_path,$file_tmp_name, $schedule);
@@ -883,7 +885,44 @@ class Managecampaigns extends CI_Controller {
                 for ($i = 0; $i < count($link); $i++) {
 
                 /*** add data to post ***/
-                                     
+
+                    /*upload image*/
+                    //$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+
+
+                    if(!empty($_FILES['upload']['name'])) {
+                        $files = $_FILES['upload']['name'][$i];
+                        $uploadOk = 1;
+                        $setByTime = strtotime("now");
+                        $target_file = $target_dir .$setByTime. '_'.basename($files);
+                        $imageName = $setByTime. '_'.basename($files);
+                        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+                        
+                        $check = getimagesize($_FILES["upload"]["tmp_name"][$i]);
+                        if($check !== false) {
+                            $uploadOk = 1;
+                        } else {
+                            $uploadOk = 0;
+                        }
+                        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+&& $imageFileType != "gif" ) {
+                            $uploadOk = 0;
+                        }
+                        if ($uploadOk == 0) {
+                        } else {
+                            if (move_uploaded_file($_FILES["upload"]["tmp_name"][$i], $target_file)) {
+                                $uploaded = 1;
+                            } else {
+                                $uploaded = 0;
+                            }
+                        }
+                    }  
+                    if(!empty($uploaded)) {
+                        $image = 'uploads/image/'. $imageName;
+                    } else {
+                        $image = @$thumb[$i];
+                    }
+                    /*upload image*/              
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
@@ -902,7 +941,7 @@ class Managecampaigns extends CI_Controller {
                             'caption' => @$caption[$i],
                             'link' => @$link[$i],
                             'mainlink' => $mainlink,
-                            'picture' => @$thumb[$i],                            
+                            'picture' => @$image,                            
                             'vid' => @$vid,                          
                     );
                     /* end data content */
@@ -1143,19 +1182,24 @@ class Managecampaigns extends CI_Controller {
                         if(empty($imgUrl)) {
                             $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
                         }
-                        $structure = FCPATH . 'uploads/image/';
-                        if (!file_exists($structure)) {
-                            mkdir($structure, 0777, true);
-                        }
-                        $imgUrl = @str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                        if (preg_match('/uploads/', $imgUrl)) {
+                            $fileName = FCPATH .$picture;
+                        } else {
+                            $structure = FCPATH . 'uploads/image/';
+                            if (!file_exists($structure)) {
+                                mkdir($structure, 0777, true);
+                            }
+                            $imgUrl = @str_replace('maxresdefault', 'hqdefault', $imgUrl);
 
-                        $file_title = basename($imgUrl);
-                        $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
+                            $file_title = basename($imgUrl);
+
+                            $fileName = FCPATH . 'uploads/image/'.$pid.$file_title;
 
 
-                        if (!preg_match('/ytimg.com/', $imgUrl)) {
-                            $imgUrl = $picture;
-                        }  
+                            if (!preg_match('/ytimg.com/', $imgUrl)) {
+                                $imgUrl = $picture;
+                            } 
+                        } 
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
                             if (!@preg_match('/imgur.com/', $fileName)) {
                                 @copy($imgUrl, $fileName);      
@@ -1190,8 +1234,10 @@ class Managecampaigns extends CI_Controller {
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                         $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                        @unlink($fileName);
                                     } else {
                                         $image = @$images; 
+                                        @unlink($fileName);
                                     }
                                 }  
                             } else {
@@ -4893,6 +4939,275 @@ public function imgtest()
         } else {
             return false;
         }
+    }
+
+    public function upload()
+    {
+        $sResultFileName = false;
+        $iWidth = $this->input->post('w');
+        $iHeight = $this->input->post('h'); // desired image result dimensions
+        $iJpgQuality = 100;
+        $resize_to   = 800;
+        $setHeight   = 420;
+        $newName = md5(time().rand());
+        $target_dir = './uploads/image/';
+        if(!empty($_FILES["image_file"]["name"])) {
+            if (! $_FILES['image_file']['error'] && $_FILES['image_file']['size'] < 1000 * 3000) {
+                if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
+                    $sTempFileName = $target_dir . $newName;
+                    move_uploaded_file($_FILES['image_file']['tmp_name'], $sTempFileName);
+                }
+            }
+        }
+        if(!empty($this->input->post('editimage'))) {
+            $sTempFileName = $target_dir . $newName;
+            @copy($this->input->post('imageurl'), $sTempFileName);
+        }
+        if(!empty($sTempFileName)) {
+            if (file_exists($sTempFileName) && filesize($sTempFileName) > 0) {
+                @chmod($sTempFileName, 0644);
+                $aSize = getimagesize($sTempFileName); // try to obtain image info
+                if (!$aSize) {
+                    @unlink($sTempFileName);
+                    return;
+                }
+                // check for image type
+                switch($aSize[2]) {
+                    case IMAGETYPE_JPEG:
+                        $sExt = '.jpg';
+
+                        // create a new image from file 
+                        $vImg = @imagecreatefromjpeg($sTempFileName);
+                        break;
+                    /*case IMAGETYPE_GIF:
+                        $sExt = '.gif';
+
+                        // create a new image from file 
+                        $vImg = @imagecreatefromgif($sTempFileName);
+                        break;*/
+                    case IMAGETYPE_PNG:
+                        $sExt = '.png';
+
+                        // create a new image from file 
+                        $vImg = @imagecreatefrompng($sTempFileName);
+                        break;
+                    default:
+                        @unlink($sTempFileName);
+                        return;
+                }
+                // create a new true color image
+                $vDstImg = @imagecreatetruecolor( $iWidth, $iHeight );
+
+                // copy and resize part of an image with resampling
+                $x_a = $this->input->post('x1');
+                $y_a = $this->input->post('y1');
+                imagecopyresampled($vDstImg, $vImg, 0, 0, (int)$x_a, (int)$y_a, $iWidth, $iHeight, (int)$iWidth, (int)$iHeight);
+
+                // define a result image filename
+                $sResultFileName = $sTempFileName . $sExt;
+
+                // output image to file
+                imagejpeg($vDstImg, $sResultFileName, $iJpgQuality);
+                @unlink($sTempFileName);
+
+                if ($resize_to > 0) {
+                    /*resize image*/
+                    $maxDim = $resize_to;
+                    $file_name = $sResultFileName;
+                    list($width, $height, $type, $attr) = getimagesize( $file_name );
+                    if ( $width < $maxDim || $height < $maxDim ) {
+                        $target_filename = $file_name;
+                        $ratio = $width/$height;
+                        if( $ratio > 1) {
+                            $new_width = $maxDim;
+                            $new_height = $maxDim/$ratio;
+                        } else {
+                            $new_width = $maxDim*$ratio;
+                            $new_height = $maxDim;
+                        }
+
+                        $src = imagecreatefromstring( file_get_contents( $file_name ) );
+                        $dst = imagecreatetruecolor( $new_width, $setHeight );
+                        imagecopyresampled( $dst, $src, 0, 0, 0, 0, $new_width, $new_height, $width, $height );
+                        imagedestroy( $src );
+                        imagejpeg( $dst, $target_filename ); // adjust format as needed
+                        imagedestroy( $dst );
+                    }
+                    /*end resize image*/
+                }
+                /* get some option*/
+                if($sResultFileName) {
+                    $data = array("image" => $newName.$sExt,"error"=>false); 
+                } else {
+                    $data = array("error" => false); 
+                }       
+                echo json_encode($data);
+            }
+        }
+        if(!empty($this->input->post('dataImageEffect'))) {
+            $obj = json_decode($this->input->post('dataImageEffect'));
+            if(!empty($obj)) {
+                foreach ($obj as $key => $value) {
+                    if(!empty($value->mainimage)) {
+                        $fname = basename($value->mainimage);
+                        $file_name = $target_dir . $fname;
+                        if(!empty($value->value->brightness)) {
+                            $blur = $value->value->blur;
+                            if($blur!=0) {
+                                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                                if($im && imagefilter($im, IMG_FILTER_GAUSSIAN_BLUR))
+                                {
+                                    imagejpeg($im, $file_name);
+                                    imagedestroy($im);
+                                }
+                            }
+
+                            $grayscale = $value->value->grayscale;
+                            if($grayscale!=0) {
+                                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                                if($im && imagefilter($im, IMG_FILTER_GRAYSCALE))
+                                {
+                                    imagejpeg($im, $file_name);
+                                    imagedestroy($im);
+                                }
+                            }
+
+                            //$brightness = ($value->value->brightness / 100);
+                            $brightness = $value->value->brightness;
+                            if($brightness!=0) {
+                                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                                if($im && imagefilter($im, IMG_FILTER_BRIGHTNESS, $brightness))
+                                {
+                                    imagejpeg($im, $file_name);
+                                    imagedestroy($im);
+                                }
+                            }
+
+                            $contrast = $value->value->contrast;
+                            if($contrast!=0) {
+                                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                                if($im && imagefilter($im, IMG_FILTER_CONTRAST, $contrast))
+                                {
+                                    imagejpeg($im, $file_name, 100);
+                                    imagedestroy($im);
+                                }
+                            }
+
+                            $huerotate = $value->value->huerotate;
+                            $invert = $value->value->invert;
+                            if($invert!=0) {
+                                $im = imagecreatefromstring( file_get_contents( $file_name ) );
+                                if($im && imagefilter($im, IMG_FILTER_NEGATE))
+                                {
+                                    imagejpeg($im, $file_name, 100);
+                                    imagedestroy($im);
+                                }
+                            }
+                            $opacity = $value->value->opacity;
+                            $sepia = $value->value->sepia;
+                        }
+                    }
+
+                    if(!empty($value->watermark)) {
+                        $iname = basename($value->value->image);
+                        $filename = $target_dir . $iname;
+                        @copy($value->value->image, $filename);
+                        $x1 = $value->value->x1 * 2;
+                        $y1 = $value->value->y1 * 2;
+                        $wWidth = $value->value->w * 2;
+                        $wHeight = $value->value->h * 2;
+                        //$this->resizeimage($filename, $wWidth, $wHeight);
+                        list($width, $height, $type, $attr) = getimagesize( $filename );
+                        $src = imagecreatefrompng($filename);
+                        $dst = imagecreatetruecolor( $wWidth, $wHeight );
+                        imagealphablending($dst, false);
+                        imagesavealpha($dst,true);
+                        $transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
+                        imagefilledrectangle($dst, 0, 0, $wWidth, $wHeight, $transparent);
+                        imagecopyresampled($dst, $src, 0, 0, 0, 0, $wWidth, $wHeight, $width, $height);
+                        imagepng($dst, $filename, 0);
+                        imagedestroy( $dst );
+                        /*End resize image*/
+                        /*apply water*/
+                        $watermark = imagecreatefrompng($filename);
+                        imagealphablending($watermark, false);
+                        imagesavealpha($watermark, true);
+                        $img = imagecreatefromjpeg($file_name);
+                        $wtrmrk_w = imagesx($watermark);
+                        $wtrmrk_h = imagesy($watermark);
+                        imagecopy($img, $watermark, $x1, $y1, 0, 0, $wtrmrk_w, $wtrmrk_h);
+                        imagejpeg($img, $file_name, 100);
+                        imagedestroy($img);
+                        imagedestroy($watermark);
+                        @unlink($filename);
+                        /*End apply water*/
+                    }
+                }
+            }
+            if($file_name) {
+                /*upload to imgur.com*/
+                $images = $this->Mod_general->uploadtoImgur($file_name);
+                $image = @$images;
+                if(!$images) {
+                    $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                    $image = $this->Mod_general->uploadToImgbb($file_name, $apiKey);
+                } else {
+                    $image = @$images; 
+                }
+                if(!empty($image)) {
+                    @unlink($file_name);
+                }
+                $data = array("upload" => $image,"error"=>false); 
+            } else {
+                $data = array("error" => false); 
+            }       
+            echo json_encode($data);
+        }
+    }
+    function resizeimage($file, $w, $h, $crop=FALSE) {
+        list($width, $height) = getimagesize($file);
+        $r = $width / $height;
+        if ($crop) {
+            if ($width > $height) {
+                $width = ceil($width-($width*abs($r-$w/$h)));
+            } else {
+                $height = ceil($height-($height*abs($r-$w/$h)));
+            }
+            $newwidth = $w;
+            $newheight = $h;
+        } else {
+            if ($w/$h > $r) {
+                $newwidth = $h*$r;
+                $newheight = $h;
+            } else {
+                $newheight = $w/$r;
+                $newwidth = $w;
+            }
+        }
+        $src = imagecreatefromstring( file_get_contents( $file ) );
+        $dst = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        return $dst;
+    }
+    public function test()
+    {
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Admin Area :: Setting';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('blog post', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Setting', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        $this->load->view ( 'managecampaigns/test', $data );
     }
 }
 /* End of file welcome.php */
