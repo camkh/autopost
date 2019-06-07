@@ -1200,8 +1200,8 @@ class Managecampaigns extends CI_Controller {
                                 $imgUrl = $picture;
                             } 
                         } 
-                        if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                            if (!(preg_match('/imgur.com/', $fileName) || preg_match('/imgbb.com/', $fileName))) {
+                        if(!preg_match('/blogspot.com/', $imgUrl) || !preg_match('/googleusercontent.com/', $imgUrl)) {
+                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl))) {
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
                                     'btnplayer'=>$pOption->btnplayer,
