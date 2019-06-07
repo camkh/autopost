@@ -1535,6 +1535,10 @@ function showResponse(responseText, statusText, xhr, $form)  {
                                     <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes.png"/>
                                     <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes-heart.png"/>
                                     <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/so-good.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/like.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/like-left.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/like-hand-right.png"/>
+                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/like-hand-left.png"/>
                                     <div style="clear: both;"></div>
                                   </div>
                                 </div>
