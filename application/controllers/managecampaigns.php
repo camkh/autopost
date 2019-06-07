@@ -1201,7 +1201,7 @@ class Managecampaigns extends CI_Controller {
                             } 
                         } 
                         if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                            if (!@preg_match('/imgur.com/', $fileName)) {
+                            if (!(preg_match('/imgur.com/', $fileName) || preg_match('/imgbb.com/', $fileName))) {
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
                                     'btnplayer'=>$pOption->btnplayer,
