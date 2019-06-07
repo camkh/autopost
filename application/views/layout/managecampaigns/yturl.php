@@ -176,7 +176,8 @@
 }
 .jcrop-droptarget canvas {
   background-color: #f0f0f0;
-}   
+}  
+.tooltip {font-family: 'Battambang';font-size: 14px!important;font-weight: 400!important;} 
  /*End updad with crop*/       
         .removediv{
             top: 0px;
@@ -1177,6 +1178,7 @@
                             var pretty = JSON.stringify(num, undefined, 2);
                             $('#datavalu').val(pretty);
                             getslider();
+                            $('.bs-tooltip').tooltip();
                         }
                         if(data.upload) {
                             $("#image_link_"+id).val(data.upload);
@@ -1486,33 +1488,46 @@ function showResponse(responseText, statusText, xhr, $form)  {
                                       <img class="icon" src="<?php echo base_url();?>uploads/image/watermark/icon/heart-smiley-icon.png">
                                   </label>
                                   <div id="choosetext" class="water-wrap" style="display: none;">
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/comeback.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/houy-ded.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/houy-dung.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/who-wait-for.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/harry-up.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/get-it.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/dont-giveup.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/text/all.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="មកដល់ហើយ" src="<?php echo base_url();?>uploads/image/watermark/text/comeback.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ឆ្នោតមកក្ដៅៗ" src="<?php echo base_url();?>uploads/image/watermark/text/houy-ded.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ឆ្នោតល្បី" src="<?php echo base_url();?>uploads/image/watermark/text/houy-dung.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="លេខមកក្ដៅៗ" src="<?php echo base_url();?>uploads/image/watermark/text/lek-ded.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="លេខកំពុងល្បី" src="<?php echo base_url();?>uploads/image/watermark/text/lek-kamlang-dang.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ខ្ញុំបង្ហោះឲ្យហើយណា!" src="<?php echo base_url();?>uploads/image/watermark/text/post-now.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="សេវទុកទៅ" src="<?php echo base_url();?>uploads/image/watermark/text/save-it.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="អ្នកណាមានលេខនេះខ្លះ?" src="<?php echo base_url();?>uploads/image/watermark/text/who-have-this.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="អ្នកណាគេកំពុងរង់ចាំ" src="<?php echo base_url();?>uploads/image/watermark/text/who-wait-for.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="មិនបាច់ចាំទេ" src="<?php echo base_url();?>uploads/image/watermark/text/harry-up.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="លេខបែកធ្លាយ" src="<?php echo base_url();?>uploads/image/watermark/text/get-it.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="អ្នកជំពាក់ធនាគារច្រើន ហាមរំលង" src="<?php echo base_url();?>uploads/image/watermark/text/dont-giveup.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ត្រូវមកច្រើនដងហើយ" src="<?php echo base_url();?>uploads/image/watermark/text/all.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="លេខ២ខ្ទង់ត្រង់ៗ" src="<?php echo base_url();?>uploads/image/watermark/text/2-trong.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="លេខ៣ខ្ទង់ត្រង់ៗ" src="<?php echo base_url();?>uploads/image/watermark/text/3-rong.png"/>
                                     <div style="clear: both;"></div>
                                   </div>
                                   <div id="chooseshape" class="water-wrap" style="display: none;">
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/sqare.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/ellipse.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/shapes/roundel.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសបែបជ្រុង" src="<?php echo base_url();?>uploads/image/watermark/shapes/sqare.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសបែបរង្វង់" src="<?php echo base_url();?>uploads/image/watermark/shapes/ellipse.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសរង្វង់បែបដៃ" src="<?php echo base_url();?>uploads/image/watermark/shapes/roundel.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសព្រួញ" src="<?php echo base_url();?>uploads/image/watermark/shapes/blue-point-l.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសព្រួញ" src="<?php echo base_url();?>uploads/image/watermark/shapes/blue-point-r.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសព្រួញ" src="<?php echo base_url();?>uploads/image/watermark/shapes/point-left.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសព្រួញ" src="<?php echo base_url();?>uploads/image/watermark/shapes/point-right.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសបិទអក្សរឬជ្រុង" src="<?php echo base_url();?>uploads/image/watermark/shapes/sqare-white.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="គូសបិទអក្សរឬជ្រុង" src="<?php echo base_url();?>uploads/image/watermark/shapes/blur.png"/>
                                     <div style="clear: both;"></div>
                                   </div>
                                   <div id="choosesticker" class="water-wrap" style="display: none;">
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-right.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-left.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/folded-hand.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/emj/Tongue_Out_Emoji_with_Winking_Eye.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/1.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/Blushing.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/heart-smiley-heart.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes-heart.png"/>
-                                    <img class="icon-choose" src="<?php echo base_url();?>uploads/image/watermark/stickers/so-good.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-right.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/emj/pointing-finger-left.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/emj/folded-hand.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/emj/Tongue_Out_Emoji_with_Winking_Eye.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/1.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/Blushing.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/heart-smiley-heart.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/love-eyes-heart.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចលើវា ដើម្បីយក" src="<?php echo base_url();?>uploads/image/watermark/stickers/so-good.png"/>
                                     <div style="clear: both;"></div>
                                   </div>
                                 </div>
