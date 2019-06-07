@@ -102,7 +102,9 @@
     margin:0;
 }
         /*End upload file*/
-
+/*watermark*/
+.water-wrap {max-height: 350px;overflow-y: auto;}
+/*End watermark*/
  /*updad with crop*/   
  .modal-dialog {
     z-index: 1050;
@@ -1503,6 +1505,11 @@ function showResponse(responseText, statusText, xhr, $form)  {
                                     <img class="icon-choose bs-tooltip"  data-original-title="ត្រូវមកច្រើនដងហើយ" src="<?php echo base_url();?>uploads/image/watermark/text/all.png"/>
                                     <img class="icon-choose bs-tooltip"  data-original-title="លេខ២ខ្ទង់ត្រង់ៗ" src="<?php echo base_url();?>uploads/image/watermark/text/2-trong.png"/>
                                     <img class="icon-choose bs-tooltip"  data-original-title="លេខ៣ខ្ទង់ត្រង់ៗ" src="<?php echo base_url();?>uploads/image/watermark/text/3-rong.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="កុំអាលថយ" src="<?php echo base_url();?>uploads/image/watermark/text/back.png"/>
+                                    <div style="clear: both;"></div>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ឆ្នោតវគ្គនេះ ប៉ុស្តិ៍ឲ្យហើយ" src="<?php echo base_url();?>uploads/image/watermark/text/posted.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="យកទៅ មានហើយ!" src="<?php echo base_url();?>uploads/image/watermark/text/rich.png"/>
+                                    <img class="icon-choose bs-tooltip"  data-original-title="ចុចមើលទៅ!" src="<?php echo base_url();?>uploads/image/watermark/text/see.png"/>
                                     <div style="clear: both;"></div>
                                   </div>
                                   <div id="chooseshape" class="water-wrap" style="display: none;">
