@@ -1442,7 +1442,7 @@ function showResponse(responseText, statusText, xhr, $form)  {
     </div>
   </div>
 </div> 
-
+<div style="display: none;">
 <div id="imageeffect">
     <div class="row">
                 <div class="col-md-8">
@@ -1537,7 +1537,7 @@ function showResponse(responseText, statusText, xhr, $form)  {
                 <div class="form-actions"> <input name="step3" value="Ok" class="btn btn-primary pull-right" type="submit"></div>
     </div>
 </div>
-
+</div>
 <!-- image watermarker and effect -->
 <script>
         /*watermarker*/
