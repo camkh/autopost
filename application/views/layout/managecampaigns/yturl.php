@@ -948,7 +948,7 @@
             $('#getDataAll').click(function () {
                 if(this.checked) {
                     $.ajax({
-                        url: '<?php echo base_url();?>uploads/<?php echo $this->session->userdata ('user_id');?>/<?php echo $this->session->userdata('fb_user_id');?>_tmp_action.json',
+                        url: '<?php echo base_url();?>uploads/<?php echo $this->session->userdata ('user_id');?>/<?php echo $this->session->userdata('fb_user_id');?>_tmp_action.json?<?php echo strtotime("now");?>',
                         dataType: 'json',
                         async: false,
                         success: function(json) {
@@ -982,6 +982,7 @@
 
                                /*blog link type*/
                                $("input[name=bloglink][value="+json.blogLink+"]").prop('checked', true);
+                               $("input[name=mpoststyle][value="+json.main_post_style+"]").prop('checked', true);
                                /*userAgent*/
                                $("input[name=useragent][value="+json.useragent+"]").prop('checked', true);
                                $("input[name=shortlink][value="+json.short_link+"]").prop('checked', true);
