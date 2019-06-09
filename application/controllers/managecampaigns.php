@@ -789,6 +789,7 @@ class Managecampaigns extends CI_Controller {
             $account_gtype = $this->input->post ( 'groups' );
 
             $blogLink = $this->input->post ( 'bloglink' );
+            $mainPostStyle = $this->input->post ( 'mpoststyle' );
             $userAgent = $this->input->post ( 'useragent' );
             $checkImage = @$this->input->post ( 'cimg' );
             $btnplayer = @$this->input->post ( 'btnplayer' );
@@ -860,6 +861,7 @@ class Managecampaigns extends CI_Controller {
                 'txtadd' => @$txtadd,
                 'blogid' => $bid,
                 'blogLink' => $blogLink,
+                'main_post_style' => $mainPostStyle,
                 'userAgent' => $userAgent,
                 'checkImage' => $checkImage,
                 'ptype' => $postType,
@@ -1149,6 +1151,7 @@ class Managecampaigns extends CI_Controller {
                     $thai_title = $getPost[0]->p_name;
                     $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                    
                     $picture = $pConent->picture;
+                    $main_post_style = @$pOption->main_post_style;
 
                     /*Post to Blogger first*/
                     $vid = $this->Mod_general->get_video_id($links);
@@ -1199,8 +1202,8 @@ class Managecampaigns extends CI_Controller {
                             if (!preg_match('/ytimg.com/', $imgUrl)) {
                                 $imgUrl = $picture;
                             } 
-                        } 
-                        if(!preg_match('/blogspot.com/', $imgUrl) || !preg_match('/googleusercontent.com/', $imgUrl)) {
+                        }
+                        if(!(preg_match('/blogspot.com/', $imgUrl) || preg_match('/googleusercontent.com/', $imgUrl))) {
                             if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl))) {
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
@@ -1234,7 +1237,6 @@ class Managecampaigns extends CI_Controller {
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                         $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
-                                        @unlink($fileName);
                                     } else {
                                         $image = @$images; 
                                         @unlink($fileName);
@@ -1275,7 +1277,7 @@ class Managecampaigns extends CI_Controller {
                                     $link = @$pConent->mainlink;
                                 } else {
                                     if(empty($pConent->mainlink)) {
-                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$blink);
+                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style);
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
                                             $p_id = $this->input->get('pid');
@@ -1577,7 +1579,7 @@ class Managecampaigns extends CI_Controller {
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div id="cshow"></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 break;
             case 'link':
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div>คลิปดูวีดีโอ==>> <a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div style="text-align:center"><table width="100%" border="0"><tr><td width="50%" align="right" valign="middle"><div id="setiamgelink"></div></td><td width="50%" align="left" valign="middle"><a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></td></tr></table></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 $label = 'link';
                 $customcode = '';
                 break;

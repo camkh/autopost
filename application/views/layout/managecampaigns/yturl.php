@@ -446,6 +446,23 @@
                                     </div>
                                     <div class="widget-content">
                                         <div class="form-group">
+                                            <label class="col-md-4 control-label khmer">ម៉ូដក្នុងប៉ុស្ដិ៍ប្លុកដើម<br/>Post style?:</label>
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" name="mpoststyle" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Youtube</i>
+                                                </label> 
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="2" name="mpoststyle" class="required" required />
+                                                    <i class="subtopmenu hangmeas">With Player</i>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="link" name="mpoststyle" class="required" required />
+                                                    <i class="subtopmenu hangmeas">Link</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-md-4 control-label khmer">ប្រើប្លុកលីងគ៍<br/>with Blog link?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
