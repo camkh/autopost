@@ -449,7 +449,7 @@
                                             <label class="col-md-4 control-label khmer">ម៉ូដក្នុងប៉ុស្ដិ៍ប្លុកដើម<br/>Post style?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
-                                                    <input type="radio" value="1" name="mpoststyle" class="required" required />
+                                                    <input type="radio" value="1" name="mpoststyle" class="required" required checked />
                                                     <i class="subtopmenu hangmeas">Youtube</i>
                                                 </label> 
                                                 <label class="radio-inline">
