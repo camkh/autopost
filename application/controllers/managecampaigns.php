@@ -4377,7 +4377,7 @@ public function imgtest()
         /*End add new blog*/
 
         /*add Prefix*/
-        if ($this->input->post('Prefix')) {
+        if ($this->input->post('postprefix')) {
             $inputPre = $this->input->post('Prefix');
             $preType = 'prefix_title';
             $where_pre = array(

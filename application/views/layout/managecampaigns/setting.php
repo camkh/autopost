@@ -372,7 +372,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                         </div>                                
                                     </div>
                                     <div class="form-actions"> 
-                                        <input type="submit" value="Save" class="btn btn-primary pull-right"> 
+                                        <input type="submit" name="postprefix" value="Save" class="btn btn-primary pull-right"> 
                                     </div>
                                 </form>
                             </div>
