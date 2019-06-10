@@ -2069,7 +2069,11 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                     }
                 }
                 /*End Show data Prefix*/
-                $sharePost->title = $preRand . '<br/>' . $sharePost->pTitle . '<br/>' . $subRand;
+                if(!empty($pSchedule->prefix_title)) {
+                    $sharePost->title = $preRand . '<br/>' . $sharePost->pTitle . '<br/>' . $subRand;
+                } else {
+                    $sharePost->title = $sharePost->pTitle . '<br/>' . $subRand;
+                }
 
                 /*count share posts*/
                 $whereCount = array (
