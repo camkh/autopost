@@ -1237,6 +1237,9 @@ class Managecampaigns extends CI_Controller {
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                         $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                        if($image) {
+                                            @unlink($fileName);
+                                        }
                                     } else {
                                         $image = @$images; 
                                         @unlink($fileName);
@@ -1340,7 +1343,7 @@ class Managecampaigns extends CI_Controller {
                                             $dataContent->setdate = false;        
                                             $dataContent->editpost = false;
                                             $dataContent->pid      = 0;
-                                            $dataContent->customcode = json_encode($dataMeta);;
+                                            $dataContent->customcode = json_encode($dataMeta);
                                             $dataContent->bid     = $blogRand;
                                             $dataContent->title    = $title . ' '. $bid . '-blid-'.$blogRand;        
                                             $dataContent->bodytext = $bodytext;
@@ -3090,6 +3093,7 @@ HTML;
                 'txtadd' => $json_a->txtadd,
                 'blogid' => $json_a->blogid,
                 'blogLink' => $json_a->blogLink,
+                'main_post_style' => $json_a->main_post_style,
                 'userAgent' => $json_a->userAgent,
                 'checkImage' => $json_a->checkImage,
                 'ptype' => $json_a->ptype,
@@ -3098,6 +3102,7 @@ HTML;
                 'filter_brightness' => $json_a->filter_brightness,
                 'post_by_manaul' => $json_a->post_by_manaul,
                 'foldlink' => $json_a->foldlink,
+                'gemail' => $json_a->gemail,
             );
 
 
@@ -3212,8 +3217,12 @@ HTML;
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                         $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                        if($image) {
+                                            @unlink($fileName);
+                                        }
                                     } else {
                                         $image = @$images; 
+                                        @unlink($fileName);
                                     }                
                                 } else {
                                     $image = $picture;
