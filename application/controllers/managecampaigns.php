@@ -1579,7 +1579,7 @@ class Managecampaigns extends CI_Controller {
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div id="cshow"></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 break;
             case 'link':
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div style="text-align:center"><table width="100%" border="0"><tr><td width="50%" align="right" valign="middle"><div id="setiamgelink"></div></td><td width="50%" align="left" valign="middle"><a href="https://youtu.be/'.$vid.'" target="_blank"> https://youtu.be/'.$vid.'</a></td></tr></table></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div style="text-align:center"><table width="100%" border="0"><tr><td width="50%" align="right" valign="middle"><div id="setiamgelink"></div></td><td width="50%" align="left" valign="middle"><a href="https://youtu.be/'.$vid.'" target="_blank" class="youtube_link"> https://youtu.be/'.$vid.'</a></td></tr></table></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 $label = 'link';
                 $customcode = '';
                 break;
@@ -2326,15 +2326,24 @@ HTML;
             $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
             $vid = '';
             if (! empty ( $this->input->get('old') )) {
-                $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
-                if(empty($iframeCheck)) {
-                    $title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
+                $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
+                if (empty($checked)) {
+                    $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
+                    if(empty($iframeCheck)) {
+                        $title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
+                    } else {
+                        $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                        $html1 = file_get_html ( $iframe );
+                        $title = $html1->find ( 'title', 0 )->innertext;
+                        $vid = $iframe;
+                    }
                 } else {
-                    $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                    $iframe = @$checked->href;
                     $html1 = file_get_html ( $iframe );
-                    $title = $html1->find ( 'title', 0 )->innertext;
+                    $title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
+                    //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
                     $vid = $iframe;
-                }                
+                }             
             } else {
                 $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
                 $title1 = @$html->find ( '.post-title', 0 )->innertext;
