@@ -241,7 +241,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                 <div class="row">
                     <div class="col-md-6">
                         <!-- blog link -->
-                        <div class="widget box">
+                        <div class="widget box" id="blogLink">
                             <div class="widget-header">
                                 <h4><i class="icon-reorder"></i> Blog Link</h4>
                                 <div class="toolbar no-padding">
@@ -266,7 +266,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             foreach ($bloglinkA as $key => $linkA):?>
                                         <tr>
                                             <td><?php echo $key;?></td>
-                                            <td><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
+                                            <td><a class="blog-link" data-id="<?php echo $linkA->object_id;?>" href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
                                             <td style="width: 50%"><a href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
                                             <td><span class="label label-success"><?php echo $linkA->meta_value;?></span></td>
                                             <td>
