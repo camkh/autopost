@@ -263,7 +263,9 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                     </thead>
                                     <tbody>
                                         <?php if(!empty($bloglinkA)):
-                                            foreach ($bloglinkA as $key => $linkA):?>
+                                            foreach ($bloglinkA as $key => $linkA):
+                                                $linkAID = (int) $linkA->meta_id;
+                                                ?>
                                         <tr>
                                             <td><?php echo $key;?></td>
                                             <td><a class="blog-link" data-id="<?php echo $linkA->object_id;?>" href="https://www.blogger.com/blogger.g?blogID=<?php echo $linkA->object_id;?>#allposts/src=sidebar" target="_blank"><?php echo $linkA->object_id;?></a></td>
@@ -272,7 +274,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             <td>
                                                 <ul class="table-controls">
                                                     <li><a href="<?php echo base_url();?>managecampaigns/setting?blog_link_a=1&bid=<?php echo $linkA->object_id;?>&title=&status=1" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
-                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkA->meta_id;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $linkAID;?>&type=blog_linkA" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
                                                 </ul>
                                             </td>
                                         </tr>
