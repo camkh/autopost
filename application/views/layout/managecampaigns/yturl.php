@@ -328,6 +328,12 @@
                                                     </div>
                                                   </div>
                                             </div>
+                                            <div class="form-actions" style="margin-left: -10px;margin-right: -10px; padding: 0px">
+                                                <label class="radio-inline" style="display: inline-block;">
+                                                    <input value="1" name="foldlink" type="checkbox">
+                                                    <i class="subtopmenu hangmeas khmer">Old data /ទិន្ន័យប្លុកដើម?</i>
+                                                </label> |
+                                            </div>
                                         </div> 
                                     </div>
                                 </div>
@@ -1232,7 +1238,7 @@
             //setmodule(id);
         }
         function setmodule(id) {
-            var formhtml = '<form id="upload_form" method="post" data-formid="'+id+'" enctype="multipart/form-data" action="<?php echo base_url();?>managecampaigns/upload" class="form-horizontal row-border" > <input type="hidden" id="x1" name="x1"/> <input type="hidden" id="y1" name="y1"/> <input type="hidden" id="x2" name="x2"/> <input type="hidden" id="y2" name="y2"/> <div class="row" id="uploadFile"> <div class="col-md-12"> <fieldset> <div class="form-group"> <input type="file" name="image_file" id="image_file" onchange="fileSelectHandler()" data-style="fileinput" accept="image/*"/> <div class="error"></div></div></fieldset> </div><div class="step2"> <h2>Step2: Please select a crop region</h2> <img id="preview"/> <div class="info"> <label>File size</label> <input type="text" id="filesize" name="filesize" class="form-control input-width-small" style="display: inline-block;"/> <label>Type</label> <input type="text" id="filetype" name="filetype" class="form-control input-width-small" style="display: inline-block;"/> <label>Image dimension</label> <input type="text" id="filedim" name="filedim" class="form-control input-width-small" style="display: inline-block;"/> <label>W</label> <input type="text" id="w" name="w" class="form-control input-width-small" style="display: inline-block;"/> <label>H</label> <input type="text" id="h" name="h" class="form-control input-width-small" style="display: inline-block;"/> </div><div class="form-group fixed"> <div class="col-md-12"> <input type="submit" value="Upload" class="btn btn-primary pull-right" name="upload"/> </div></div></div><div class="step3"></div></div><div class="row" id="wrap-loading"> <div class="col-md-12"> <div id="loading"></div></div></div></form>';
+            var formhtml = '<div class="tabbable tabbable-custom tabs-below" id="tabbables"> <div class="tab-content"> <div class="tab-pane active" id="tab_2_1"><!--form--><form id="upload_form" method="post" data-formid="'+id+'" enctype="multipart/form-data" action="<?php echo base_url();?>managecampaigns/upload" class="form-horizontal row-border" > <input type="hidden" id="x1" name="x1"/> <input type="hidden" id="y1" name="y1"/> <input type="hidden" id="x2" name="x2"/> <input type="hidden" id="y2" name="y2"/> <div class="row" id="uploadFile"> <div class="col-md-12"> <fieldset> <div class="form-group"> <input type="file" name="image_file" id="image_file" onchange="fileSelectHandler()" data-style="fileinput" accept="image/*"/> <div class="error"></div></div></fieldset> </div><div class="step2"> <h2>Step2: Please select a crop region</h2> <img id="preview"/> <div class="info"> <label>File size</label> <input type="text" id="filesize" name="filesize" class="form-control input-width-small" style="display: inline-block;"/> <label>Type</label> <input type="text" id="filetype" name="filetype" class="form-control input-width-small" style="display: inline-block;"/> <label>Image dimension</label> <input type="text" id="filedim" name="filedim" class="form-control input-width-small" style="display: inline-block;"/> <label>W</label> <input type="text" id="w" name="w" class="form-control input-width-small" style="display: inline-block;"/> <label>H</label> <input type="text" id="h" name="h" class="form-control input-width-small" style="display: inline-block;"/> </div><div class="form-group fixed"> <div class="col-md-12"> <input type="submit" value="Upload" class="btn btn-primary pull-right" name="upload"/> </div></div></div><div class="step3"></div></div><div class="row" id="wrap-loading"> <div class="col-md-12"> <div id="loading"></div></div></div></form><!--end form--></div><div class="tab-pane" id="tab_2_2"><div class="form-horizontal row-border"><div class="form-group" style="margin:0"> <label class="col-md-2 control-label">ដាក់លីងគ៍/URL:</label> <div class="col-md-10"><div class="input-group"> <input type="text" name="fromlink" id="fromlink" class="form-control"> <span class="input-group-btn"> <button class="btn btn-default" type="button" id="getfromlink" style="height:32px">Get!</button> </span> </div></div> </div></div></div></div><ul class="nav nav-tabs"> <li class="active"><a href="#tab_2_1" data-toggle="tab">ពីកុំព្យូទ័រ/Upload</a></li><li><a href="#tab_2_2" data-toggle="tab">ពីវេបសាយ / URL</a></li></ul> </div>';
             $('#formgenerate').html(formhtml);
             $('#cropModal').modal('show');
         }
@@ -1588,7 +1594,15 @@ function showResponse(responseText, statusText, xhr, $form)  {
         
         (function(){
           
-
+            $(document).on("click","#getfromlink", function(){
+                var id = $("#upload_form").data('formid');
+                var img = $("#fromlink").val();
+                if(img) {
+                    $("#show_link_"+id).attr("src",img);
+                    $("#image_link_"+id).val(img);
+                    $('#cropModal').modal('hide');
+                }
+            });
             // $(document).on("mousemove",function(event){
             //     $("#mousex").val(event.pageX);
             //     $("#mousey").val(event.pageY);
