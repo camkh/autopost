@@ -1358,8 +1358,9 @@
                 // }
         }
         function getLink(e) {
-            $("#blockuis").show();
             var id = $(e).attr('id'),oldlink ='';
+            var sid = $(e).closest(".optionBox").data('postid');            
+            Apps.blockUI($("#post_"+sid));
             if($("input[name=foldlink]").is(":checked")) {
                 oldlink = $("input[name=foldlink]").val();
             }            
@@ -1367,7 +1368,6 @@
                 var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
                   .done(function(data) {
                     if ( data ) {
-                        $("#blockuis").hide();
                         var obj = JSON.parse(data);
                       $('#title_' + id).val(obj.name);
                       $('#name_' + id).val(obj.name);
