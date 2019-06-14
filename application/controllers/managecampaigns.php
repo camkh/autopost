@@ -2474,6 +2474,8 @@ HTML;
                 if(!empty($matches[0])) {
                     foreach ($matches[0] as $image) {
                         $file_title = basename($image);
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         @copy($image, $fileName);   
                         $images = $this->mod_general->uploadtoImgur($fileName);
@@ -2508,6 +2510,8 @@ HTML;
                 if(!empty($matches[0])) {
                     foreach ($matches[0] as $image) {
                         $file_title = basename($image);
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         @copy($image, $fileName);   
                         $images = $this->mod_general->uploadtoImgur($fileName);
@@ -2541,7 +2545,8 @@ HTML;
                 $matches = array_reverse($matches);
                 if(!empty($matches[0])) {
                     foreach ($matches[0] as $image) {
-                        $file_title = basename($image);
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         @copy($image, $fileName);   
                         $images = $this->mod_general->uploadtoImgur($fileName);
