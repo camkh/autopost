@@ -1359,7 +1359,7 @@
         }
         function getLink(e) {
             var id = $(e).attr('id'),oldlink ='';
-            var sid = $(e).closest(".optionBox").data('postid');            
+            var sid = $(e).closest(".optionBox").data('postid'); 
             Apps.blockUI($("#post_"+sid));
             if($("input[name=foldlink]").is(":checked")) {
                 oldlink = $("input[name=foldlink]").val();
@@ -1375,7 +1375,21 @@
                       $('#description_' + id).val(obj.description);
                       $('#image_' + id).val(obj.picture);
                       $('#show_' + id).attr("src",obj.picture);
-                      getcontent(id.replace("link_", ""));
+                      if(obj.from != 'site') {
+                        getcontent(id.replace("link_", ""));
+                      }
+                      if(obj.from == 'site') {
+                        console.log('site');
+                        $('#description_link_' + sid).data("wysihtml5").editor.setValue(obj.content);
+                        window.setTimeout(function () {
+                            Apps.unblockUI($("#post_"+sid));
+                            noty({
+                                text: "<strong>Success!</strong>",
+                                type: "success",
+                                timeout: 1000
+                            })
+                        }, 1000)
+                      }
                     }
                   })
                   .fail(function() {

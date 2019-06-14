@@ -2330,60 +2330,29 @@ HTML;
         $log_id = $this->session->userdata ( 'user_id' );
         /* Sidebar */
         if (! empty ( $url )) {
-            $this->load->library ( 'html_dom' );
-            $html = file_get_html ( $url );
-            $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
-            $vid = '';
-            if (! empty ( $this->input->get('old') )) {
-                $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
-                if (empty($checked)) {
-                    $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
-                    if(empty($iframeCheck)) {
-                        $title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
-                    } else {
-                        $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
-                        $html1 = file_get_html ( $iframe );
-                        $title = $html1->find ( 'title', 0 )->innertext;
-                        $vid = $iframe;
-                    }
-                } else {
-                    $iframe = @$checked->href;
-                    $html1 = file_get_html ( $iframe );
-                    $title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
-                    //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
-                    $vid = $iframe;
-                }             
+            preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $matches);
+            if (!empty($matches[1])) {
+                $content = $this->getContentfromYoutube($url);
+                $conent = $content->conent;
+                $vid = (!empty($matches[1]) ? $matches[1] : '');
+                $from = 'yt';
             } else {
-                $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
-                $title1 = @$html->find ( '.post-title', 0 )->innertext;
-                if (!$title) {
-                    $title = $html->find ( '.post-title a', 0 )->innertext;
-                } elseif ($title1) {
-                    $title = $html->find ( '.post-title', 0 )->innertext;
-                } else {
-                    $title = $html->find ( 'title', 0 )->innertext;
-                }
+                $content = $this->getConentFromSite($url);
+                $conent = $content->conent;
+                $conent = wordwrap($conent, 1000, '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>');
+                $from = $content->site;
+                $vid = '';
             }
-            
-            $postTitle = $title;
-            $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
-            $image_src = @$html->find ( 'link [rel=image_src]', 0 )->href;
-            if (! empty ( $image_src )) {
-                $thumb = $image_src;
-            } elseif (! empty ( $html->find ( 'meta [property=og:image]', 0 )->content )) {
-                $thumb = $html->find ( 'meta [property=og:image]', 0 )->content;
-            } else {
-                $thumb = $image_id;
-            }
-            $thumb = $this->resize_image ( $thumb );
             $data = array (
-                    'picture' => @$thumb,
-                    'name' => trim ( $title ),
-                    'message' => trim ( $title ),
-                    'caption' => trim ( $title ),
-                    'description' => trim ( $description ),
-                    'link' => $url,
-                    'vid' => $vid,
+                'picture' => @$content->thumb,
+                'name' => trim ( @$content->title ),
+                'message' => trim ( @$content->title ),
+                'caption' => trim ( @$content->title ),
+                'description' => trim ( @$content->description ),
+                'content' => trim ( @$conent ),
+                'link' => $url,
+                'vid' => $vid,
+                'from'=> $from
             );            
             if (! empty ( $data )) {
                 if(!empty($this->input->get('url'))) {
@@ -2394,9 +2363,287 @@ HTML;
             } else {
                 return null;
             }
+            // die;
+            // $description = @$html->find ( 'meta[property=og:description]', 0 )->content;
+            // $vid = '';
+            // if (! empty ( $this->input->get('old') )) {
+            //     $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
+            //     if (empty($checked)) {
+            //         $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
+            //         if(empty($iframeCheck)) {
+            //             $title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
+            //         } else {
+            //             $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+            //             $html1 = file_get_html ( $iframe );
+            //             $title = $html1->find ( 'title', 0 )->innertext;
+            //             $vid = $iframe;
+            //         }
+            //     } else {
+            //         $iframe = @$checked->href;
+            //         $html1 = file_get_html ( $iframe );
+            //         $title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
+            //         //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
+            //         $vid = $iframe;
+            //     }             
+            // } else {
+            //     $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
+            //     $title1 = @$html->find ( '.post-title', 0 )->innertext;
+            //     if (!$title) {
+            //         $title = $html->find ( '.post-title a', 0 )->innertext;
+            //     } elseif ($title1) {
+            //         $title = $html->find ( '.post-title', 0 )->innertext;
+            //     } else {
+            //         $title = $html->find ( 'title', 0 )->innertext;
+            //     }
+            // }
+            
+            // $postTitle = $title;
+            // $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
+            // $image_src = @$html->find ( 'link [rel=image_src]', 0 )->href;
+            // if (! empty ( $image_src )) {
+            //     $thumb = $image_src;
+            // } elseif (! empty ( $html->find ( 'meta [property=og:image]', 0 )->content )) {
+            //     $thumb = $html->find ( 'meta [property=og:image]', 0 )->content;
+            // } else {
+            //     $thumb = $image_id;
+            // }
+            // $thumb = $this->resize_image ( $thumb );
+            // $data = array (
+            //         'picture' => @$thumb,
+            //         'name' => trim ( $title ),
+            //         'message' => trim ( $title ),
+            //         'caption' => trim ( $title ),
+            //         'description' => trim ( $description ),
+            //         'link' => $url,
+            //         'vid' => $vid,
+            // );            
+            // if (! empty ( $data )) {
+            //     if(!empty($this->input->get('url'))) {
+            //         echo json_encode($data);
+            //         exit();
+            //     }
+            //     return $data;
+            // } else {
+            //     return null;
+            // }
         } else {
             return null;
         }
+    }
+    function getConentFromSite($url)
+    {
+        $this->load->library ( 'html_dom' );
+        $html = file_get_html ( $url );
+        $obj = new stdClass();
+        $obj->description = @$html->find ( 'meta[property=og:description]', 0 )->content;
+        $obj->title = $html->find ( 'title', 0 )->innertext;
+        $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
+        $image_src = @$html->find ( 'link [rel=image_src]', 0 )->href;
+        if (! empty ( $image_src )) {
+            $thumb = $image_src;
+        } elseif (! empty ( $html->find ( 'meta [property=og:image]', 0 )->content )) {
+            $thumb = $html->find ( 'meta [property=og:image]', 0 )->content;
+        } else {
+            $thumb = $image_id;
+        }
+        $obj->thumb = $thumb;
+        $parse = parse_url($url);
+        //echo $parse['host'];
+        switch ($parse['host']) {
+            case 'www.siamnews.com':
+                foreach($html->find('.line_view') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
+
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $content, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $file_title = basename($image);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($image, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        $content = str_replace($image,$gimage,$content);
+                    }
+                }
+                $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case '108resources.com':
+                $content = @$html->find ( '.bdaia-post-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $content, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $file_title = basename($image);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($image, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        $content = str_replace($image,$gimage,$content);
+                    }
+                }
+                $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'lahbey.com':
+                $content = @$html->find ( '.td-ss-main-content .td-post-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $content, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $file_title = basename($image);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($image, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        $content = str_replace($image,$gimage,$content);
+                    }
+                }
+                $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'deejaiplus.com':
+                foreach($html->find('.sharedaddy') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.robots-nocontent') as $item) {
+                    $item->outertext = '';
+                }
+                $content = @$html->find ( '#main .entry-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $content, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        $content = str_replace($image,$gimage,$content);
+                    }
+                }
+                $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
+            default:
+                $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
+                if (empty($checked)) {
+                    $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
+                    if(empty($iframeCheck)) {
+                        $obj->title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
+                    } else {
+                        $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                        $html1 = file_get_html ( $iframe );
+                        $obj->title = $html1->find ( 'title', 0 )->innertext;
+                        $vid = $iframe;
+                    }
+                } else {
+                    $iframe = @$checked->href;
+                    $html1 = file_get_html ( $iframe );
+                    $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
+                    //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
+                    $vid = $iframe;
+                }
+                $obj->conent = '';
+                $obj->site = 'old';
+                return $obj;
+                break;
+        }
+    }
+    function getContentfromYoutube($url)
+    {
+        $this->load->library ( 'html_dom' );
+        $html = file_get_html ( $url );
+        $obj = new stdClass();
+        $obj->description = @$html->find ( 'meta[property=og:description]', 0 )->content;
+        $obj->conent = @$html->find ( 'meta[property=og:description]', 0 )->content;
+        $title = @$html->find ( 'meta[property=og:title]', 0 )->content;                
+        $title1 = @$html->find ( '.post-title', 0 )->innertext;
+        if (!$title) {
+            $title = $html->find ( '.post-title a', 0 )->innertext;
+        } elseif ($title1) {
+            $title = $html->find ( '.post-title', 0 )->innertext;
+        } else {
+            $title = $html->find ( 'title', 0 )->innertext;
+        }
+        $obj->title = $title;
+        $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
+        $image_src = @$html->find ( 'link [rel=image_src]', 0 )->href;
+        if (! empty ( $image_src )) {
+            $thumb = $image_src;
+        } elseif (! empty ( $html->find ( 'meta [property=og:image]', 0 )->content )) {
+            $thumb = $html->find ( 'meta [property=og:image]', 0 )->content;
+        } else {
+            $thumb = $image_id;
+        }
+        $obj->thumb = $this->resize_image ( $thumb );
+        return $obj;
     }
 	function resize_image($url, $imgsize = 0) {
 		if (preg_match ( '/blogspot/', $url )) {

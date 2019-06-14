@@ -1361,7 +1361,7 @@ public function get_video_id($param, $videotype = '')
         return array('userAgent' => $u_agent, 'name' => $bname, 'version' => $version, 'platform' => $platform, 'pattern' => $pattern);
     }
 
-    public function uploadMedia($file_path='', $param=array())
+    public function uploadMedia($file_path='', $param=array(),$rezie=1)
        {
         if(!empty($file_path)) {
              if (file_exists($file_path)) {
@@ -1374,26 +1374,27 @@ public function get_video_id($param, $videotype = '')
 
                 $filetype = mime_content_type($file_path);
                 /*resize image*/
-                $maxDim = 800;
-                $file_name = $imgName;
-                list($width, $height, $type, $attr) = @getimagesize( $file_name );
-                if ( $width < $maxDim || $height < $maxDim ) {
-                    $target_filename = $file_name;
-                    $ratio = $width/$height;
-                    if( $ratio > 1) {
-                        $new_width = $maxDim;
-                        $new_height = $maxDim/$ratio;
-                    } else {
-                        $new_width = $maxDim*$ratio;
-                        $new_height = $maxDim;
-                    }
+                if(!empty($rezie)) {
+                    $file_name = $imgName;
+                    list($width, $height, $type, $attr) = @getimagesize( $file_name );
+                    if ( $width < $maxDim || $height < $maxDim ) {
+                        $target_filename = $file_name;
+                        $ratio = $width/$height;
+                        if( $ratio > 1) {
+                            $new_width = $maxDim;
+                            $new_height = $maxDim/$ratio;
+                        } else {
+                            $new_width = $maxDim*$ratio;
+                            $new_height = $maxDim;
+                        }
 
-                    $src = imagecreatefromstring( file_get_contents( $file_name ) );
-                    $dst = imagecreatetruecolor( $new_width, 415 );
-                    imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
-                    imagedestroy( $src );
-                    imagejpeg( $dst, $target_filename ); // adjust format as needed
-                    imagedestroy( $dst );
+                        $src = imagecreatefromstring( file_get_contents( $file_name ) );
+                        $dst = imagecreatetruecolor( $new_width, 415 );
+                        imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
+                        imagedestroy( $src );
+                        imagejpeg( $dst, $target_filename ); // adjust format as needed
+                        imagedestroy( $dst );
+                    }
                 }
 
                 if(!empty($param['filter_brightness'])) {
