@@ -1530,7 +1530,7 @@ public function get_video_id($param, $videotype = '')
     public function uploadtoImgur($imgName)
     {
         $client_id = '51d22a7e4b628e4';
-        $image = file_get_contents($imgName);
+        $image = @file_get_contents($imgName);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
         curl_setopt($ch, CURLOPT_POST, TRUE);

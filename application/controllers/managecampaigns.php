@@ -2339,8 +2339,6 @@ HTML;
             } else {
                 $content = $this->getConentFromSite($url);
                 $conent = $content->conent;
-                echo $conent;
-                echo '<br/>+++++++++++++<br/>';
                 require('Adsense.php');
                 $newcontent = new adinsert($conent);
                 $setConents = $newcontent->echo_content();
