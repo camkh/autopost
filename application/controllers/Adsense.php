@@ -32,7 +32,7 @@ public function __construct($content) {
 
 
 public function echo_content(){
-    echo $this->content;
+    return $this->content;
 }
 
 private function insert_ads() {
@@ -74,7 +74,7 @@ private function get_first_pos() {
             else:
                         if($wcount>10) :
                             $newstring=$string.$this->ad;
-                            echo $newstring;
+                            //echo $newstring;
                             $this->ad_pos1=1;
                             //$this->content=str_replace($string,$newstring,$this->content);
                             $this->content= preg_replace('~'.$string.'~', $newstring, $this->content, 1);
