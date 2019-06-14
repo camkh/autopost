@@ -2339,7 +2339,14 @@ HTML;
             } else {
                 $content = $this->getConentFromSite($url);
                 $conent = $content->conent;
-                $conent = wordwrap($conent, 1000, '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>');
+                echo $conent;
+                echo '<br/>+++++++++++++<br/>';
+                require('Adsense.php');
+                $newcontent = new adinsert($conent);
+                $setConents = $newcontent->echo_content();
+                $adsense = '<h1>test</h1><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+                //$setConents = str_replace('<!--adsense-->', $adsense, $setConents);
+                //$setConents = preg_replace('<div class="setAds"></div>',"ssssssssss",$setConents);
                 $from = $content->site;
                 $vid = '';
             }
@@ -2349,7 +2356,7 @@ HTML;
                 'message' => trim ( @$content->title ),
                 'caption' => trim ( @$content->title ),
                 'description' => trim ( @$content->description ),
-                'content' => trim ( @$conent ),
+                'content' => trim ( @$setConents ),
                 'link' => $url,
                 'vid' => $vid,
                 'from'=> $from
@@ -2451,6 +2458,7 @@ HTML;
         //echo $parse['host'];
         switch ($parse['host']) {
             case 'www.siamnews.com':
+                $ads = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 foreach($html->find('.line_view') as $item) {
                     $item->outertext = '';
                 }
@@ -2458,7 +2466,7 @@ HTML;
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
 
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
-                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 
                 $regex = '/src="([^"]*)"/';
                 // we want all matches
@@ -2481,7 +2489,9 @@ HTML;
                             $gimage = @$images; 
                             @unlink($fileName);
                         }
-                        $content = str_replace($image,$gimage,$content);
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
                     }
                 }
                 $obj->conent = $content;
@@ -2491,7 +2501,7 @@ HTML;
             case '108resources.com':
                 $content = @$html->find ( '.bdaia-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
-                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $regex = '/src="([^"]*)"/';
                 // we want all matches
                 preg_match_all( $regex, $content, $matches );
@@ -2513,7 +2523,9 @@ HTML;
                             $gimage = @$images; 
                             @unlink($fileName);
                         }
-                        $content = str_replace($image,$gimage,$content);
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
                     }
                 }
                 $obj->conent = $content;
@@ -2523,7 +2535,7 @@ HTML;
             case 'lahbey.com':
                 $content = @$html->find ( '.td-ss-main-content .td-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
-                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $regex = '/src="([^"]*)"/';
                 // we want all matches
                 preg_match_all( $regex, $content, $matches );
@@ -2545,7 +2557,9 @@ HTML;
                             $gimage = @$images; 
                             @unlink($fileName);
                         }
-                        $content = str_replace($image,$gimage,$content);
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
                     }
                 }
                 $obj->conent = $content;
@@ -2561,7 +2575,7 @@ HTML;
                 }
                 $content = @$html->find ( '#main .entry-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
-                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $regex = '/src="([^"]*)"/';
                 // we want all matches
                 preg_match_all( $regex, $content, $matches );
@@ -2584,7 +2598,9 @@ HTML;
                             $gimage = @$images; 
                             @unlink($fileName);
                         }
-                        $content = str_replace($image,$gimage,$content);
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
                     }
                 }
                 $obj->conent = $content;

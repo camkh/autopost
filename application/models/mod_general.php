@@ -1541,7 +1541,7 @@ public function get_video_id($param, $videotype = '')
         $reply = curl_exec($ch);
         curl_close($ch);
         $reply = json_decode($reply);
-        if($reply->success) {
+        if(!empty($reply->success)) {
             return $reply->data->link;
         } else {
             return false;
@@ -1561,7 +1561,7 @@ public function get_video_id($param, $videotype = '')
             $reply = curl_exec($ch);
             curl_close($ch);
             $reply = json_decode($reply);
-            if($reply->success) {
+            if(!empty($reply->success)) {
                 return $reply->data->image->url;
             } else {
                 return false;
