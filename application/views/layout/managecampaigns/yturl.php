@@ -1414,7 +1414,6 @@
         }
 
         function getEditor (id) {  
-             wysihtml5ParserRules.tags.script = { "remove": 0 };
             $("#description_link_" + id).wysihtml5('deepExtend', {
                 "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
                 "emphasis": true, //Italics, bold, etc. Default true
@@ -1424,7 +1423,6 @@
                 "color": false, //Button to change color of font  
                 "blockquote": false,
                 "html": true, //Button which allows you to edit the generated HTML. Default false
-                parserRules: wysihtml5ParserRules
             });
         }
         function myStopFunction() {
