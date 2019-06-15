@@ -2611,8 +2611,18 @@ HTML;
                 return $obj;
                 break;
             default:
+                $dataA = @$html->find ( '#Blog1 .post', 0 );
                 $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
-                if (empty($checked)) {
+                $regex = '~var customcode = ({(.*?)(?=};)};)~';
+                preg_match_all($regex, $dataA, $matches);
+                if(!empty($matches[0][0])) {
+                    $json = $matches[0][0];
+                    $jsonArr = explode('"', $json);
+                    $html1 = file_get_html ( 'https://www.youtube.com/watch?v='.$jsonArr[11] );
+                    $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
+                    //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
+                    $vid = $jsonArr[11];
+                } else if (empty($checked)) {
                     $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
                     if(empty($iframeCheck)) {
                         $obj->title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
