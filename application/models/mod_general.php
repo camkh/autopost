@@ -1375,6 +1375,7 @@ public function get_video_id($param, $videotype = '')
                 $filetype = mime_content_type($file_path);
                 /*resize image*/
                 if(!empty($rezie)) {
+                    $maxDim = 800;
                     $file_name = $imgName;
                     list($width, $height, $type, $attr) = @getimagesize( $file_name );
                     if ( $width < $maxDim || $height < $maxDim ) {
