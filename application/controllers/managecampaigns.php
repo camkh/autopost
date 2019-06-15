@@ -3479,7 +3479,7 @@ HTML;
                                         'filter_contrast'=>$json_a->filter_contrast,
                                         'img_rotate'=>$json_a->img_rotate,
                                     );
-                                    $images = $this->mod_general->uploadMedia($fileName,$param); 
+                                    $images = $this->mod_general->uploadMedia($fileName,$param,1); 
                                     if(!$images) {
                                         $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                         $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
