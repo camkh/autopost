@@ -928,6 +928,15 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
+
+                    if($mainPostStyle == 'tnews') {
+                        $pattern = "|(<div class=\"setAdsSection\">.*?<\/div>)|";
+                        $adsense = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+                        preg_match_all($pattern, $txt, $matches);
+                        foreach ($matches[0] as $value) {
+                            $txt = str_replace($value, $adsense, $txt);
+                        }
+                    }
                     if(!empty( $foldlink )) {
                         
                         $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
@@ -1132,8 +1141,11 @@ class Managecampaigns extends CI_Controller {
                 if(!empty($getPost[0])) {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $pOption = json_decode($getPost[0]->p_schedule);
+                    $main_post_style = @$pOption->main_post_style;
                     if (!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) {
-                        redirect(base_url().'facebook/shareation?post=getpost');
+                        if($main_post_style != 'tnews') {
+                            redirect(base_url().'facebook/shareation?post=getpost');
+                        }
                         //http://localhost/autopost/facebook/shareation?post=getpost
                     }
                     $photo = array(
@@ -1151,7 +1163,7 @@ class Managecampaigns extends CI_Controller {
                     $thai_title = $getPost[0]->p_name;
                     $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                    
                     $picture = $pConent->picture;
-                    $main_post_style = @$pOption->main_post_style;
+                    
 
                     /*Post to Blogger first*/
                     $vid = $this->Mod_general->get_video_id($links);
@@ -1159,28 +1171,32 @@ class Managecampaigns extends CI_Controller {
                     $blink = $this->input->get('blink');
 
                     // if false video
-                    if(strlen($vid) < 10) {
-                        $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
-                        /*check next post*/
-                        $whereNext = array (
-                            'user_id' => $log_id,
-                            'u_id' => $fbUserId,
-                            'p_post_to' => 1,
-                        );
-                        $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
-                        if(!empty($nextPost[0])) {
-                            $p_id = $nextPost[0]->p_id;
-                            $autopost = $this->input->get('autopost');
-                            echo '<div style="background-image:url('.$imgRand.');background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background: #000 center center no-repeat; background-size: 100%;"><center>Please wait...</center></div>';
-                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>'; 
+
+                    if($main_post_style != 'tnews') {
+                        if(strlen($vid) < 10) {
+                            $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
+                            /*check next post*/
+                            $whereNext = array (
+                                'user_id' => $log_id,
+                                'u_id' => $fbUserId,
+                                'p_post_to' => 1,
+                            );
+                            $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, 'p_id', $whereNext );
+                            if(!empty($nextPost[0])) {
+                                $p_id = $nextPost[0]->p_id;
+                                $autopost = $this->input->get('autopost');
+                                echo '<div style="background-image:url('.$imgRand.');background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background: #000 center center no-repeat; background-size: 100%;"><center>Please wait...</center></div>';
+                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$p_id.'&bid='.$bid.'&action=postblog&blink='.$blink.'&autopost='.$autopost.'";}, 30 );</script>'; 
+                            }
                         }
                     }
                     // if false video
 
 
                     /*upload photo first*/
+
                     $imgur = false;        
-                    if(!empty($vid)) {
+                    if(!empty($vid) || $main_post_style == 'tnews') {
                         $imgUrl = $picture;
                         if(empty($imgUrl)) {
                             $imgUrl = 'https://i.ytimg.com/vi/'.$vid.'/hqdefault.jpg';
@@ -1204,7 +1220,7 @@ class Managecampaigns extends CI_Controller {
                             } 
                         }
                         if(!(preg_match('/blogspot.com/', $imgUrl) || preg_match('/googleusercontent.com/', $imgUrl))) {
-                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl))) {
+                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl)) && (!preg_match("/http/", $imgUrl) && $main_post_style == 'tnews')) {
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
                                     'btnplayer'=>$pOption->btnplayer,
@@ -1591,6 +1607,11 @@ class Managecampaigns extends CI_Controller {
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div style="text-align:center"><table width="100%" border="0"><tr><td width="50%" align="right" valign="middle"><div id="setiamgelink"></div></td><td width="50%" align="left" valign="middle"><a href="https://youtu.be/'.$vid.'" target="_blank" class="youtube_link"> https://youtu.be/'.$vid.'</a></td></tr></table></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 $label = 'link';
                 $customcode = '';
+                break;
+            case 'tnews':
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$conent;
+                $customcode = '';
+                $label = 'News';
                 break;
             default:
                 $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div>Others news:</div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';

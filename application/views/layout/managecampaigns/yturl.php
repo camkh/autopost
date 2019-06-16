@@ -452,7 +452,7 @@
                                     </div>
                                     <div class="widget-content">
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label khmer">ម៉ូដក្នុងប៉ុស្ដិ៍ប្លុកដើម<br/>Post style?:</label>
+                                            <label class="col-md-4 control-label khmer">ម៉ូដក្នុងប៉ុស្ដិ៍ប្លុកដើម<br/>Content type?:</label>
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
                                                     <input type="radio" value="1" name="mpoststyle" class="required" required checked />
@@ -465,7 +465,11 @@
                                                 <label class="radio-inline">
                                                     <input type="radio" value="link" name="mpoststyle" class="required" required />
                                                     <i class="subtopmenu hangmeas">Link</i>
-                                                </label>   
+                                                </label>  
+                                                <label class="radio-inline khmer">
+                                                    <input type="radio" value="tnews" name="mpoststyle" class="required" required />
+                                                    <i class="subtopmenu hangmeas">ព័ត៌មាន / News</i>
+                                                </label>  
                                             </div>
                                         </div>
                                         <div class="form-group">

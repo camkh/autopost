@@ -10,7 +10,7 @@ class adinsert extends CI_Controller {
     var $ad_pos1=2;
     var $ad_pos2;
     var $ad_pos3;
-    var $ad= '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+    var $ad= '<div class="setAdsSection"></div>';
 
 public function __construct($content) {
 
