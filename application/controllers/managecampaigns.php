@@ -2486,13 +2486,12 @@ HTML;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $file_title = basename($image);
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
@@ -2524,13 +2523,12 @@ HTML;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $file_title = basename($image);
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
@@ -2596,13 +2594,13 @@ HTML;
                 $content = @$html->find ( '.td-ss-main-content .td-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
+
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
@@ -2638,13 +2636,13 @@ HTML;
                 $content = @$html->find ( '#main .entry-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
+
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
@@ -2695,13 +2693,13 @@ HTML;
                 $htmlContent->save();
                 $htmlContent = str_replace('data-cfsrc','src',$htmlContent);
                 $htmlContent = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $htmlContent);
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
-                preg_match_all( $regex, $htmlContent, $matches );
+                
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
@@ -2735,7 +2733,7 @@ HTML;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
 
-                
+
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
                 $ImgSrc = array_pop($matches);
