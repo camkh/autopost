@@ -128,7 +128,7 @@ private function find_ad_pos() {
             $pos1=  ($remainder_images/2)-1;
             $pos1= $this->getclosestkey($pos1, $p);
         endif;
-        $this->ad_pos2= $this->paragraphs[$pos1]['end'];
+        $this->ad_pos2= @$this->paragraphs[$pos1]['end'];
     endif;
 }
 
