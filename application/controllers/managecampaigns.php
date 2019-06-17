@@ -1609,7 +1609,11 @@ class Managecampaigns extends CI_Controller {
                 $customcode = '';
                 break;
             case 'tnews':
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$conent;
+                require('Adsense.php');
+                $newcontent = new adinsert($conent);
+                $setConents = $newcontent->echo_content();
+                
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$setConents;
                 $customcode = '';
                 $label = 'News';
                 break;
@@ -2359,10 +2363,7 @@ HTML;
                 $from = 'yt';
             } else {
                 $content = $this->getConentFromSite($url);
-                $conent = $content->conent;
-                require('Adsense.php');
-                $newcontent = new adinsert($conent);
-                $setConents = $newcontent->echo_content();
+                $setConents = $content->conent;
                 $adsense = '<h1>test</h1><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 //$setConents = str_replace('<!--adsense-->', $adsense, $setConents);
                 //$setConents = preg_replace('<div class="setAds"></div>',"ssssssssss",$setConents);
