@@ -2734,13 +2734,14 @@ HTML;
                 }
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
-                $regex = '/src="([^"]*)"/';
-                // we want all matches
+
+                
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
                 // reversing the matches array
-                $matches = array_reverse($matches);
-                if(!empty($matches[0])) {
-                    foreach ($matches[0] as $image) {
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
                         $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
