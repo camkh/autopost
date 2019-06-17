@@ -1369,7 +1369,7 @@
                 oldlink = $("input[name=foldlink]").val();
             }            
             if(e!='') {
-                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
+                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + encodeURI($(e).val()) + "&old=" + oldlink)
                   .done(function(data) {
                     if ( data ) {
                         var obj = JSON.parse(data);
