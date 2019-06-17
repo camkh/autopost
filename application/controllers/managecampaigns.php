@@ -2480,7 +2480,7 @@ HTML;
                 foreach($html->find('.line_view') as $item) {
                     $item->outertext = '';
                 }
-                $html->save();
+                //$html->save();
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
 
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
@@ -2634,6 +2634,7 @@ HTML;
                 foreach($html->find('.robots-nocontent') as $item) {
                     $item->outertext = '';
                 }
+                $html->save();
                 $content = @$html->find ( '#main .entry-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -2665,6 +2666,63 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.tnews.co.th':
+                $content = @$html->find ( '.content-main .h4-content-lh', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $htmlContent = str_get_html($content);
+                foreach($htmlContent->find('.row') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($htmlContent->find('.text-left') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($htmlContent->find('blockquote') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($htmlContent->find('#hastag-txt') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($htmlContent->find('.news-word') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($htmlContent->find('.hastag-topic') as $item) {
+                    $item->outertext = '';
+                }
+                $htmlContent->save();
+                $htmlContent = str_replace('data-cfsrc','src',$htmlContent);
+                $htmlContent = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $htmlContent);
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $htmlContent, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $htmlContent = str_replace($image,$gimage,$htmlContent);
+                        }
+                    }
+                }
+                $obj->conent = $htmlContent;
                 $obj->site = 'site';
                 return $obj;
                 break;
