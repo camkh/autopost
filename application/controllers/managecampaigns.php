@@ -2728,6 +2728,7 @@ HTML;
                 break;
             case 'www.77jowo.com':
                 $contents = @$html->find ( '#content-detail', 0 );
+                $content = '';
                 foreach($contents->find("div[class^='detail-']") as $item) {
                     $content .= $item;
                 }
