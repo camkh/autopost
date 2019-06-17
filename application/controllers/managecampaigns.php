@@ -928,15 +928,6 @@ class Managecampaigns extends CI_Controller {
 
                     /* data content */
                     $txt = preg_replace('/\r\n|\r/', "\n", $conents[$i]);
-
-                    if($mainPostStyle == 'tnews') {
-                        $pattern = "|(<div class=\"setAdsSection\">.*?<\/div>)|";
-                        $adsense = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
-                        preg_match_all($pattern, $txt, $matches);
-                        foreach ($matches[0] as $value) {
-                            $txt = str_replace($value, $adsense, $txt);
-                        }
-                    }
                     if(!empty( $foldlink )) {
                         
                         $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
@@ -1612,8 +1603,15 @@ class Managecampaigns extends CI_Controller {
                 require('Adsense.php');
                 $newcontent = new adinsert($conent);
                 $setConents = $newcontent->echo_content();
-                
-                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$setConents;
+                if($mainPostStyle == 'tnews') {
+                    $pattern = "|(<div class=\"setAdsSection\">.*?<\/div>)|";
+                    $adsense = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
+                    preg_match_all($pattern, $setConents, $matches);
+                    foreach ($matches[0] as $value) {
+                        $txt = str_replace($value, $adsense, $setConents);
+                    }
+                }
+                $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$txt;
                 $customcode = '';
                 $label = 'News';
                 break;
