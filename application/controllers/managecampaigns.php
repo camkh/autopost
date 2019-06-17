@@ -2518,6 +2518,44 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'siamvariety.com':
+                $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
+
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                
+                $regex = '/src="([^"]*)"/';
+                // we want all matches
+                preg_match_all( $regex, $content, $matches );
+                // reversing the matches array
+                $matches = array_reverse($matches);
+                if(!empty($matches[0])) {
+                    foreach ($matches[0] as $image) {
+                        $file_title = basename($image);
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($image, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->site = 'site';
+                return $obj;
+                break;
             case '108resources.com':
                 $content = @$html->find ( '.bdaia-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
