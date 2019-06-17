@@ -1603,7 +1603,7 @@ class Managecampaigns extends CI_Controller {
                 require('Adsense.php');
                 $newcontent = new adinsert($conent);
                 $setConents = $newcontent->echo_content();
-                if($mainPostStyle == 'tnews') {
+                if($blink == 'tnews') {
                     $pattern = "|(<div class=\"setAdsSection\">.*?<\/div>)|";
                     $adsense = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                     preg_match_all($pattern, $setConents, $matches);
