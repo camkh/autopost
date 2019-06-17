@@ -1161,7 +1161,7 @@ class Managecampaigns extends CI_Controller {
                     $links = $pConent->link;
                     $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
                     $thai_title = $getPost[0]->p_name;
-                    $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                    
+                    $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                   
                     $picture = $pConent->picture;
                     
 
