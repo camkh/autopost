@@ -2634,6 +2634,8 @@ HTML;
             default:
                 $dataA = @$html->find ( '#Blog1 .post', 0 );
                 $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
+                $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
+                $iframeCheckH2 = @$html->find ( '#Blog1 h2', 0 );
                 $regex = '~var customcode = ({(.*?)(?=};)};)~';
                 preg_match_all($regex, $dataA, $matches);
                 if(!empty($matches[0][0])) {
@@ -2643,22 +2645,19 @@ HTML;
                     $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
                     //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
                     $vid = $jsonArr[11];
-                } else if (empty($checked)) {
-                    $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
-                    if(empty($iframeCheck)) {
-                        $obj->title = @$html->find ( '#Blog1 h2', 0 )->innertext;        
-                    } else {
-                        $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
-                        $html1 = file_get_html ( $iframe );
-                        $obj->title = $html1->find ( 'title', 0 )->innertext;
-                        $vid = $iframe;
-                    }
-                } else {
+                } else if (!empty($checked)) {
                     $iframe = @$checked->href;
                     $html1 = file_get_html ( $iframe );
                     $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
                     //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
                     $vid = $iframe;
+                } else if(!empty($iframeCheck)) {
+                    $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
+                    $html1 = file_get_html ( $iframe );
+                    $obj->title = $html1->find ( 'title', 0 )->innertext;
+                    $vid = $iframe;
+                } else {
+                    $obj->title = @$html->find ( 'meta[property=og:title]', 0 )->content; 
                 }
                 $obj->conent = '';
                 $obj->site = 'old';
