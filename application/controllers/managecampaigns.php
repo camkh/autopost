@@ -2518,7 +2518,7 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
-            case 'siamvariety.com':
+            case 'www.siamvariety.com':
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
 
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
