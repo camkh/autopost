@@ -1210,52 +1210,47 @@ class Managecampaigns extends CI_Controller {
                                 $imgUrl = $picture;
                             } 
                         }
-                        if(!(preg_match('/blogspot.com/', $imgUrl) || preg_match('/googleusercontent.com/', $imgUrl))) {
-                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl)) && (!preg_match("/http/", $imgUrl) && $main_post_style == 'tnews') && !preg_match('/ytimg.com/', $imgUrl)) {
-                                var_dump($imgUrl);
-                                die;
-                                @copy($imgUrl, $fileName);      
-                                $param = array(
-                                    'btnplayer'=>$pOption->btnplayer,
-                                    'playerstyle'=>$pOption->playerstyle,
-                                    'imgcolor'=>$pOption->imgcolor,
-                                    'txtadd'=>$pOption->txtadd,
-                                    'filter_brightness'=>$pOption->filter_brightness,
-                                    'filter_contrast'=>$pOption->filter_contrast,
-                                    'img_rotate'=>$pOption->img_rotate,
-                                );
-                                if(!empty($pOption->foldlink) && !empty($pConent->picture)) {
-                                    $image = $pConent->picture;
-                                } else {
-                                    if ( ! function_exists( 'exif_imagetype' ) ) {
-                                        function exif_imagetype ( $filename ) {
-                                            if ( ( list($width, $height, $type, $attr) = getimagesize( $filename ) ) !== false ) {
-                                                return $type;
-                                            }
-                                        return false;
+                        
+                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
+                            @copy($imgUrl, $fileName);      
+                            $param = array(
+                                'btnplayer'=>$pOption->btnplayer,
+                                'playerstyle'=>$pOption->playerstyle,
+                                'imgcolor'=>$pOption->imgcolor,
+                                'txtadd'=>$pOption->txtadd,
+                                'filter_brightness'=>$pOption->filter_brightness,
+                                'filter_contrast'=>$pOption->filter_contrast,
+                                'img_rotate'=>$pOption->img_rotate,
+                            );
+                            if(!empty($pOption->foldlink) && !empty($pConent->picture)) {
+                                $image = $pConent->picture;
+                            } else {
+                                if ( ! function_exists( 'exif_imagetype' ) ) {
+                                    function exif_imagetype ( $filename ) {
+                                        if ( ( list($width, $height, $type, $attr) = getimagesize( $filename ) ) !== false ) {
+                                            return $type;
                                         }
+                                    return false;
                                     }
-                                    $checkImage = @exif_imagetype($fileName);
-                                    if(empty($checkImage)) {
-                                        $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
-                                        echo '<center class="khmer" style="color:red;">No Image គ្មានរូបភាព</center>';
-                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
-                                                exit();
-                                    }
-                                    $images = $this->mod_general->uploadMedia($fileName,$param);
-                                    if(!$images) {
-                                        $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
-                                        $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
-                                        if($image) {
-                                            @unlink($fileName);
-                                        }
-                                    } else {
-                                        $image = @$images; 
+                                }
+                                $checkImage = @exif_imagetype($fileName);
+                                if(empty($checkImage)) {
+                                    $this->Mod_general->delete('post', array('p_id'=>$getPost[0]->p_id));
+                                    echo '<center class="khmer" style="color:red;">No Image គ្មានរូបភាព</center>';
+                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
+                                            exit();
+                                }
+                                $images = $this->mod_general->uploadMedia($fileName,$param);
+                                if(!$images) {
+                                    $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                                    $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                    if($image) {
                                         @unlink($fileName);
                                     }
-                                }  
-                            } else {
-                                $image = $imgUrl;
+                                } else {
+                                    $image = @$images; 
+                                    @unlink($fileName);
+                                }
                             }                          
                         } else {
                             $image = $picture;
