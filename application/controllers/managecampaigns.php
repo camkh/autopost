@@ -876,10 +876,12 @@ class Managecampaigns extends CI_Controller {
             /* end data schedule */  
             /*save tmp data post*/
             $this->load->library('upload');
-            $target_dir = './uploads/image/';
-            $tmp_path = './uploads/'.$log_id.'/';
-            $file_tmp_name = $fbuids . '_tmp_action.json';
-            $this->json($tmp_path,$file_tmp_name, $schedule);
+            if($mainPostStyle!= 'tnews') {
+                $target_dir = './uploads/image/';
+                $tmp_path = './uploads/'.$log_id.'/';
+                $file_tmp_name = $fbuids . '_tmp_action.json';
+                $this->json($tmp_path,$file_tmp_name, $schedule);
+            }
             /*End save tmp data post*/
             $postAto = $this->Mod_general->getActionPost();
             if (!empty($link)) {
