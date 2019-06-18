@@ -1211,7 +1211,9 @@ class Managecampaigns extends CI_Controller {
                             } 
                         }
                         if(!(preg_match('/blogspot.com/', $imgUrl) || preg_match('/googleusercontent.com/', $imgUrl))) {
-                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl)) && (!preg_match("/http/", $imgUrl) && $main_post_style == 'tnews')) {
+                            if (!(preg_match('/imgur.com/', $imgUrl) || preg_match('/imgbb.com/', $imgUrl)) && (!preg_match("/http/", $imgUrl) && $main_post_style == 'tnews') && !preg_match('/ytimg.com/', $imgUrl)) {
+                                var_dump($imgUrl);
+                                die;
                                 @copy($imgUrl, $fileName);      
                                 $param = array(
                                     'btnplayer'=>$pOption->btnplayer,
