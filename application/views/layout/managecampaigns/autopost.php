@@ -45,6 +45,11 @@ if(!empty($bloglinkA[0])) {
     $createNewBlog = true;
     $bNewName = generateRandomString(1).'1';
 }
+if(!empty($this->input->get('checkspamurl')) && !empty($this->input->get('bid'))) {
+    $bLinkID = $this->input->get('bid');
+} else {
+    $bLinkID = $bLinkID;
+}
 if(empty($bLinkID) && empty($this->input->get('createblog')) && empty($this->input->get('changeblogurl'))) {
     $currentURL = current_url(); //for simple URL
     $params = $_SERVER['QUERY_STRING']; //for parameters
@@ -68,7 +73,7 @@ $backto = @$this->input->get('backto');
 $backto = str_replace('blog;_link_id', 'blog_link_id', $backto);
 $backto = str_replace('blink;=', 'blink=', $backto);
 $backto = str_replace('autopost;=', 'autopost=', $backto);
-$backto = urlencode($backto);
+$backto = htmlspecialchars($backto);
 $gemail = $this->session->userdata ('gemail');
 if(!empty($this->input->get('changeblogurl'))) {
     if(!empty($this->input->get('bid'))) {
@@ -92,7 +97,9 @@ $glogin = str_replace('blink;=', 'blink=', $glogin);
 $glogin = str_replace('autopost;=', 'autopost=', $glogin);
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
-<code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}iimPlay(&quot;CODE:&quot;);</code>
+<code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=<?php 
+    if(!empty($this->input->get('checkspamurl')) && !empty($this->input->get('bid'))):?><?php echo $backto;?><?php else:?>&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog<?php endif;?>\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;<?php 
+    if(!empty($this->input->get('checkspamurl')) && !empty($this->input->get('bid'))):?>macro += &quot;URL GOTO=&quot; + homeUrl + &quot;managecampaigns/autopost?changeblogurl=1&amp;bid=<?php echo @$this->input->get('bid');?>&amp;backto=<?php echo urlencode(base_url().'managecampaigns/posttotlogLink?pid='.$this->input->get('pid').'&bid='.$this->input->get('bid'));?>\n&quot;;<?php else:?>macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;<?php endif;?>retcode=iimPlay(macro);}iimPlay(&quot;CODE:&quot;);</code>
 <code id="codeD" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo @$gemail;?>\n';mm+=&quot;WAIT SECONDS=15\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?start=1\n&quot;;retcode=iimPlay(mm);</code>
 <?php if(!empty($this->input->get('bitly'))):?><code id="bitly" style="width:300px;overflow:hidden;display:none">var links=&quot;<?php echo $this->input->get('bitly');?>&quot;,pid=&quot;<?php echo @$this->input->get('pid');?>&quot;;</code><?php endif;?>
 <?php if(!empty($this->input->get('glogin'))):?><code id="codeE" style="width:300px;overflow:hidden;display:none">mm=&quot;CODE:&quot;;mm+=&quot;SET !ERRORIGNORE YES\n&quot;;mm+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/account\n&quot;;mm+=&quot;WAIT SECONDS=10\n&quot;;mm+='TAG POS=1 TYPE=DIV ATTR=TXT:<?php echo !empty($this->session->userdata ( 'gemail' )) ? $this->session->userdata ( 'gemail' ) : @$json_a->gemail; ?>\n';mm+=&quot;WAIT SECONDS=15\n&quot;;mm+=&quot;URL GOTO=<?php echo !empty($this->input->get('glogin')) ? @$glogin : '&quot;+homeUrl+&quot;managecampaigns/autopost?start=1'; ?>\n&quot;;retcode=iimPlay(mm);if(retcode&lt;0){errtext=iimGetLastError();macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=<?php echo !empty($this->input->get('glogin')) ? @$glogin : '&quot;+homeUrl+&quot;managecampaigns/autopost?start=1'; ?>\n&quot;;retcode=iimPlay(macro);}</code><?php endif;?>
@@ -261,6 +268,9 @@ $glogin = str_replace('autopost;=', 'autopost=', $glogin);
         <?php endif;?>
         <?php if(!empty($this->input->get('changeblogurl'))):?>
             changeBlogURL();
+        <?php endif;?>
+        <?php if(!empty($this->input->get('checkspamurl')) && !empty($this->input->get('bid'))):?>
+            checkBloggerPost();
         <?php endif;?>
         <?php if(!empty($this->input->get('bitly'))):?>
             bitly();

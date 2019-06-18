@@ -1255,7 +1255,6 @@ class Managecampaigns extends CI_Controller {
                         } else {
                             $image = $picture;
                         }
-
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
                             /*update post*/
@@ -1266,12 +1265,11 @@ class Managecampaigns extends CI_Controller {
                                 'caption' => $pConent->caption,
                                 'link' => $pConent->link,
                                 'mainlink' => $pConent->mainlink,
-                                'picture' => @$images->data->link,                            
+                                'picture' => @$image,                            
                                 'vid' => @$pConent->vid,                            
                             );
                             $dataPostInstert = array (
                                 Tbl_posts::conent => json_encode ( $content ),
-                                'p_post_to' => 2,
                                 'yid' => $vid,
                             );
                             $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
@@ -1285,6 +1283,7 @@ class Managecampaigns extends CI_Controller {
                                 } else {
                                     if(empty($pConent->mainlink)) {
                                         $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style);
+                                        //$blogData['error'] = true;
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
                                             $p_id = $this->input->get('pid');
@@ -1321,17 +1320,23 @@ class Managecampaigns extends CI_Controller {
 
                                 if(!empty($link)) {
                                     if(!empty($blink) && $blink == 1) {
+
                                         //set blog link by ID
                                         if(!empty($blog_link_id)) {
                                             $blogRand = $blog_link_id;
                                         } else {
-                                            $blogRand = $this->getBlogLink();
-                                            if(empty($blogRand)) {
+                                            $bLinkData = $this->getBlogLink();
+                                            if(empty($bLinkData)) {
                                                 $currentURL = current_url(); //for simple URL
                                                 $params = $_SERVER['QUERY_STRING']; //for parameters
                                                 $fullURL = $currentURL . '?' . $params;
                                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
                                             }
+                                            $backto = base_url().'managecampaigns/posttotloglink?pid='.$pid.'&bid='.$bLinkData;
+                                            /*check blog spam or not*/
+                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?checkspamurl=1&bid='.$bLinkData.'&pid='.$pid.'&backto='.urlencode($backto).'";}, 3000 );</script>';
+                                            die;
+                                            /*End check blog spam or not*/
                                         }
 
                                         if(!empty($blogRand)) {
@@ -1557,6 +1562,126 @@ class Managecampaigns extends CI_Controller {
         copy($imgUrl, $fileName);
         $image = $this->Mod_general->uploadMediaWithText($fileName);
         die;
+    }
+    public function posttotlogLink()
+    {
+        $log_id = $this->session->userdata ('user_id');
+        $this->Mod_general->checkUser ();
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $fbUserId = $this->session->userdata ( 'sid' );
+
+        $pid = $this->input->get('pid');
+        $blogRand = $this->input->get('bid');
+        //$blogRand = $this->getBlogLink();
+
+        $wPost = array (
+            'user_id' => $log_id,
+            'p_id' => $pid,
+        );
+        $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+        if(!empty($getPost[0])) {
+            $pConent = json_decode($getPost[0]->p_conent);
+            $pOption = json_decode($getPost[0]->p_schedule);
+
+            $photo = array(
+                'https://lh3.googleusercontent.com/-S2xe5PHDH7S6Zg4KzKyERsg9oEuVwPYOW-gIaof4Xitston7KLtpH9F-JlxHEWhZbudA8bkE6HGWrYFtJ10uZdLDg5jQLcv3nAKK1VlzDXhGwB2YMU6m4NaoCIDV5hIp5MmVCzctSwpP_lg2rhG1XKMBxvD25FjEa4qgzzNfjD_v-xpMUPC0-FD2u9_SwJRwZCukm7cYAjv99eA1PILj2tgOF7CJWRUKp5bgEJcHHHiby9Qac479FMWYbJDPQl0a2tSP26aKZiIilPQOCWFGmBjFU_Je1IjQJrcSdz_a-yFbqRqUjViq1AOgIsv6qhmT5vbSkTIRYccdBqu5-4NlH7JGBzIlAst4tDQk8fjCLcHA0FvumJPoACEL60DzueJIFDUBRL6auJivvic5OfAM8lQRA8ndmiVxvxzPO14PxVI_ShlKu25ELfRejf6Jf0rdwcxxzwFnlW47gJRoKbQnE0sKSFVCuHvUmJ8FRAnThMhWleN-tV7zn7AHGSdffaRCfj-8ui_hNaLwzGf1bejKtAEudToYNLqCRs045lEXqvMPc_7WyAhN3pkgq1R32DJEw9lDYxPpVn6m2Rf9xlKO-_cuMUNvGFUHUveUhL8rfkHFsYRdEd0arAhcnVBpT7TcGzX6qoUaMY1LCJwJv30h3DU4zRxRQz57jStn5WEIdTjQfM2sHhIsmQXWM29jy1yTK3jXE4NJuXWgSh3Zmppy6Q_Ig=w568-h757-no',
+                'https://lh3.googleusercontent.com/2l01VH5XU5Dwc1GF9qMuc7vNHv0ZZ_MZXF5TY-4CgiiJNyZ-EGPvpdeRCGOime4oFCxQzELZ43fz-3SCjjJalIHsG-vf2Fq-JfpdoQRnerO76EU08_tUs942crf96A4L03GDguHtEqDVNugYfjDs96PxAVrhZCTadF8nFVSrnzvn0dNgUL6iAXH3-sOnCufYdgpsw8xDoEqx1tfTNyBcr7ipzqwjW8CkAWMqu3AAogYC_lsGx99kHjLjpPBY9wt-VLplSPy4SOtul7XUF1K7y-643sM0T6quKyVP9kAKJlj8tT8WoZA792k0Mi0Q_mQTnc5ow_Q1_TKhvhs-ApCurUWYoJR-znRbjYnKUwjYhlj6xZnRxOP0OhwKNPg3Gdd5n7SthKLYOco_3s9IjPZSzJYorCgHmGvYN721AxnIcGoDMv9J-tmW-3X1CGzhNkSV4drFggbcy6dp9oRdx0RvUxMxclFNr1l0ZND-yu0d1XaYYYEfwUjCRfYeNbBB4sdZjc9bnLGBRGguJ7yFkbtui2Q_QBHrG8PgGvMwgWPE1MyECJgHJYW2jZzxCfY0RFfwkrnRR1b6kQhXVqtxEhRVhcCyMk0qV0Xl-Uns7m-NW8EA2yEQqOutc1T4rHAq4ITjnF9sHGqLVmbA8tf3Xz8Ui3hWM6_1p30=w1024-h576-no',
+                'https://lh3.googleusercontent.com/O9Zb5ANk53CjsRCCKeruCsDRrlCgQceDg0aRPEQSLWxKIFuD0Vn5Yq5zDu__wWUB7gkCiaabTxuv2Gl_Tv5vTGELVtJYIjL1i4MxrPTZksCWRP4st9xh8mExLkleNhvYx9O4XFKP3LlKEJsP463XW1mCJg4lxUlP9EUQX1ob3VXrSAt_mi55P6Kpv3YIicX3DRPOMI1r-kw-Ymh7sb1SLLz4EElhxAWsH0Z_7U7qu-nGhdHWNkon26k8iO2-tSYXDw9r-uFJ_F1hyqpXp5cvU5ivtCVUPru5pqWsIKFfw4r4mMo6TD2hHudTE99njFu-B06e2P9puSF2wVGSuJoIfUI0eelKs29_kK3F9aFannbLdfWxmY4pImKh9-kW-AOBc-qemGWSSe-aAAyB1g6vnP3xzc1Qj8UubcCFDxX1ior-pCfhT_-DTgiksrqlJmIrc2qY-XLHOEZeiYwMLQ128FjYVBL0mzr0EmUcUEBNDvYrvtJRL_wJ_g61EQQpywGb4s6wQw_V6iJWXi_TNPw4UBMZ0WkVGVAn4gAVMnvtKnrqsdKNbpu4_mUoI4yqutBUc_xTqs7nq8LlkQqoC7symx1qJVtbk9NgP4-WsC2I1qhF4KkDhEgdQgiRNf_u30I4-4eC-OgsXp576TZatPp4ud4lC0rD8Tk=w1024-h576-no',
+                'https://preykabbas.files.wordpress.com/2011/03/sovanaphumi-air-106.jpg',
+                'https://preykabbas.files.wordpress.com/2011/02/e19e80e19eb6e19e9ae19e91e19f85e2808be19e9be19f81e19e84e2808be19e94e19f92e19e9ae19eb6e19e9fe19eb6e19e91e19ea2e19e84e19f92e19e82e19e9a9.jpg'
+            );
+            $brand = mt_rand(0, count($photo) - 1);
+            $imgRand = $photo[$brand];
+            /*End get post from post id*/
+
+            $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
+            $thai_title = $getPost[0]->p_name;
+            $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                   
+            $image = $pConent->picture;
+            $links = $pConent->link;
+            $vid = $this->Mod_general->get_video_id($links);
+            $vid = $vid['vid'];
+
+
+
+            $main_post_style = @$pOption->main_post_style;
+            $bid = @$pOption->blogid;
+            $mainlink = @$pConent->mainlink;
+
+            /*Show to Detail in view*/
+            $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">1</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$getPost[0]->p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">0</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
+            echo $showHTHM;
+            /*End Show to Detail in view*/
+
+
+            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$mainlink.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$mainlink.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$mainlink.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
+            $title = (string) $title;
+            $dataMeta = array(
+                'title' => $title,
+                'image' => $image,
+                'link' => $mainlink
+            );
+ 
+            $customcode = json_encode($dataMeta);
+            $dataContent          = new stdClass();
+            $dataContent->setdate = false;        
+            $dataContent->editpost = false;
+            $dataContent->pid      = 0;
+            $dataContent->customcode = json_encode($dataMeta);
+            $dataContent->bid     = $blogRand;
+            $dataContent->title    = $title . ' '. $bid . '-blid-'.$blogRand;        
+            $dataContent->bodytext = $bodytext;
+            $dataContent->label    = 'blink';
+
+            $DataBlogLink = $this->postBlogger($dataContent);
+
+            $postAto = $this->Mod_general->getActionPost();
+            if(!empty($DataBlogLink['error'])) {
+                //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$postAto.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                exit();
+            }
+            $link = $DataBlogLink->url;
+
+            /*update post*/
+            if(!empty($link) && !preg_match('/youtu/', $pConent->mainlink)) {
+                $whereUp = array('p_id' => $pid);
+                $content = array (
+                    'name' => $pConent->name,
+                    'message' => $pConent->message,
+                    'caption' => $pConent->caption,
+                    'link' => $link,
+                    'mainlink' => $pConent->mainlink,
+                    'picture' => $pConent->picture,                            
+                    'vid' => $pConent->vid,                            
+                );
+                $dataPostInstert = array (
+                    Tbl_posts::conent => json_encode ( $content ),
+                    'p_post_to' => 0,
+                );
+                $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+            }
+            /*End update post*/
+            /*update youtube if autopost*/
+            $fbid = $this->session->userdata ( 'sid' ); 
+            if(!empty($postAto)) {
+                $whereYtup = array(
+                    'yid' => $vid,
+                    'y_fid' => $fbid,
+                );
+                $ytInstert = array (
+                    'y_status' => 1,
+                );
+                $updates = $this->Mod_general->update( 'youtube',$ytInstert, $whereYtup);
+            }
+            /*End update youtube if autopost*/
+
+            $runpost  = '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'";}, 30 );</script>';
+            echo $runpost;
+            exit();
+        }
     }
     public function postBlogger($dataContent)
     {
@@ -3064,8 +3189,6 @@ HTML;
                     if(!empty($autoData[0])) {
                         $autopost = json_decode($autoData[0]->c_value);
                         if($autopost->autopost == 1) {
-                            echo date('H');
-                            echo '<br/>';
                             if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                             } else {
@@ -3402,7 +3525,6 @@ HTML;
         $string = file_get_contents($tmp_path);
         $json_a = json_decode($string);
         echo '<meta http-equiv="refresh" content="20"/>';
-
         /*update main blog link*/
         if(!empty($this->input->get('addbloglink')) && strlen($this->input->get('addbloglink')) > 20) {
             $addbloglink = $this->input->get('addbloglink');
@@ -3832,7 +3954,6 @@ HTML;
                 $whereNext = array (
                     'user_id' => $log_id,
                     'u_id' => $sid,
-                    'p_post_to' => 1,
                     'p_id' => $this->input->get('pid'),
                 );
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereNext );
@@ -3840,13 +3961,14 @@ HTML;
                     $data['datapost'] = $nextPost[0];
                     /*show blog linkA*/
                     $data['bloglinkA'] = false;
-                    $guid = $this->session->userdata ('guid');
-                    $blogLinkType = 'blog_linkA';
-                    $whereLinkA = array(
-                        'meta_key'      => $blogLinkType . '_'. $guid,
-                    );
-                    $bLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-                    if (!empty($bLinkData[0])) {
+                    // $guid = $this->session->userdata ('guid');
+                    // $blogLinkType = 'blog_linkA';
+                    // $whereLinkA = array(
+                    //     'meta_key'      => $blogLinkType . '_'. $guid,
+                    // );
+                    // $bLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+                    $bLinkData = $this->getBlogLink();
+                    if (!empty($bLinkData)) {
                         $data['bloglinkA'] = $bLinkData;
                     }
                     /*End show blog link*/
@@ -4011,14 +4133,15 @@ public function imgtest()
         }
 
         /*show blog linkA*/
+        $bLinkData = $this->getBlogLink();
         $guid = $this->session->userdata ('guid');
         $blogLinkType = 'blog_linkA';
         $whereLinkA = array(
             'meta_key'      => $blogLinkType . '_'. $guid,
         );
-        $queryLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
-        if (!empty($queryLinkData[0])) {
-            $data['bloglinkA'] = $queryLinkData;
+        $bLinkData = $this->Mod_general->select('meta', '*', $whereLinkA);
+        if (!empty($bLinkData)) {
+            $data['bloglinkA'] = $bLinkData;
         }
         /*End show blog link*/
 
