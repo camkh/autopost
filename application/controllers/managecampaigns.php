@@ -1210,7 +1210,7 @@ class Managecampaigns extends CI_Controller {
                                 $imgUrl = $picture;
                             } 
                         }
-                        
+
                         if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
                             @copy($imgUrl, $fileName);      
                             $param = array(
