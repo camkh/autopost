@@ -1550,10 +1550,12 @@ public function get_video_id($param, $videotype = '')
     }
     public function uploadToImgbb($image, $apiKey)
     {
-        
-        /*upload to Imgbb.com*/
-        $image = @file_get_contents($image);
         if(!empty($image)) {
+            if (!file_exists($image)) {
+                return false;
+            }
+            /*upload to Imgbb.com*/
+            $image = @file_get_contents($image);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'https://api.imgbb.com/1/upload?key='.$apiKey);
             curl_setopt($ch, CURLOPT_POST, TRUE);
