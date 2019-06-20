@@ -2492,7 +2492,6 @@ HTML;
                 $from = $content->site;
                 $vid = '';
             }
-            echo $setConents;
             $data = array (
                 'picture' => @$content->thumb,
                 'name' => trim ( @$content->title ),
