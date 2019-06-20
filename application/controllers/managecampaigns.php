@@ -2967,8 +2967,47 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'tnews.teenee.com':
+                $content = '';
+                foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
+                    $content .= $item->innertext;
+                }
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
             default:
-                $dataA = @$html->find ( '#Blog1 .post', 0 );
+                $dataA = @$html->find ( '#main .post', 0 );
                 $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
                 $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
                 $iframeCheckH2 = @$html->find ( '#Blog1 h2', 0 );
