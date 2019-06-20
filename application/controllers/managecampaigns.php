@@ -2485,13 +2485,14 @@ HTML;
                 $from = 'yt';
             } else {
                 $content = $this->getConentFromSite($url);
-                $setConents = $content->conent;
+                $setConents = $content->conent . '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
                 $adsense = '<h1>test</h1><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 //$setConents = str_replace('<!--adsense-->', $adsense, $setConents);
                 //$setConents = preg_replace('<div class="setAds"></div>',"ssssssssss",$setConents);
                 $from = $content->site;
                 $vid = '';
             }
+            echo $setConents;
             $data = array (
                 'picture' => @$content->thumb,
                 'name' => trim ( @$content->title ),
@@ -2638,6 +2639,7 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2675,6 +2677,7 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2711,6 +2714,7 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2748,6 +2752,7 @@ HTML;
                 //     }
                 // }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2790,6 +2795,7 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2847,6 +2853,7 @@ HTML;
                     }
                 }
                 $obj->conent = $htmlContent;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2887,6 +2894,42 @@ HTML;
                     }
                 }
                 $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.one31.net':
+                $contents = @$html->find ( '.box-newsdetail .newsdetail-txt', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
@@ -2919,6 +2962,7 @@ HTML;
                     $obj->title = @$html->find ( 'meta[property=og:title]', 0 )->content; 
                 }
                 $obj->conent = '';
+                $obj->fromsite = '';
                 $obj->site = 'old';
                 return $obj;
                 break;
