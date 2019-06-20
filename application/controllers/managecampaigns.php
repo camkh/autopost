@@ -250,7 +250,9 @@ class Managecampaigns extends CI_Controller {
                 $url = 'http:'.$url;
             }
             /*check spam link*/
-            $getUrl =  @parse_url($url)["host"];
+            $url = strtok($url, "?");
+            $exploded_uri = explode('/', $url);
+            $getUrl =  @$exploded_uri[2];
             $whereLinkSpam = array (
                 'user_id' => $log_id,
                 'u_id' => $fbUserId,
@@ -259,7 +261,9 @@ class Managecampaigns extends CI_Controller {
             if(!empty($spamLink[0])) {
                 foreach ($spamLink as $key => $sLink) {
                     $content = json_decode($sLink->p_conent);
-                    $getLink =  @parse_url($content->link)["host"];
+                    //$getLink =  @parse_url($content->link)["host"];
+                    $exploded_ur = explode('/', $content->link);
+                    $getLink =  @$exploded_ur[2];
                     if($getLink == $getUrl) {
                         $whereSpam = array (
                             'user_id' => $log_id,
@@ -270,10 +274,10 @@ class Managecampaigns extends CI_Controller {
                 }
             }
             /*End check spam link*/
-
             $this->load->library ( 'html_dom' );
-            $html = @file_get_html ($url);
-            $title = @$html->find( 'title', 0 )->innertext;
+            $getUrl = strtok($this->input->get('spam_url'), "?");
+            $html = @file_get_html($getUrl);
+            $title = @$html->find( 'meta[property=og:title]', 0 )->content;
             $backURL = urlencode(base_url().'facebook/shareation?post=getpost');
             $blID = false;
             if(!empty($title)) {
@@ -3150,6 +3154,41 @@ HTML;
                         if(!preg_match('/^(http)/', $imagedd)){
                             $imagedd = 'http://socialnews.teenee.com/penkhao/'.$imagedd;
                         }
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'khreality.com':
+                $contents = @$html->find ( '.single-container .entry-content', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
                         @copy($imagedd, $fileName);   
