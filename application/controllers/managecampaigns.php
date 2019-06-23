@@ -806,7 +806,31 @@ class Managecampaigns extends CI_Controller {
             $post_by_manaul = @$this->input->post ( 'post_by_manaul' );
             $foldlink = @$this->input->post ( 'foldlink' );
             $youtube_link = @$this->input->post ( 'vid' );
+
+            $fromOld_link = @$this->input->post ( 'fromoldlink' );
+            $postbloglink = @$this->input->post ( 'setbloglink' );
+            $saddtxt = @$this->input->post ( 'saddtxt' );
+            $label = @$this->input->post ( 'label' );
+
+
             
+            // for ($i = 0; $i < count($link); $i++) {
+            //     $PostInput = 'smpoststyle'.($i+1);
+            //     $smpoststyle = @$this->input->post ( $PostInput );
+            //     $main_post_type = !empty($smpoststyle) ? $smpoststyle : $mainPostStyle;
+            //     $from_old_link = !empty($fromOld_link[$i]) ? $fromOld_link[$i] : $foldlink;
+            //     $post_blog_link = !empty($postbloglink[$i]) ? $postbloglink[$i] : $blogLink;
+            //     $AddSuffixTitle = !empty($saddtxt[$i]) ? $saddtxt[$i] : $SuffixTitle;
+            //     $labels = !empty($label[$i]) ? $label[$i] : '';
+            //     echo 'i: '.$i;
+            //     echo ', main blog: '.$from_old_link;
+            //     echo ', main blog tyle: '.$main_post_type;
+            //     echo ', blink: '.$post_blog_link;
+            //     echo ', SuffixTitle: '.$AddSuffixTitle;
+            //     echo ', label: '.$labels;
+            //     echo '<br/>';
+            // }
+
             /* check account type */
             $s_acount = explode ( '|', $accoung );
             /* end check account type */
@@ -839,60 +863,68 @@ class Managecampaigns extends CI_Controller {
                     }
                 }
             }
-            $schedule = array (                    
-                'start_date' => @$startDate,
-                'start_time' => @$startTime,
-                'end_date' => @$endDate,
-                'end_time' => @$endDate,
-                'loop' => @$looptype,
-                'loop_every' => @$loopOnEvery,
-                'loop_on' => @$days,
-                'wait_group' => @$pause,
-                'wait_post' => @$ppause,
-                'randomGroup' => @$random,
-                'prefix_title' => @$PrefixTitle,
-                'suffix_title' => @$SuffixTitle,
-                'short_link' => @$short_link,
-                'check_image' => @$checkImage,
-                'imgcolor' => @$imgcolor,
-                'btnplayer' => @$btnplayer,
-                'playerstyle' => @$playerstyle,
-                'random_link' => @$random_link,
-                'share_type' => @$share_type,
-                'share_schedule' => @$post_action,
-                'account_group_type' => @$account_gtype,
-                'txtadd' => @$txtadd,
-                'blogid' => $bid,
-                'blogLink' => $blogLink,
-                'main_post_style' => $mainPostStyle,
-                'userAgent' => $userAgent,
-                'checkImage' => $checkImage,
-                'ptype' => $postType,
-                'img_rotate' => $img_rotate,
-                'filter_contrast' => $filter_contrast,
-                'filter_brightness' => $filter_brightness,
-                'post_by_manaul' => $post_by_manaul,
-                'foldlink' => $foldlink,
-                'gemail' => $this->session->userdata ( 'gemail' ),
-            );
+            
 
             /* end data schedule */  
-            /*save tmp data post*/
             $this->load->library('upload');
-            if($mainPostStyle!= 'tnews') {
-                $target_dir = './uploads/image/';
-                $tmp_path = './uploads/'.$log_id.'/';
-                $file_tmp_name = $fbuids . '_tmp_action.json';
-                $this->json($tmp_path,$file_tmp_name, $schedule);
-            }
-            /*End save tmp data post*/
             $postAto = $this->Mod_general->getActionPost();
             if (!empty($link)) {
 
                 for ($i = 0; $i < count($link); $i++) {
 
                 /*** add data to post ***/
-
+                    $PostInput = 'smpoststyle'.($i+1);
+                    $smpoststyle = @$this->input->post ( $PostInput );
+                    $main_post_type = !empty($smpoststyle) ? $smpoststyle : $mainPostStyle;
+                    $from_old_link = !empty($fromOld_link[$i]) ? $fromOld_link[$i] : $foldlink;
+                    $post_blog_link = !empty($postbloglink[$i]) ? $postbloglink[$i] : $blogLink;
+                    $AddSuffixTitle = !empty($saddtxt[$i]) ? $saddtxt[$i] : $SuffixTitle;
+                    $labels = !empty($label[$i]) ? $label[$i] : '';
+                    $schedule = array (                    
+                        'start_date' => @$startDate,
+                        'start_time' => @$startTime,
+                        'end_date' => @$endDate,
+                        'end_time' => @$endDate,
+                        'loop' => @$looptype,
+                        'loop_every' => @$loopOnEvery,
+                        'loop_on' => @$days,
+                        'wait_group' => @$pause,
+                        'wait_post' => @$ppause,
+                        'randomGroup' => @$random,
+                        'prefix_title' => @$PrefixTitle,
+                        'suffix_title' => @$AddSuffixTitle,
+                        'short_link' => @$short_link,
+                        'check_image' => @$checkImage,
+                        'imgcolor' => @$imgcolor,
+                        'btnplayer' => @$btnplayer,
+                        'playerstyle' => @$playerstyle,
+                        'random_link' => @$random_link,
+                        'share_type' => @$share_type,
+                        'share_schedule' => @$post_action,
+                        'account_group_type' => @$account_gtype,
+                        'txtadd' => @$txtadd,
+                        'blogid' => $bid,
+                        'blogLink' => $post_blog_link,
+                        'main_post_style' => @$main_post_type,
+                        'userAgent' => $userAgent,
+                        'checkImage' => $checkImage,
+                        'ptype' => $postType,
+                        'img_rotate' => $img_rotate,
+                        'filter_contrast' => $filter_contrast,
+                        'filter_brightness' => $filter_brightness,
+                        'post_by_manaul' => $post_by_manaul,
+                        'foldlink' => @$from_old_link,
+                        'gemail' => $this->session->userdata ( 'gemail' ),
+                        'label' => $labels,
+                    );
+                    /*save tmp data post*/
+                    if($main_post_type!= 'tnews') {
+                        $target_dir = './uploads/image/';
+                        $tmp_path = './uploads/'.$log_id.'/';
+                        $file_tmp_name = $fbuids . '_tmp_action.json';
+                        $this->json($tmp_path,$file_tmp_name, $schedule);
+                    }
+                    /*End save tmp data post*/
                     /*upload image*/
                     //$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 
@@ -1287,7 +1319,7 @@ class Managecampaigns extends CI_Controller {
                                     $link = @$pConent->mainlink;
                                 } else {
                                     if(empty($pConent->mainlink)) {
-                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style);
+                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style,$pOption->label);
                                         //$blogData['error'] = true;
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
@@ -1697,7 +1729,7 @@ class Managecampaigns extends CI_Controller {
         return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
-    public function postToBlogger($bid, $vid, $title,$image,$conent='',$blink)
+    public function postToBlogger($bid, $vid, $title,$image,$conent='',$blink,$label='')
     {
 
         /*prepare post*/

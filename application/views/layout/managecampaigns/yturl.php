@@ -64,7 +64,7 @@
     word-wrap: break-word;
     color: #1a4756;
 }
-
+#postimacros .addmorefield label{text-align: left;margin: -5px 0;}
 #postimacros .hidden, #uploadImg:not(.hidden) + label{
     display: none;
 }
@@ -200,6 +200,8 @@
     .icon-choose {height: 50px;cursor: pointer;border: 1px solid white;float: left;padding: 5px;}
     .icon-choose:hover {border: 1px solid red}
     .water-wrap {margin: 10px 5px 5px 10px;border: 1px solid #eee;padding: 3px}
+    fieldset {padding: 10px;border: 1px solid #ddd;}
+    fieldset legend{font-size: 100%;border:none;margin-bottom: 0px;font-weight: bold;width: inherit;}
     /*End watermark*/
     </style>
 
@@ -328,17 +330,59 @@
                                                     </div>
                                                   </div>
                                             </div>
-                                            <div class="form-actions" style="margin-left: -10px;margin-right: -10px; padding: 0px">
-                                                <label class="radio-inline" style="display: inline-block;">
-                                                    <input value="1" name="fromoldlink[]" type="checkbox">
-                                                    <i class="subtopmenu hangmeas khmer">ប្លុកដើម?</i>
-                                                </label> | <label class="radio-inline" style="display: inline-block;">
-                                                    <input value="1" name="setbloglink[]" type="checkbox">
-                                                    <i class="subtopmenu hangmeas khmer">ប្រើប្លុកលីងគ៍?</i>
-                                                </label> | <label class="radio-inline" style="display: inline-block;">
-                                                    <input value="1" name="fromoldlink[]" type="checkbox">
-                                                    <i class="subtopmenu hangmeas khmer">ប្លុកដើម?</i>
-                                                </label>
+                                            <div class="addmorefield" style="">
+                                                    <div class="form-group" style="border: none">
+                                                        <div class="col-md-3 khmer">
+                                                            <fieldset>
+                                                                <legend>យកទិន្នន័យពី:</legend>
+                                                                <label class="radio-inline" style="display: inline-block;margin-top: -3px">
+                                                                    <input value="1" name="fromoldlink[]" type="checkbox">
+                                                                    <i class="subtopmenu hangmeas khmer">មិនផុសប្លុកដើម</i>
+                                                                </label>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <legend>Post to Blog link:</legend>
+                                                                <label class="radio-inline" style="display: inline-block;">
+                                                                    <input value="1" name="setbloglink[]" type="checkbox">
+                                                                    <i class="subtopmenu hangmeas khmer">ប្រើប្លុកលីងគ៍?</i>
+                                                                </label>
+                                                            </fieldset>
+                                                        </div>
+                                                       
+                                                        <div class="col-md-3">
+                                                            <fieldset>
+                                                                <legend>Post Type:</legend>
+                                                                <label class="radio">
+                                                                    <input type="radio" value="1" name="smpoststyle1" class="uniform smpoststyle" />
+                                                                    <i class="subtopmenu hangmeas">Youtube</i>
+                                                                </label> 
+                                                                <label class="radio">
+                                                                    <input type="radio" value="2" name="smpoststyle1" class="uniform smpoststyle" />
+                                                                    <i class="subtopmenu hangmeas">With Player</i>
+                                                                </label>
+                                                                <label class="radio">
+                                                                    <input type="radio" value="link" name="smpoststyle1" class="uniform smpoststyle" />
+                                                                    <i class="subtopmenu hangmeas">Link</i>
+                                                                </label>  
+                                                                <label class="radio khmer">
+                                                                    <input type="radio" value="tnews" name="smpoststyle1" class="uniform smpoststyle" />
+                                                                    <i class="subtopmenu hangmeas">ព័ត៌មាន / News</i>
+                                                                </label> 
+                                                            </fieldset>
+                                                        </div>
+                                                         <div class="col-md-6">
+                                                            <fieldset>
+                                                                <legend>ថែមអត្ថបទពីក្រោយ:</legend>
+                                                                    <label class="khmer" style="max-width: 100%;width: 100%">
+                                                                    <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control" placeholder="1234|1234|1234"></textarea></label>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <legend>ប្រភេទ / Label:</legend>
+                                                                    <label class="khmer" style="max-width: 100%;width: 100%">
+                                                                    <input style="max-width: 100%;width: 100%;" name="label[]" class="form-control set_balel" placeholder="News, Thai Lottery" type="text"></label>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
                                             </div>
                                         </div> 
                                     </div>
@@ -1108,8 +1152,16 @@
               $('.morefield').append('<div class="widget box optionBox" id="post_'+code+'"  data-postid="'+code+'"><div class="widget-header"><h4><i class="icon-reorder"></i> Post <span class="counts">'+n+'</span></h4><div class="toolbar no-padding"><div class="btn-group"><span class="btn btn-xs btn-inverse widgets-refresh" onclick="getcontent(&#39;'+code+'&#39;);"><i class="icon-refresh"></i></span><button class="btn btn-xs removediv bs-tooltip" data-original-title="Remove this" type="button" id="'+code+'"  onclick="removediv(&#39;'+code+'&#39;);"><i class="icon-remove text-danger"></i></button></div></div></div><div class="widget-content"><div class="row-border"><div class="form-group"><div class="col-md-12"><div class="form-group"><div class="col-md-12"><table style="width: 100%;"><tbody><tr><td><div class="form-group" style="margin-bottom: 3px"><div class="col-md-12"><div class="input-group"><span class="input-group-addon"><i style="color: red" class="icon-youtube-sign"></i></span> <input type="text" value="" class="form-control post-option" name="link[]" placeholder="Youtube URL or ID" id="'+link+'" onchange="getLink(this);" /></div></div></div><div class="form-group" style="border: none;margin-bottom: 3px"><label class="col-md-3 khmer">ចំណងជើងប្លុក</label><div class="col-md-9"><input type="text" value="" class="form-control post-option" name="title[]" placeholder="Title" id="'+title+'" /></div></div><div class="form-group" style="border: none"><label class="col-md-3 khmer">ចំណងជើងស៊ែរ៍</label><div class="col-md-9"><input type="text" id="'+name+'" value="" class="form-control post-option" name="name[]" /></div></div></td><td style="width: 150px;"><div class="imgwrap"><img id="'+image_show+'" src="https://i.ytimg.com/vi/0000/0.jpg" style="width:150px;margin-left: 5px;height:102px;border: 1px solid #CCC;"/><a href="javascript:;" class="btn btn-xs btn-inverse" title="Edit Image" onclick="getEitImage(this);"><i class="glyphicon glyphicon-pencil"></i></a></div><button type="button" class="btn btn-xs btn-primary pull-right" style="margin-left: 5px;width: 150px" onclick="getImage(this);"><span class="khmer">ដូររូបភាព</span></button><input type="hidden" id="'+image+'" value="" class="form-control post-option" name="thumb[]" placeholder="Image url" /><input type="hidden" id="'+vid+'" value="" class="form-control post-option" name="vid[]" /></td></tr></tbody></table></div></div><div class="form-group" style="border: none"><div class="col-md-12"><textarea name="conents[]" id="'+description+'" class="form-control post-option wysiwygs" style="height: 58px"></textarea></div></div></div></div></div></div></div>');
                 $('.bs-tooltip').tooltip();
                 getEditor(code);
-                updateCount();
+                updateCount(code);
                 window.location.hash = 'post_'+code;
+                var postid = $("#post_"+code);
+                if($(postid).length){
+                    $( "#addmorefields .addmorefield" ).clone().appendTo( "#post_" +code + " .row-border" );
+                    // $( "#post_" +code + " .row-border .smpoststyle" ).each(function(i) {
+                    //   $(this).attr('name', $(this).attr('name') + i);
+                    // });
+                    $("#post_" +code + " .row-border .smpoststyle").attr('name', $("#post_" +code + " .row-border .smpoststyle").attr('name') + $( ".optionBox" ).length);
+                }
                 //var count = $(".listofsong").length;
                 //$("#countdiv").text("ចំនួន " + count + " បទ");
             });        
@@ -1264,7 +1316,7 @@
 
         function removediv(id){
              $("#post_" + id).remove();
-             updateCount();
+             updateCount(id);
         }
 
         function getcontent(id) {
@@ -1389,6 +1441,10 @@
                         getcontent(id.replace("link_", ""));
                       }
                       if(obj.from == 'site') {
+                        $('#post_' + sid + ' .set_balel').val(obj.label);
+                        $('#post_' + sid + ' .smpoststyle[value=tnews]').prop('checked', true);
+                      }
+                      if(obj.from == 'site') {
                         console.log('site');
                         $('#description_link_' + sid).data("wysihtml5").editor.setValue(obj.content);
                         window.setTimeout(function () {
@@ -1415,12 +1471,18 @@
             $("#imageviewFist").html('<img style="width:100%;height:55px;" src="' + e + '"/>');
         }
 
-        function updateCount() {
+        function updateCount(id) {
             $(".optionBox .counts").each(function (index, value) {
                 index = (index + 1);
                 var id = $(this).parent().parent().parent().attr('id'); 
                $("#" + id + ' .counts').html(index);
+               $("#" +id + " .row-border .smpoststyle").attr('name', 'smpoststyle' + index);
             });
+            
+        }
+
+        function updateIputField(index,id) {
+            $("#post_" +id + " .row-border .smpoststyle").attr('name', $("#post_" +id + " .row-border .smpoststyle").attr('name') + index);
         }
 
         function getEditor (id) {  
@@ -1613,6 +1675,65 @@ function showResponse(responseText, statusText, xhr, $form)  {
 </div>
 </div>
 <!-- image watermarker and effect -->
+
+<!-- add more field -->
+<div id="addmorefields" style="display: none;">
+    <div class="addmorefield" style="">
+        <div class="form-group" style="border: none">
+            <div class="col-md-3 khmer">
+                <fieldset>
+                    <legend>យកទិន្នន័យពី:</legend>
+                    <label class="radio-inline" style="display: inline-block;margin-top: -3px">
+                        <input value="1" name="fromoldlink[]" type="checkbox">
+                        <i class="subtopmenu hangmeas khmer">មិនផុសប្លុកដើម</i>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Post to Blog link:</legend>
+                    <label class="radio-inline" style="display: inline-block;">
+                        <input value="1" name="setbloglink[]" type="checkbox">
+                        <i class="subtopmenu hangmeas khmer">ប្រើប្លុកលីងគ៍?</i>
+                    </label>
+                </fieldset>
+            </div>
+           
+            <div class="col-md-3">
+                <fieldset>
+                    <legend>Post Type:</legend>
+                    <label class="radio">
+                        <input type="radio" value="1" name="smpoststyle" class="uniform smpoststyle"  />
+                        <i class="subtopmenu hangmeas">Youtube</i>
+                    </label> 
+                    <label class="radio">
+                        <input type="radio" value="2" name="smpoststyle" class="uniform smpoststyle" />
+                        <i class="subtopmenu hangmeas">With Player</i>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" value="link" name="smpoststyle" class="uniform smpoststyle"  />
+                        <i class="subtopmenu hangmeas">Link</i>
+                    </label>  
+                    <label class="radio khmer">
+                        <input type="radio" value="tnews" name="smpoststyle" class="uniform smpoststyle"  />
+                        <i class="subtopmenu hangmeas">ព័ត៌មាន / News</i>
+                    </label> 
+                </fieldset>
+            </div>
+             <div class="col-md-6">
+                <fieldset>
+                    <legend>ថែមអត្ថបទពីក្រោយ:</legend>
+                        <label class="khmer" style="max-width: 100%;width: 100%">
+                        <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control" placeholder="1234|1234|1234"></textarea></label>
+                </fieldset>
+                <fieldset>
+                    <legend>ប្រភេទ / Label:</legend>
+                        <label class="khmer" style="max-width: 100%;width: 100%">
+                        <input type="text" style="max-width: 100%;width: 100%;" name="label[]" class="form-control set_balel" placeholder="News, Thai Lottery"></label>
+                </fieldset>
+            </div>
+        </div>
+</div>
+</div>
+<!-- End add more field -->
 <script>
         /*watermarker*/
         
