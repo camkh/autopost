@@ -2839,6 +2839,48 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'deemindplus.com':
+                foreach($html->find('.sharedaddy') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.robots-nocontent') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $content = @$html->find ( '#main .entry-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
             case 'deejunglife.com':
                 foreach($html->find('.sharedaddy') as $item) {
                     $item->outertext = '';
@@ -3223,6 +3265,41 @@ HTML;
                 break;
             case 'khreality.com':
                 $contents = @$html->find ( '.single-container .entry-content', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.khaosod.co.th':
+                $contents = @$html->find ( '.ud_post_wrap .td-post-content', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
