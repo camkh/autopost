@@ -330,9 +330,15 @@
                                             </div>
                                             <div class="form-actions" style="margin-left: -10px;margin-right: -10px; padding: 0px">
                                                 <label class="radio-inline" style="display: inline-block;">
-                                                    <input value="1" name="foldlink" type="checkbox">
-                                                    <i class="subtopmenu hangmeas khmer">Old data /ទិន្ន័យប្លុកដើម?</i>
-                                                </label> |
+                                                    <input value="1" name="fromoldlink[]" type="checkbox">
+                                                    <i class="subtopmenu hangmeas khmer">ប្លុកដើម?</i>
+                                                </label> | <label class="radio-inline" style="display: inline-block;">
+                                                    <input value="1" name="setbloglink[]" type="checkbox">
+                                                    <i class="subtopmenu hangmeas khmer">ប្រើប្លុកលីងគ៍?</i>
+                                                </label> | <label class="radio-inline" style="display: inline-block;">
+                                                    <input value="1" name="fromoldlink[]" type="checkbox">
+                                                    <i class="subtopmenu hangmeas khmer">ប្លុកដើម?</i>
+                                                </label>
                                             </div>
                                         </div> 
                                     </div>

@@ -839,12 +839,6 @@ class Managecampaigns extends CI_Controller {
                     }
                 }
             }
-            $con = str_replace('&gt;', '>', $conents[0]);
-            $con = str_replace('&lt;', '<', $con);
-
-            var_dump($con);
-            die;
-
             $schedule = array (                    
                 'start_date' => @$startDate,
                 'start_time' => @$startTime,
@@ -1707,6 +1701,8 @@ class Managecampaigns extends CI_Controller {
     {
 
         /*prepare post*/
+        $conent = str_replace('&gt;', '>', $conent);
+        $conent = str_replace('&lt;', '<', $conent);
         $this->load->library('google_api');
         $client = new Google_Client();
         $client->setAccessToken($this->session->userdata('access_token'));
@@ -1742,6 +1738,11 @@ class Managecampaigns extends CI_Controller {
                     preg_match_all($pattern, $setConents, $matches);
                     foreach ($matches[0] as $value) {
                         $txt = str_replace($value, $adsense, $setConents);
+                    }
+                    $patternA = "|(<div class=\"setAds\">.*?<\/div>)|";
+                     preg_match_all($patternA, $txt, $matchesA);
+                     foreach ($matchesA[0] as $valueA) {
+                        $txt = str_replace($valueA, $adsense, $txt);
                     }
                 }
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$txt;
@@ -2510,6 +2511,7 @@ HTML;
                 'content' => trim ( @$setConents ),
                 'link' => $url,
                 'vid' => $vid,
+                'label' => @$content->label,
                 'from'=> $from
             );            
             if (! empty ( $data )) {
@@ -2609,13 +2611,22 @@ HTML;
         //echo $parse['host'];
         switch ($parse['host']) {
             case 'www.siamnews.com':
-                $ads = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 foreach($html->find('.line_view') as $item) {
                     $item->outertext = '';
                 }
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                 $obj->label = implode(',', $label);
+                /*End get label*/
+               
                 //$html->save();
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
-
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
@@ -2647,12 +2658,24 @@ HTML;
                         }
                     }
                 }
+
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
                 break;
             case 'www.siamvariety.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                 $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
 
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
@@ -2692,6 +2715,16 @@ HTML;
                 return $obj;
                 break;
             case 'www.siamtopic.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
                 $content = @$html->find ( '#article-post .data_detail', 0 )->innertext;
 
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
@@ -2731,6 +2764,19 @@ HTML;
                 return $obj;
                 break;
             case '108resources.com':
+                /*get label*/
+                $label = [];
+                $label = $html->find('span[typeof=v:Breadcrumb]',1)->plaintext;
+                if($label == 'ดวงและความเชื่อ') {
+                    $obj->label = 'ศรัทธา - ความเชื่อ';
+                } else if($label == 'สูตรอาหาร') {
+                    $obj->label = 'อาหารการกิน';
+                } else if($label == 'อาหารและสุขภาพ') {
+                    $obj->label = 'อาหารการกิน,สุขภาพ';
+                } else {
+                    $obj->label = $label;
+                }
+                /*End get label*/
                 $content = @$html->find ( '.bdaia-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -2770,6 +2816,16 @@ HTML;
                 return $obj;
                 break;
             case 'lahbey.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.td-crumb-container span')) - 1;
+                foreach($html->find('.td-crumb-container span') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
                 $content = @$html->find ( '.td-ss-main-content .td-post-content', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -2809,6 +2865,10 @@ HTML;
                 return $obj;
                 break;
             case 'deejaiplus.com':
+                /*get label*/
+                $label = $html->find('.cat-links a',0)->plaintext;
+                $obj->label = $label;
+                /*End get label*/
                 foreach($html->find('.sharedaddy') as $item) {
                     $item->outertext = '';
                 }
@@ -2866,6 +2926,11 @@ HTML;
                 return $obj;
                 break;
             case 'deemindplus.com':
+                /*get label*/
+                $label = $html->find('.cat-links a',0)->plaintext;
+                $obj->label = $label;
+                /*End get label*/
+
                 foreach($html->find('.sharedaddy') as $item) {
                     $item->outertext = '';
                 }
@@ -2920,6 +2985,10 @@ HTML;
                 return $obj;
                 break;
             case 'deejunglife.com':
+                /*get label*/
+                $label = $html->find('.cat-links a',0)->plaintext;
+                $obj->label = $label;
+                /*End get label*/
                 foreach($html->find('.sharedaddy') as $item) {
                     $item->outertext = '';
                 }
@@ -2975,6 +3044,17 @@ HTML;
                 return $obj;
                 break;
             case 'www.tnews.co.th':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = @$html->find ( '.content-main .h4-content-lh', 0 )->innertext;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -3033,6 +3113,17 @@ HTML;
                 return $obj;
                 break;
             case 'www.77jowo.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $contents = @$html->find ( '#content-detail', 0 );
                 $content = '';
                 foreach($contents->find("div[class^='detail-']") as $item) {
@@ -3074,6 +3165,8 @@ HTML;
                 return $obj;
                 break;
             case 'www.one31.net':
+                /*get label*/
+                $obj->label = 'ข่าว';
                 $contents = @$html->find ( '.box-newsdetail .newsdetail-txt', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -3111,6 +3204,17 @@ HTML;
                 return $obj;
                 break;
             case 'www.mumkhao.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $contents = @$html->find ( '#main .data_detail', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -3148,6 +3252,22 @@ HTML;
                 return $obj;
                 break;
             case 'tnews.teenee.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.post-header .post-author a')) - 1;
+                foreach($html->find('.post-header .post-author a') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $setNewLabel = trim($labels->plaintext);
+                        if($setNewLabel == 'ข่าวเด่นประเด็นร้อน') {
+                            $label[] = 'ข่าว';
+                        } else {
+                            $label[] = $setNewLabel;
+                        }
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = '';
                 foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
                     $content .= $item->innertext;
@@ -3193,6 +3313,22 @@ HTML;
                 return $obj;
                 break;
             case 'variety.teenee.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.post-header .post-author a')) - 1;
+                foreach($html->find('.post-header .post-author a') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $setNewLabel = trim($labels->plaintext);
+                        if($setNewLabel == 'ข่าวเด่นประเด็นร้อน') {
+                            $label[] = 'ข่าว';
+                        } else {
+                            $label[] = $setNewLabel;
+                        }
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = '';
                 foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
                     $content .= $item->innertext;
@@ -3236,6 +3372,22 @@ HTML;
                 return $obj;
                 break;
             case 'entertain.teenee.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.post-header .post-author a')) - 1;
+                foreach($html->find('.post-header .post-author a') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $setNewLabel = trim($labels->plaintext);
+                        if($setNewLabel == 'ข่าวเด่นประเด็นร้อน') {
+                            $label[] = 'ข่าว';
+                        } else {
+                            $label[] = $setNewLabel;
+                        }
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = '';
                 foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
                     $content .= $item->innertext;
@@ -3278,6 +3430,22 @@ HTML;
                 return $obj;
                 break;
             case 'socialnews.teenee.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.post-header .post-author a')) - 1;
+                foreach($html->find('.post-header .post-author a') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $setNewLabel = trim($labels->plaintext);
+                        if($setNewLabel == 'ข่าวเด่นประเด็นร้อน') {
+                            $label[] = 'ข่าว';
+                        } else {
+                            $label[] = $setNewLabel;
+                        }
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
                 $content = '';
                 foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
                     $content .= $item->innertext;
@@ -3321,6 +3489,21 @@ HTML;
                 return $obj;
                 break;
             case 'khreality.com':
+                /*get label*/
+                $label = $html->find('#main-navigation .current-post-parent a',0)->plaintext;
+                if($label == 'ข่าวทั่วไป') {
+                    $obj->label = 'ข่าว';
+                } else if($label == 'ข่าวต่างประเทศ') {
+                    $obj->label = 'ข่าว,ข่าวต่างประเทศ';
+                } else if($label == 'ข่าวบันเทิง') {
+                    $obj->label = 'ข่าว,ข่าวบันเทิง';
+                } else if($label == 'สุขภาพ') {
+                    $obj->label = 'ไลฟ์สไตล์,สุขภาพ';
+                } else {
+                    $obj->label = $label;
+                }
+                
+                /*End get label*/
                 $contents = @$html->find ( '.single-container .entry-content', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -3357,6 +3540,25 @@ HTML;
                 return $obj;
                 break;
             case 'www.sanook.com':
+                /*get label*/
+                $label = $html->find('nav.nav li.active a span',0)->plaintext;
+                if($label == 'กีฬา') {
+                    $obj->label = 'ข่าว,ข่าวกีฬา';
+                } else if($label == 'ข่าวบันเทิง') {
+                    $obj->label = 'ข่าว,ข่าวบันเทิง';
+                } else if($label == 'ไอที') {
+                    $obj->label = 'ข่าว,ข่าวไอที';
+                } else if($label == 'รถยนต์') {
+                    $obj->label = 'ข่าว,ข่าวยานยนต์';
+                } else if($label == 'ดูดวง') {
+                    $obj->label = 'ไลฟ์สไตล์,ดูดวง';
+                } else if($label == 'สุขภาพ') {
+                    $obj->label = 'ไลฟ์สไตล์,สุขภาพ';
+                } else {
+                    $obj->label = $label;
+                }
+                
+                /*End get label*/
                 foreach($html->find('.EntryShare') as $item) {
                     $item->outertext = '';
                 }
@@ -3416,6 +3618,34 @@ HTML;
                 return $obj;
                 break;
             case 'www.khaosod.co.th':
+                /*get label*/
+                $label = $html->find('.entry-crumbs span',1)->plaintext;
+                if($label == 'กีฬา') {
+                    $obj->label = 'ข่าว,ข่าวกีฬา';
+                } else if($label == 'บันเทิง') {
+                    $obj->label = 'ข่าว,ข่าวบันเทิง';
+                } else if($label == 'ไอที') {
+                    $obj->label = 'ข่าว,ข่าวไอที';
+                } else if($label == 'ยานยนต์') {
+                    $obj->label = 'ข่าว,ข่าวยานยนต์';
+                } else if($label == 'ดวง') {
+                    $obj->label = 'ไลฟ์สไตล์,ดูดวง';
+                } else if($label == 'สุขภาพ') {
+                    $obj->label = 'ไลฟ์สไตล์,สุขภาพ';
+                } else if($label == 'การเมือง') {
+                    $obj->label = 'ข่าว,ข่าวการเมือง';
+                } else if($label == 'เศรษฐกิจ') {
+                    $obj->label = 'ข่าว,เศรษฐกิจ';
+                } else if($label == 'ทุกทิศทั่วไทย') {
+                    $obj->label = 'ข่าว,ทุกทิศทั่วไทย';
+                } else if($label == 'ตรวจหวยกับข่าวสด') {
+                    $obj->label = 'ไลฟ์สไตล์,เสี่ยงดวง - หวย';
+                } else {
+                    $obj->label = $label;
+                }
+                
+                /*End get label*/
+
                 $contents = @$html->find ( '.ud_post_wrap .td-post-content', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
@@ -3451,6 +3681,7 @@ HTML;
                 return $obj;
                 break;
             default:
+                $obj->label = '';
                 $dataA = @$html->find ( '#main .post', 0 );
                 $checked = @$html->find ( '#Blog1 .youtube_link', 0 );
                 $iframeCheck = @$html->find ( '#Blog1 iframe', 0 );
