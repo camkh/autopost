@@ -1757,7 +1757,11 @@ class Managecampaigns extends CI_Controller {
                 break;
             case 'link':
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div id="ishow"></div><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a class="readmore" href="#">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div style="text-align:center"><table width="100%" border="0"><tr><td width="50%" align="right" valign="middle"><div id="setiamgelink"></div></td><td width="50%" align="left" valign="middle"><a href="https://youtu.be/'.$vid.'" target="_blank" class="youtube_link"> https://youtu.be/'.$vid.'</a></td></tr></table></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
-                $label = 'link';
+                if(!empty($label)) {
+                    $label = $label;
+                } else {
+                    $label = 'Link';
+                }
                 $customcode = '';
                 break;
             case 'tnews':
@@ -1779,7 +1783,12 @@ class Managecampaigns extends CI_Controller {
                 }
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$txt;
                 $customcode = '';
-                $label = 'News';
+                
+                if(!empty($label)) {
+                    $label = $label;
+                } else {
+                    $label = 'News';
+                }
                 break;
             default:
                 $bodytext = '<img class="thumbnail noi" style="text-align:center" src="'.$image.'"/><!--more--><div><b>'.$title.'</b></div><div class="wrapper"><div class="small"><p>'.$conent.'</p></div> <a href="#" class="readmore">... Click to read more</a></div><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div><div>Others news:</div><iframe width="100%" height="280" src="https://www.youtube.com/embed/'.$vid.'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
