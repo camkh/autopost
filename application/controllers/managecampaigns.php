@@ -970,7 +970,8 @@ class Managecampaigns extends CI_Controller {
                         $vid = $this->Mod_general->get_video_id($youtube_link[$i]);
                         $mainlink = $link[$i];
                     } else {
-                        $vid = $this->Mod_general->get_video_id($link[$i]);
+                        $setNewYtID = !empty($youtube_link[$i]) ? $youtube_link[$i] : $link[$i];
+                        $vid = $this->Mod_general->get_video_id($setNewYtID);
                         $mainlink = '';
                     }                    
                     $vid = $vid['vid']; 
@@ -1166,11 +1167,12 @@ class Managecampaigns extends CI_Controller {
                     'p_id' => $pid,
                 );
                 $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+
                 if(!empty($getPost[0])) {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $pOption = json_decode($getPost[0]->p_schedule);
                     $main_post_style = @$pOption->main_post_style;
-                    if (!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) {
+                    if ((!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) || empty($pConent->vid)) {
                         if($main_post_style != 'tnews') {
                             redirect(base_url().'facebook/shareation?post=getpost');
                         }
@@ -2536,12 +2538,17 @@ HTML;
                 $from = 'yt';
             } else {
                 $content = $this->getConentFromSite($url);
-                $setConents = $content->conent . '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
+                if(!empty($content->fromsite)) {
+                    $conTenSite = '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
+                } else {
+                    $conTenSite = '';
+                }
+                $setConents = $content->conent.$conTenSite;
                 $adsense = '<h1>test</h1><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
                 //$setConents = str_replace('<!--adsense-->', $adsense, $setConents);
                 //$setConents = preg_replace('<div class="setAds"></div>',"ssssssssss",$setConents);
                 $from = $content->site;
-                $vid = '';
+                $vid = @$content->vid;
             }
             $data = array (
                 'picture' => @$content->thumb,
@@ -3752,6 +3759,43 @@ HTML;
                 $obj->conent = '';
                 $obj->fromsite = '';
                 $obj->site = 'old';
+                return $obj;
+                break;
+            case 'casa982.com':
+                $obj->label = '';
+                $obj->title = @$html->find ( 'meta[name=description]', 0 )->content; 
+                $contents = @$html->find ( '#main .entry-content', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = '';
+                $obj->site = 'site';
                 return $obj;
                 break;
             default:
