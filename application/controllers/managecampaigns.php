@@ -1172,7 +1172,7 @@ class Managecampaigns extends CI_Controller {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $pOption = json_decode($getPost[0]->p_schedule);
                     $main_post_style = @$pOption->main_post_style;
-                    if ((!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) || empty($pConent->vid)) {
+                    if (!(preg_match('/youtu/', $pConent->link) && $pOption->foldlink ==1) && empty($pConent->vid)) {
                         if($main_post_style != 'tnews') {
                             redirect(base_url().'facebook/shareation?post=getpost');
                         }
@@ -1188,7 +1188,7 @@ class Managecampaigns extends CI_Controller {
                     $brand = mt_rand(0, count($photo) - 1);
                     $imgRand = $photo[$brand];
                 /*End get post from post id*/
-                    $links = $pConent->link;
+                    $links = !empty($pConent->vid) ? $pConent->vid : $pConent->link;
                     $title = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->name)));
                     $thai_title = $getPost[0]->p_name;
                     $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                   
@@ -1303,7 +1303,7 @@ class Managecampaigns extends CI_Controller {
                                 'message' => $pConent->message,
                                 'caption' => $pConent->caption,
                                 'link' => $pConent->link,
-                                'mainlink' => $pConent->mainlink,
+                                'mainlink' => @$pConent->mainlink,
                                 'picture' => @$image,                            
                                 'vid' => @$pConent->vid,                            
                             );
@@ -1321,7 +1321,7 @@ class Managecampaigns extends CI_Controller {
                                     $link = @$pConent->mainlink;
                                 } else {
                                     if(empty($pConent->mainlink)) {
-                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style,$pOption->label);
+                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style,@$pOption->label);
                                         //$blogData['error'] = true;
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
@@ -1767,9 +1767,11 @@ class Managecampaigns extends CI_Controller {
                 $customcode = '';
                 break;
             case 'tnews':
-                require('Adsense.php');
-                $newcontent = new adinsert($conent);
-                $setConents = $newcontent->echo_content();
+                //require('Adsense.php');
+                //$newcontent = new adinsert($conent);
+                //$setConents = $this->ad_between_paragraphs($conent);
+                $setConents = $this->insertAd($conent, '<div class="setAdsSection"></div>', $pos = 1);
+
                 if($blink == 'tnews') {
                     $pattern = "|(<div class=\"setAdsSection\">.*?<\/div>)|";
                     $adsense = '<div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>';
@@ -1777,12 +1779,13 @@ class Managecampaigns extends CI_Controller {
                     foreach ($matches[0] as $value) {
                         $txt = str_replace($value, $adsense, $setConents);
                     }
-                    $patternA = "|(<div class=\"setAds\">.*?<\/div>)|";
-                     preg_match_all($patternA, $txt, $matchesA);
-                     foreach ($matchesA[0] as $valueA) {
-                        $txt = str_replace($valueA, $adsense, $txt);
-                    }
+                    // $patternA = "|(<div class=\"setAds\">.*?<\/div>)|";
+                    //  preg_match_all($patternA, $txt, $matchesA);
+                    //  foreach ($matchesA[0] as $valueA) {
+                    //     $txt = str_replace($valueA, $adsense, $txt);
+                    // }
                 }
+
                 $bodytext = '<link href="'.$image.'" rel="image_src"/><meta content="'.$image.'" property="og:image"/><img class="thumbnail news" style="text-align:center" src="'.$image.'"/><!--more--><div style="text-align: center;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" ></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></div>'.$txt;
                 $customcode = '';
                 
@@ -3767,6 +3770,8 @@ HTML;
                 $contents = @$html->find ( '#main .entry-content', 0 );
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
                 $ImgSrc = array_pop($matches);
@@ -6697,6 +6702,190 @@ public function imgtest()
         /*End breadcrumb*/
 
         $this->load->view ( 'managecampaigns/test', $data );
+    }
+
+    function insertAd($content, $ad, $pos = 0){
+      // $pos = 0 means randomly position in the content
+        $closing_p = '</p>';
+        $paragraphs = explode( $closing_p, $content );
+        $count = count($paragraphs);
+        $midpoint = floor($count / 1.5);
+
+        if($count == 0  or $count <= $pos){
+            return $content;
+        }
+        else{
+            for ($i=0; $i < $midpoint; $i++) { 
+                if( $i%2 == 1 ) {
+                    if($pos == 0){
+                      $pos = rand (1, $count - 1);
+                    } else {
+                        $pos = $i;
+                    }
+                    $content = preg_replace('/<p>/', '<helper>', $content, $pos + 1);
+                    $content = preg_replace('/<helper>/', '<p>', $content, $pos);
+                    $content = str_replace('<helper>', $ad . "\n<p>", $content);
+                }
+
+            }
+            // if($pos == 0){
+            //   $pos = rand (1, $count - 1);
+            // }
+            // $content = preg_replace('/<p>/', '<helper>', $content, $pos + 1);
+            // $content = preg_replace('/<helper>/', '<p>', $content, $pos);
+            // $content = str_replace('<helper>', $ad . "\n<p>", $content);
+            return $content;
+        }
+    }
+
+    function ad_between_paragraphs($content){
+        /**-----------------------------------------------------------------------------
+         *
+         *  @author       Pieter Goosen <http://stackoverflow.com/users/1908141/pieter-goosen>
+         *  @return       Ads in between $content
+         *  @link         http://stackoverflow.com/q/25888630/1908141
+         * 
+         *  Special thanks to the following answers on my questions that helped me to
+         *  to achieve this
+         *     - http://stackoverflow.com/a/26032282/1908141
+         *     - http://stackoverflow.com/a/25988355/1908141
+         *     - http://stackoverflow.com/a/26010955/1908141
+         *     - http://wordpress.stackexchange.com/a/162787/31545
+         *
+        *------------------------------------------------------------------------------*/ 
+
+
+            /**-----------------------------------------------------------------------------
+             *
+             *  wptexturize is applied to the $content. This inserts p tags that will help to  
+             *  split the text into paragraphs. The text is split into paragraphs after each
+             *  closing p tag. Remember, each double break constitutes a paragraph.
+             *  
+             *  @todo If you really need to delete the attachments in paragraph one, you want
+             *        to do it here before you start your foreach loop
+             *
+            *------------------------------------------------------------------------------*/ 
+            $closing_p = '</p>';
+            $paragraphs = explode( $closing_p, $content );
+
+
+            /**-----------------------------------------------------------------------------
+             *
+             *  The amount of paragraphs is counted to determine add frequency. If there are
+             *  less than four paragraphs, only one ad will be placed. If the paragraph count
+             *  is more than 4, the text is split into two sections, $first and $second according
+             *  to the midpoint of the text. $totals will either contain the full text (if 
+             *  paragraph count is less than 4) or an array of the two separate sections of
+             *  text
+             *
+             *  @todo Set paragraph count to suite your needs
+             *
+            *------------------------------------------------------------------------------*/ 
+            $count = count( $paragraphs );
+            echo $count%3;
+            if( 4 >= $count ) {
+                $totals = array( $paragraphs ); 
+            }else{
+                $midpoint = floor($count / 2);
+                $first = array_slice($paragraphs, 0, $midpoint );
+                if( $count%2 == 1 ) {
+                    $second = array_slice( $paragraphs, $midpoint, $midpoint, true );
+                }else{
+                    $second = array_slice( $paragraphs, $midpoint, $midpoint-1, true );
+                }
+                $totals = array( $first, $second );
+            }
+
+            $new_paras = array();   
+            //var_dump($totals);
+            die;
+            foreach ( $totals as $key_total=>$total ) {
+                /**-----------------------------------------------------------------------------
+                 *
+                 *  This is where all the important stuff happens
+                 *  The first thing that is done is a work count on every paragraph
+                 *  Each paragraph is is also checked if the following tags, a, li and ul exists
+                 *  If any of the above tags are found or the text count is less than 10, 0 is 
+                 *  returned for this paragraph. ($p will hold these values for later checking)
+                 *  If none of the above conditions are true, 1 will be returned. 1 will represent
+                 *  paragraphs that qualify for add insertion, and these will determine where an ad 
+                 *  will go
+                 *  returned for this paragraph. ($p will hold these values for later checking)
+                 *
+                 *  @todo You can delete or add rules here to your liking
+                 *
+                *------------------------------------------------------------------------------*/ 
+                $p = array();
+                foreach ( $total as $key_paras=>$paragraph ) {
+                    $word_count = count(explode(' ', $paragraph));
+                    if( preg_match( '~<(?:img|ul|li)[ >]~', $paragraph ) || $word_count < 10 ) {  
+                        $p[$key_paras] = 0; 
+                    }else{
+                        $p[$key_paras] = 1; 
+                    }   
+                }
+
+                /**-----------------------------------------------------------------------------
+                 *
+                 *  Return a position where an add will be inserted
+                 *  This code checks if there are two adjacent 1's, and then return the second key
+                 *  The ad will be inserted between these keys
+                 *  If there are no two adjacent 1's, "no_ad" is returned into array $m
+                 *  This means that no ad will be inserted in that section
+                 *
+                *------------------------------------------------------------------------------*/ 
+                $m = array();
+                foreach ( $p as $key=>$value ) {
+                    if( 1 === $value && array_key_exists( $key-1, $p ) && $p[$key] === $p[$key-1] && !$m){
+                        $m[] = $key;
+                    }elseif( !array_key_exists( $key+1, $p ) && !$m ) {
+                        $m[] = 'no-ad';
+                    }
+                } 
+                /**-----------------------------------------------------------------------------
+                 *
+                 *  Use two different ads, one for each section
+                 *  Only ad1 is displayed if there is less than 4 paragraphs
+                 *
+                 *  @todo Replace "PLACE YOUR ADD NO 1 HERE" with your add or code. Leave p tags
+                 *  @todo I will try to insert widgets here to make it dynamic
+                 *
+                *------------------------------------------------------------------------------*/ 
+                if( $key_total == 0 ){
+                    $ad = array( 'ad1' => '<div class="setAdsSection"></div>');
+                }else{
+                    $ad = array( 'ad2' => '<div class="setAdsSection"></div>');
+                }
+
+                /**-----------------------------------------------------------------------------
+                 *
+                 *  This code loops through all the paragraphs and checks each key against $mail
+                 *  and $key_para
+                 *  Each paragraph is returned to an array called $new_paras. $new_paras will
+                 *  hold the new content that will be passed to $content.
+                 *  If a key matches the value of $m (which holds the array key of the position
+                 *  where an ad should be inserted) an add is inserted. If $m holds a value of
+                 *  'no_ad', no ad will be inserted
+                 *
+                *------------------------------------------------------------------------------*/ 
+                foreach ( $total as $key_para=>$para ) {
+                    if( !in_array( 'no_ad', $m ) && $key_para == $m[0] ){
+                        $new_paras[key($ad)] = $ad[key($ad)];
+                        $new_paras[$key_para] = $para;
+                    }else{
+                        $new_paras[$key_para] = $para;
+                    }
+                }
+            }
+            /**-----------------------------------------------------------------------------
+             *
+             *  $content should be a string, not an array. $new_paras is an array, which will
+             *  not work. $new_paras are converted to a string with implode, and then passed
+             *  to $content which will be our new content
+             *
+            *------------------------------------------------------------------------------*/ 
+            $content =  implode( ' ', $new_paras );
+        return $content;
     }
 }
 /* End of file welcome.php */
