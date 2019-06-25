@@ -2699,7 +2699,7 @@ HTML;
                         }
                     }
                 }
-
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -2750,6 +2750,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -2799,6 +2800,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -2851,6 +2853,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -2900,6 +2903,7 @@ HTML;
                 //         }
                 //     }
                 // }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -2961,6 +2965,7 @@ HTML;
                 }
                 // echo $content;
                 // die;
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3020,6 +3025,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3079,6 +3085,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3148,6 +3155,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $htmlContent;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3200,6 +3208,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3239,6 +3248,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3287,6 +3297,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3348,6 +3359,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3407,6 +3419,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3465,6 +3478,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3575,6 +3589,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3653,6 +3668,7 @@ HTML;
                         }
                     }
                 }
+                $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
@@ -3721,6 +3737,23 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'ball76.com':
+                $obj->label = '';
+                $iframeCheck = @$html->find ( '.su-youtube iframe', 0 );
+                $obj->title = $html->find ( 'title', 0 )->innertext;
+                if(!empty($iframeCheck)) {
+                    $iframe = @$iframeCheck->src;
+                    // $html1 = file_get_html ( $iframeCheck->src );
+                    // $obj->title = $html1->find ( 'title', 0 )->innertext;
+                    $vid = $this->Mod_general->get_video_id($iframe);
+                    $obj->vid = $vid['vid'];
+                    $obj->thumb = 'https://i.ytimg.com/vi/'.$obj->vid.'/hqdefault.jpg';
+                }
+                $obj->conent = '';
+                $obj->fromsite = '';
+                $obj->site = 'old';
+                return $obj;
+                break;
             default:
                 $obj->label = '';
                 $dataA = @$html->find ( '#main .post', 0 );
@@ -3735,18 +3768,18 @@ HTML;
                     $html1 = file_get_html ( 'https://www.youtube.com/watch?v='.$jsonArr[11] );
                     $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
                     //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
-                    $vid = $jsonArr[11];
+                    $obj->vid = $jsonArr[11];
                 } else if (!empty($checked)) {
                     $iframe = @$checked->href;
                     $html1 = file_get_html ( $iframe );
                     $obj->title = @$html1->find ( 'meta[property=og:title]', 0 )->content; 
                     //$title = $html1->find ( 'tit.youtube_linkle', 0 )->innertext;
-                    $vid = $iframe;
+                    $obj->vid = $iframe;
                 } else if(!empty($iframeCheck)) {
                     $iframe = @$html->find ( '#Blog1 iframe', 0 )->src;
                     $html1 = file_get_html ( $iframe );
                     $obj->title = $html1->find ( 'title', 0 )->innertext;
-                    $vid = $iframe;
+                    $obj->vid = $iframe;
                 } else {
                     $obj->title = @$html->find ( 'meta[property=og:title]', 0 )->content; 
                 }
