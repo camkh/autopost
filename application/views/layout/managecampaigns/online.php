@@ -91,7 +91,6 @@ var otherOnline = [
 {"name":"R","online":"cg5tms2uhr"},
 {"name":"KHun","online":"egofkf08xp"},
 {"name":"KHoun","online":"h4tsxsdii1"},
-{"name":"01","online":"tnei4ubws0"},
 {"name":"02","online":"x8ywnliba3"},
 {"name":"03","online":"kjvkw1u49x"},
 {"name":"04","online":"rl6lxrm5ag"},

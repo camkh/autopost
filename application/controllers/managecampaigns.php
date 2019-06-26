@@ -1172,7 +1172,7 @@ class Managecampaigns extends CI_Controller {
                     $pConent = json_decode($getPost[0]->p_conent);
                     $pOption = json_decode($getPost[0]->p_schedule);
                     $main_post_style = @$pOption->main_post_style;
-                    if (!(preg_match('/youtu/', $pConent->link) && $pOption->foldlink ==1) && empty($pConent->vid)) {
+                    if ((!preg_match('/youtu/', $pConent->link) && $pOption->foldlink !=1) && empty($pConent->vid)) {
                         if($main_post_style != 'tnews') {
                             redirect(base_url().'facebook/shareation?post=getpost');
                         }
