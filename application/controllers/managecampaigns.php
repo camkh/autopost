@@ -3803,6 +3803,50 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'www.kiddee.welovemyking.com':
+                foreach($html->find('.seed-social') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $label = $html->find('.tt_cat_single a',0)->plaintext;
+                $obj->label = $label;
+                $obj->title = @$html->find ( 'title', 0 )->plaintext; 
+                $contents = @$html->find ( '.thaitheme_read', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = '';
+                $obj->site = 'site';
+                return $obj;
+                break;
             default:
                 $obj->label = '';
                 $dataA = @$html->find ( '#main .post', 0 );
