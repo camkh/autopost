@@ -330,6 +330,7 @@ class Managecampaigns extends CI_Controller {
             $MulitLink = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereLinkMulti );
             if(!empty($MulitLink[0])) {
                 $Multurl = $this->input->get('link');
+                $Multurl = strtok($Multurl, "?");
                 foreach ($MulitLink as $key => $MulLink) {
                 $Mcontent = json_decode($MulLink->p_conent);
                     if(trim($Multurl) == trim($Mcontent->link)) {
