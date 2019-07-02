@@ -322,7 +322,7 @@ class Managecampaigns extends CI_Controller {
         /*End delete spam url*/
 
         /*Check for multi Share */
-        if($this->input->get('m') == 'multishare') {
+        if($this->input->get('m') == 'multishare' || $this->input->get('spam_fb')==2) {
             $whereLinkMulti = array (
                 'user_id' => $log_id,
                 'u_id' => $fbUserId,
