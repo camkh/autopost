@@ -321,6 +321,31 @@ class Managecampaigns extends CI_Controller {
         }
         /*End delete spam url*/
 
+        /*Check for multi Share */
+        if($this->input->get('m') == 'multishare') {
+            $whereLinkMulti = array (
+                'user_id' => $log_id,
+                'u_id' => $fbUserId,
+            );
+            $MulitLink = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereLinkMulti );
+            if(!empty($MulitLink[0])) {
+                $Multurl = $this->input->get('link');
+                foreach ($MulitLink as $key => $MulLink) {
+                $Mcontent = json_decode($MulLink->p_conent);
+                    if(trim($Multurl) == trim($Mcontent->link)) {
+                        $whereMul = array (
+                            'user_id' => $log_id,
+                            'p_id' => $MulLink->p_id
+                        );
+                        @$this->Mod_general->delete('post', $whereMul);
+                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
+                        exit();
+                    }
+                }
+            }
+        }
+        /*End Check for multi Share */
+
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
