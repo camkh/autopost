@@ -109,7 +109,7 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<?php if(!empty($this->input->get('spam_fb'))):
+		<?php if(!empty($this->input->get('spam_fb') && $this->input->get('spam_fb')!=2)):
 			$message = $this->input->get('spam_fb');
 			$mArr = explode('until ', $message);
 			?>
