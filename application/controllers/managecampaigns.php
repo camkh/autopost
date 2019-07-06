@@ -3454,6 +3454,7 @@ HTML;
                 /*get label*/
                 //$label = $html->find('.cat-links a',0)->plaintext;
                 $obj->label = 'Lott';
+                $obj->title = str_replace('หมีหวย.com', '', $obj->title);
                 /*End get label*/
 
                 // foreach($html->find('.sharedaddy') as $item) {
@@ -3478,6 +3479,69 @@ HTML;
                 $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
                 $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
                 $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->vid = '';
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.007lotto.net':
+                /*get label*/
+                //$label = $html->find('.cat-links a',0)->plaintext;
+                $obj->label = 'Lott';
+                //$obj->title = str_replace('หมีหวย.com', '', $obj->title);
+                /*End get label*/
+
+                foreach($html->find('#share-this') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.addthis_sharing_toolbox') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $content = @$html->find ( '#main .entry-content', 0 )->innertext;
+                $content = preg_replace('/<center\b[^>]*>(.*?)<\/center>/is', "", $content);
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-sizes=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-src=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-recalc-dims=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-large-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-medium-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-meta=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+                $content = str_replace('--Advertisement--', '', $content);
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
                 $ImgSrc = array_pop($matches);
