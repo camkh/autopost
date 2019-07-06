@@ -1170,8 +1170,16 @@ class Managecampaigns extends CI_Controller {
                     'pid'=> $pid, 
                     'uid'=> $log_id,
                 );
+
                 $tmp_path = './uploads/'.$log_id.'/';
-                $file_name = $tmp_path . $pid.'.json';
+                if (!file_exists($tmp_path)) {
+                    mkdir($tmp_path, 0700, true);
+                }
+                $tmp_path_sid = './uploads/'.$log_id.'/'.$fbid.'/';
+                if (!file_exists($tmp_path_sid)) {
+                    mkdir($tmp_path_sid, 0700, true);
+                }
+                $file_name = $tmp_path_sid . $pid .'-post.json';
                 if (file_exists($file_name)) {
                     $LoopId = file_get_contents($file_name);
                     $LoopIdArr = json_decode($LoopId);
@@ -1352,8 +1360,19 @@ class Managecampaigns extends CI_Controller {
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
                                             $p_id = $this->input->get('pid');
-                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id=";}, 30 );</script>';
-                                            exit();
+
+                                            if(count($postsLoop)>5) {
+                                               //echo $showHTHM;
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
+                                                die;
+                                            } else {
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&wait=5";}, 30 );</script>';
+                                                die;
+                                            }
+
+
+                                            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id=";}, 30 );</script>';
+                                            // exit();
                                         }
                                         $link = @$blogData->url;
                                         /*update post*/
@@ -1425,8 +1444,17 @@ class Managecampaigns extends CI_Controller {
                                             $DataBlogLink = $this->postBlogger($dataContent);
                                             if(!empty($DataBlogLink['error'])) {
                                                 //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
-                                                exit();
+                                                if(count($postsLoop)>5) {
+                                               //echo $showHTHM;
+                                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                    die;
+                                                } else {
+                                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&wait=5";}, 30 );</script>';
+                                                    die;
+                                                }
+                                                
+                                                // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                // exit();
                                             }
                                             $link = $DataBlogLink->url;
                                         }
@@ -1492,8 +1520,19 @@ class Managecampaigns extends CI_Controller {
 
                     $showHTHM = '<link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet"><style>.khmer{font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);}</style><div style="background-repeat: no-repeat;background-attachment: fixed;position:absolute;top:0;bottom:0;left:0;right:0;background-size: cover; background:url('.$imgRand.'); center center no-repeat; background-size: 100%;"><div style="background: rgba(255, 255, 255, 0.38);text-align:center;font-size:20px;padding:40px;font-family: Hanuman, serif!important;font-size: 30px;color: #fff;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);">សូមមេត្តារង់ចាំ<br/>Please wait...<br/><table align="center" class="table table-hover table-striped table-bordered table-highlight-head"> <tbody> <tr> <td align="left" valign="middle">Post</td><td align="left" valign="middle">1</td></tr><tr> <td align="left" valign="middle">Post ID: </td><td align="left" valign="middle">'.$getPost[0]->p_id.'</td></tr><tr> <td align="left" valign="middle">ប៉ុស្តិ៍ជាលើកទី: </td><td align="left" valign="middle">0</td></tr><tr> <td align="left" valign="middle">ប្រើអ៊ីម៉ែល: </td><td align="left" valign="middle">'.@$pOption->gemail.'</td></tr><tr> <td align="left" valign="middle">Main Blog ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$bid.'">'.@$bid.'</a></td></tr><tr> <td align="left" valign="middle">Blog Link ID: </td><td align="left" valign="middle"><a class="K3JSBVB-i-F" target="_blank" href="https://www.blogger.com/blogger.g?blogID='.@$blogRand.'">'.@$blogRand.'</a></td></tr></tbody></table></div></div>';
                             //$showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 30 );</script>';
-                        $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'";}, 30 );</script>';
-                        echo $showHTHM;
+                        $showHTHM .= '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'&wait=5";}, 30 );</script>';
+
+                        if(count($postsLoop)>5) {
+                           //echo $showHTHM;
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$getPost[0]->p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
+                            die;
+                        } else {
+                            echo $showHTHM;
+                            die;
+                        }
+
+
+                        //echo $showHTHM;
                         exit();
                         // if(count($postsLoop)>5) {
                         //    //echo $showHTHM;
@@ -5028,25 +5067,32 @@ HTML;
                             /* end add data to post */
 
                             /*limit for 2 posts*/
-                            // $postsLoop[] = array(
-                            //     'pid'=> $AddToPost, 
-                            //     'uid'=> $log_id,
-                            // );
-                            // $tmp_path = './uploads/'.$log_id.'/';
-                            // $file_name = $tmp_path . $sid.'-post.json';
-                            // if (file_exists($file_name)) {
-                            //     $LoopId = file_get_contents($file_name);
-                            //     $LoopIdArr = json_decode($LoopId);
-                            //     foreach ($LoopIdArr as $lId) {
-                            //         $postsLoop[] = array(
-                            //             'pid'=> $lId->pid, 
-                            //             'uid'=> $lId->uid,
-                            //         );
-                            //     }
-                            // }
-                            // $f = fopen($file_name, 'w');
-                            // fwrite($f, json_encode($postsLoop));
-                            // fclose($f);
+                            $postsLoop[] = array(
+                                'pid'=> $AddToPost, 
+                                'uid'=> $log_id,
+                            );
+                            $tmp_path = './uploads/'.$log_id.'/';
+                            if (!file_exists($tmp_path)) {
+                                mkdir($tmp_path, 0700, true);
+                            }
+                            $tmp_path_sid = './uploads/'.$log_id.'/'.$sid.'/';
+                            if (!file_exists($tmp_path_sid)) {
+                                mkdir($tmp_path_sid, 0700, true);
+                            }
+                            $file_name = $tmp_path_sid . $PostCheck[0]->p_id.'-post.json';
+                            if (file_exists($file_name)) {
+                                $LoopId = file_get_contents($file_name);
+                                $LoopIdArr = json_decode($LoopId);
+                                foreach ($LoopIdArr as $lId) {
+                                    $postsLoop[] = array(
+                                        'pid'=> $lId->pid, 
+                                        'uid'=> $lId->uid,
+                                    );
+                                }
+                            }
+                            $f = fopen($file_name, 'w');
+                            fwrite($f, json_encode($postsLoop));
+                            fclose($f);
                             /*End limit for 2 posts*/
                             
                             /* add data to group of post */

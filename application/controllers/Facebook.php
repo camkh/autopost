@@ -1643,7 +1643,8 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         if(!empty($postAto)) {
                             if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                                 if(preg_match('/youtu/', $pConent->link) || $dataPost[0]->p_post_to ==1 || ($dataPost[0]->p_post_to == 1 && $pOption->main_post_style =='tnews')) {
-                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, 30 );</script>';
+                                    $wait = !empty($this->input->get('wait')) ? ($this->input->get('wait') * 1000) : 30;
+                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";}, '.$wait.' );</script>';
                                     exit();
                                 } else {
                                     redirect(base_url() . 'Facebook/share?post='.$value.'&id=' . $pid.'&agent=' . $shOption->userAgent.'&shareid='.$shareid);
