@@ -374,7 +374,7 @@
                                                             <fieldset>
                                                                 <legend>ថែមអត្ថបទពីក្រោយ:</legend>
                                                                     <label class="khmer" style="max-width: 100%;width: 100%">
-                                                                    <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control" placeholder="1234|1234|1234"></textarea></label>
+                                                                    <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control setPrefix" placeholder="1234|1234|1234"></textarea></label>
                                                             </fieldset>
                                                             <fieldset>
                                                                 <legend>ប្រភេទ / Label:</legend>
@@ -1442,6 +1442,7 @@
                       }
                       if(obj.from == 'site') {
                         $('#post_' + sid + ' .set_balel').val(obj.label);
+                        $('#post_' + sid + ' .setPrefix').val('ขอแค่ ขอบคุณ');
                         $('#post_' + sid + ' .smpoststyle[value=tnews]').prop('checked', true);
                       }
                       if(obj.from == 'site') {
@@ -1722,7 +1723,7 @@ function showResponse(responseText, statusText, xhr, $form)  {
                 <fieldset>
                     <legend>ថែមអត្ថបទពីក្រោយ:</legend>
                         <label class="khmer" style="max-width: 100%;width: 100%">
-                        <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control" placeholder="1234|1234|1234"></textarea></label>
+                        <textarea style="max-width: 100%;width: 100%;height: 34px" rows="1" cols="5" name="saddtxt[]" class="form-control setPrefix" placeholder="1234|1234|1234"></textarea></label>
                 </fieldset>
                 <fieldset>
                     <legend>ប្រភេទ / Label:</legend>
