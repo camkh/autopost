@@ -5208,7 +5208,7 @@ HTML;
                             if (!file_exists($tmp_path_sid)) {
                                 mkdir($tmp_path_sid, 0700, true);
                             }
-                            $file_name = $tmp_path_sid . $PostCheck[0]->p_id.'-post.json';
+                            $file_name = $tmp_path_sid . @$PostCheck[0]->p_id.'-post.json';
                             if (file_exists($file_name)) {
                                 $LoopId = file_get_contents($file_name);
                                 $LoopIdArr = json_decode($LoopId);
