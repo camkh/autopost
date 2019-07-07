@@ -51,6 +51,7 @@ $backto = str_replace('blog;_link_id', 'blog_link_id', $backto);
 $backto = str_replace('blink;=', 'blink=', $backto);
 $backto = str_replace('autopost;=', 'autopost=', $backto);
 $backto = urlencode($backto);
+
 ?>
 <code id="codeB" style="width:300px;overflow:hidden;display:none"></code>
 <code id="codeC" style="width:300px;overflow:hidden;display:none">macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=https://developers.facebook.com/tools/debug/sharing/?q=xxxxxxxxxxx\n&quot;;macro+=&quot;TAG POS=1 TYPE=SPAN ATTR=TXT:We&lt;SP&gt;can't&lt;SP&gt;review&lt;SP&gt;this&lt;SP&gt;website&lt;SP&gt;because&lt;SP&gt;the*\n&quot;;retcode=iimPlay(macro);var error=true;if(retcode&lt;0){error=false;}; if(!error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/ajax?lid=&quot;+bid+&quot;&amp;p=autopostblog\n&quot;;retcode=iimPlay(macro);};if(error){macro=&quot;CODE:&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;setting?blog_link_a=1&amp;bid=&quot;+bid+&quot;&amp;title=&amp;status=2\n&quot;;macro+=&quot;WAIT SECONDS=2\n&quot;;macro+=&quot;URL GOTO=&quot;+homeUrl+&quot;managecampaigns/autopost?startpost=1\n&quot;;retcode=iimPlay(macro);}</code>

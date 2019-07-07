@@ -1272,7 +1272,7 @@ class Managecampaigns extends CI_Controller {
                             if (!file_exists($structure)) {
                                 mkdir($structure, 0777, true);
                             }
-                            $imgUrl = @str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                            //$imgUrl = @str_replace('maxresdefault', 'hqdefault', $imgUrl);
 
                             $file_title = basename($imgUrl);
 
@@ -5071,43 +5071,43 @@ HTML;
                             $picture = 'https://i.ytimg.com/vi/'.$ytData->yid.'/hqdefault.jpg';
                             $imgUrl = $picture;
                                 
-                                $structure = FCPATH . 'uploads/image/';
-                                if (!file_exists($structure)) {
-                                    mkdir($structure, 0777, true);
-                                }
-                                $imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
-                                $file_title = basename($imgUrl);
-                                $fileName = FCPATH . 'uploads/image/'.$ytData->yid.$file_title;
+                            $structure = FCPATH . 'uploads/image/';
+                            if (!file_exists($structure)) {
+                                mkdir($structure, 0777, true);
+                            }
+                            //$imgUrl = str_replace('maxresdefault', 'hqdefault', $imgUrl);
+                            $file_title = basename($imgUrl);
+                            $fileName = FCPATH . 'uploads/image/'.$ytData->yid.$file_title;
 
-                                if (!preg_match('/ytimg.com/', $fileName)) {
-                                    $imgUrl = $picture;
-                                }    
+                            if (!preg_match('/ytimg.com/', $fileName)) {
+                                $imgUrl = $picture;
+                            }    
 
-                                if(!preg_match('/blogspot.com/', $fileName) || !preg_match('/googleusercontent.com/', $fileName)) {
-                                    copy($imgUrl, $fileName);      
-                                    $param = array(
-                                        'btnplayer'=>$json_a->btnplayer,
-                                        'playerstyle'=>$json_a->playerstyle,
-                                        'imgcolor'=>$json_a->imgcolor,
-                                        'txtadd'=>$json_a->txtadd,
-                                        'filter_brightness'=>$json_a->filter_brightness,
-                                        'filter_contrast'=>$json_a->filter_contrast,
-                                        'img_rotate'=>$json_a->img_rotate,
-                                    );
-                                    $images = $this->mod_general->uploadMedia($fileName,$param,1); 
-                                    if(!$images) {
-                                        $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
-                                        $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
-                                        if($image) {
-                                            @unlink($fileName);
-                                        }
-                                    } else {
-                                        $image = @$images; 
+                            if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
+                                copy($imgUrl, $fileName);      
+                                $param = array(
+                                    'btnplayer'=>$json_a->btnplayer,
+                                    'playerstyle'=>$json_a->playerstyle,
+                                    'imgcolor'=>$json_a->imgcolor,
+                                    'txtadd'=>$json_a->txtadd,
+                                    'filter_brightness'=>$json_a->filter_brightness,
+                                    'filter_contrast'=>$json_a->filter_contrast,
+                                    'img_rotate'=>$json_a->img_rotate,
+                                );
+                                $images = $this->mod_general->uploadMedia($fileName,$param,1); 
+                                if(!$images) {
+                                    $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                                    $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                    if($image) {
                                         @unlink($fileName);
-                                    }                
+                                    }
                                 } else {
-                                    $image = $picture;
-                                }
+                                    $image = @$images; 
+                                    @unlink($fileName);
+                                }                
+                            } else {
+                                $image = $picture;
+                            }
                             /*End upload image so server*/
                             $contents = $aObj->getpost(1);
                             $txt = preg_replace('/\r\n|\r/', "\n", $contents["content"][0]["content"]); 
@@ -5296,6 +5296,79 @@ HTML;
                 );
                 $nextPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $whereNext );
                 if(!empty($nextPost[0])) {
+                    $pConent = json_decode($nextPost[0]->p_conent);
+                    $pOption = json_decode($nextPost[0]->p_schedule);
+                    $picture = $pConent->picture;
+                    if (preg_match("/http/", $picture) && preg_match('/ytimg.com/', $picture)) {
+                        $file_title = basename($picture);
+                        $fileName = FCPATH . 'uploads/image/'.$nextPost[0]->p_id.$file_title;
+                        @copy($picture, $fileName); 
+                        /*Upload image to server*/
+                        
+                        if(!empty($pOption->foldlink) && !empty($pConent->picture)) {
+                            $image = $pConent->picture;
+                        } else {
+                            /*Check true image*/
+                            if ( ! function_exists( 'exif_imagetype' ) ) {
+                                function exif_imagetype ( $filename ) {
+                                    if ( ( list($width, $height, $type, $attr) = getimagesize( $fileName ) ) !== false ) {
+                                        return $type;
+                                    }
+                                return false;
+                                }
+                            }
+                            $checkImage = @exif_imagetype($fileName);
+                            if(empty($checkImage)) {
+                                $this->Mod_general->delete('post', array('p_id'=>$nextPost[0]->p_id));
+                                echo '<center class="khmer" style="color:red;">No Image គ្មានរូបភាព</center>';
+                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
+                                exit();
+                            }
+                            /*End Check true image*/
+                            $param = array(
+                                'btnplayer'=>@$pOption->btnplayer,
+                                'playerstyle'=>@$pOption->playerstyle,
+                                'imgcolor'=>@$pOption->imgcolor,
+                                'txtadd'=>@$pOption->txtadd,
+                                'filter_brightness'=>@$pOption->filter_brightness,
+                                'filter_contrast'=>@$pOption->filter_contrast,
+                                'img_rotate'=>@$pOption->img_rotate,
+                            );
+                            $images = $this->mod_general->uploadMedia($fileName,$param);
+                            if(!$images) {
+                                $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                                $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                                if($image) {
+                                    @unlink($fileName);
+                                }
+                            } else {
+                                $image = @$images; 
+                                @unlink($fileName);
+                            }
+                        }
+                        /*End Upload image to server*/
+                        if(!empty($image)) {
+                            /*update post*/
+                            $whereUp = array('p_id' => $nextPost[0]->p_id);
+                            $content = array (
+                                'name' => $pConent->name,
+                                'message' => $pConent->message,
+                                'caption' => $pConent->caption,
+                                'link' => $pConent->link,
+                                'mainlink' => @$pConent->mainlink,
+                                'picture' => @$image,                            
+                                'vid' => @$pConent->vid,                            
+                            );
+                            $dataPostInstert = array (
+                                Tbl_posts::conent => json_encode ( $content ),
+                            );
+                            $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                            echo $updates;
+                            /*End update post*/
+                            @unlink($fileName);
+                        }
+                        header("Refresh:0");
+                    }
                     $data['datapost'] = $nextPost[0];
                     /*show blog linkA*/
                     $data['bloglinkA'] = false;
