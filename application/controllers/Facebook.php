@@ -1632,6 +1632,54 @@ WHERE gl.`gu_grouplist_id` = {$id}");
                         $group = 0, 
                         $limit = 1 
                     );
+                    if(empty($dataShare[0])) {
+                        /*if empty groups*/
+                        $fbUserId = $this->session->userdata('fb_user_id');
+                        $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                        $string = file_get_contents($tmp_path);
+                        $json_a = json_decode($string);
+
+                        /*get group*/
+                       $wGroupType = array (
+                                'gu_grouplist_id' => $json_a->account_group_type,
+                                'gu_user_id' => $log_id,
+                                'gu_status' => 1
+                        );
+                        $tablejoin = array('socail_network_group'=>'socail_network_group.sg_id=group_user.gu_idgroups');
+                        $itemGroups = $this->Mod_general->join('group_user', $tablejoin, $fields = '*', $wGroupType);
+                       /*End get group*/
+                       /* add data to group of post */
+                        if(!empty($itemGroups)) {
+                            echo '<meta http-equiv="refresh" content="5"/>';
+                            if($json_a->share_schedule == 1) {
+                                $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
+                                $cPost = $date->format('Y-m-d H:i:s');
+                            } else {
+                                $cPost = date('Y-m-d H:i:s');
+                            }
+                            $ShContent = array (
+                                'userAgent' => @$json_a->userAgent,                            
+                            );                    
+                            foreach($itemGroups as $key => $groups) { 
+                                if(!empty($groups)) {       
+                                    $dataGoupInstert = array(
+                                        'p_id' => $PID,
+                                        'sg_page_id' => $groups->sg_id,
+                                        'social_id' => @$sid,
+                                        'sh_social_type' => 'Facebook',
+                                        'sh_type' => $json_a->ptype,
+                                        'c_date' => $cPost,
+                                        'uid' => $log_id,                                    
+                                        'sh_option' => json_encode($ShContent),                                    
+                                    );
+                                    $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                                }
+                            } 
+                        }
+                        /* end add data to group of post */
+                        /*End if empty groups*/
+                    }
+
                     if(!empty($dataShare[0])) {
                         $pid = $dataShare[0]->p_id;
                         $postId = $dataShare[0]->p_id;
