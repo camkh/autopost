@@ -38,6 +38,7 @@
                     echo "<a href=\"javascript:void(0);\" class=\"list-group-item\"><b> Last Name : </b>" . $userData->family_name . "</a>";
                     echo "<a href=\"javascript:void(0);\" class=\"list-group-item\"><b> Gender : </b>" . $userData->gender . "</a>";
                     echo "<a href=\"javascript:void(0);\" class=\"list-group-item\"><b>Email : </b>" . $userData->email . "</a>";
+                    echo "<a href=\"#". $userData->id ."\" class=\"list-group-item\"><b>GID : </b>" . $userData->id . "</a>";
                     ?>
 
                             <a class='logout list-group-item' href='https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=<?php echo base_url(); ?>index.php/user_authentication/logout'>Logout</a> 

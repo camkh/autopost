@@ -173,6 +173,7 @@ class Managecampaigns extends CI_Controller {
             $fbname = nl2br(trim(strip_tags($fbname))); 
             $this->session->set_userdata('fb_user_name', $fbname);
         }
+        $this->session->unset_userdata('back');
         if($fbuid) {
             $checkFbId = $this->mod_general->select(
                 Tbl_user::tblUser,
