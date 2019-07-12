@@ -3889,6 +3889,7 @@ HTML;
                 $obj->label = implode(',', $label);
                 /*End get label*/
 
+
                 $content = '';
                 foreach($html->find ('#main div[itemprop=articleBody]') as $item) {
                     $content .= $item->innertext;
@@ -3896,6 +3897,7 @@ HTML;
                 $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
                 $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
                 $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+
 
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
@@ -3905,7 +3907,7 @@ HTML;
                     foreach ($ImgSrc as $image) {
                         $imagedd = strtok($image, "?");
                         if(!preg_match('/^(http)/', $imagedd)){
-                            $imagedd = 'http://socialnews.teenee.com/penkhao/'.$imagedd;
+                            $imagedd = 'http://horo.teenee.com/seer/'.$imagedd;
                         }
                         $file_title = basename($imagedd);
                         $fileName = FCPATH . 'uploads/image/'.$file_title;
