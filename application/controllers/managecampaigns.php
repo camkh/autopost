@@ -1361,13 +1361,12 @@ class Managecampaigns extends CI_Controller {
                                         if(!empty($blogData['error'])) {
                                             //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
                                             $p_id = $this->input->get('pid');
-
                                             if(count($postsLoop)>5) {
                                                //echo $showHTHM;
                                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
                                                 die;
                                             } else {
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&wait=5";}, 30 );</script>';
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
                                                 die;
                                             }
 
