@@ -1285,7 +1285,7 @@ class Managecampaigns extends CI_Controller {
                             } 
                         }
 
-                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
+                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl) && !preg_match('/maxresdefault/', $imgUrl)) {
                             @copy($imgUrl, $fileName);      
                             $param = array(
                                 'btnplayer'=>$pOption->btnplayer,
@@ -1328,6 +1328,11 @@ class Managecampaigns extends CI_Controller {
                             }                          
                         } else {
                             $image = $picture;
+                        }
+
+                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl) && !preg_match('/maxresdefault/', $imgUrl)) {
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
+                                            exit();
                         }
                         $post_by_manaul = $pOption->post_by_manaul;
                         if(!empty($image)) {
@@ -4286,7 +4291,7 @@ HTML;
                 //     $item->outertext = '';
                 // }
                 // $html->save();
-                
+                $obj->thumb = @$html->find ( '.np-article-thumb img', 0 )->src; 
                 /*get label*/
                 $label = [];
                 foreach($html->find('.post-cats-list a') as $index => $labels) {

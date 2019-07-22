@@ -1375,10 +1375,10 @@ public function get_video_id($param, $videotype = '')
                 $filetype = mime_content_type($file_path);
                 /*resize image*/
                 if(!empty($rezie)) {
-                    $maxDim = 800;
+                    $maxDim = 1200;
                     $file_name = $imgName;
                     list($width, $height, $type, $attr) = @getimagesize( $file_name );
-                    if($width<700) {
+                    if($width<1200) {
                         if ( $width < $maxDim || $height < $maxDim ) {
                             $target_filename = $file_name;
                             $ratio = $width/$height;
@@ -1391,7 +1391,7 @@ public function get_video_id($param, $videotype = '')
                             }
 
                             $src = imagecreatefromstring( file_get_contents( $file_name ) );
-                            $dst = imagecreatetruecolor( $new_width, 415 );
+                            $dst = imagecreatetruecolor( $new_width, 635 );
                             imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
                             imagedestroy( $src );
                             imagejpeg( $dst, $target_filename ); // adjust format as needed
