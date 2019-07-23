@@ -1330,7 +1330,7 @@ class Managecampaigns extends CI_Controller {
                             $image = $picture;
                         }
 
-                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl) && !preg_match('/maxresdefault/', $imgUrl)) {
+                        if (preg_match("/http/", $image) && preg_match('/ytimg.com/', $image) && !preg_match('/maxresdefault/', $image)) {
                             echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost";}, 600 );</script>'; 
                                             exit();
                         }
