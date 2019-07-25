@@ -2614,7 +2614,11 @@ HTML;
                 $vid = (!empty($matches[1]) ? $matches[1] : '');
                 $from = 'yt';
             } else {
-                $content = $this->getConentFromSite($url);
+                    if($log_id == 2) {
+                        $content = $this->getConentFromSite($url);
+                    } else {
+                        $content = array();
+                    }
                 if(!empty($content->fromsite)) {
                     $conTenSite = '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
                 } else {
@@ -4317,6 +4321,69 @@ HTML;
                 $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
                 preg_match_all( $regex, $content, $matches );
                 $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->conent = $content;
+                $obj->fromsite = '';
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.seesuttho.com':
+                foreach($html->find('.code-block') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.wp-post-author-wrap') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $obj->thumb = @$html->find ( '.image-link img.attachment-hitmag-featured', 0 )->src; 
+                /*get label*/
+                $label = [];
+                foreach($html->find('.post-cats-list a') as $index => $labels) {
+                    $setNewLabel = trim($labels->plaintext);
+                    if($setNewLabel == 'ดูดวงรายวัน') {
+                        $label[] = 'ดูดวง';
+                        $label[] = 'ไลฟ์สไตล์';
+                    } else if($setNewLabel == 'สาระน่ารู้') {
+                        $label[] = 'เรื่องน่ารู้';
+                    } else {
+                        $label[] = $setNewLabel;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+
+                $obj->title = @$html->find ( 'title', 0 )->plaintext; 
+                $contents = @$html->find ( '#main .entry-content', 0 );
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $contents);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+
                 // reversing the matches array
                 if(!empty($ImgSrc)) {
                     foreach ($ImgSrc as $image) {

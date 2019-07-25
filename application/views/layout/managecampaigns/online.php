@@ -1,4 +1,6 @@
-<?php if ($this->session->userdata('user_type') != 4) { ?>
+<?php
+$userID = $this->session->userdata ( 'user_id' );
+ if ($userID == 2) { ?>
     <style>
         .radio-inline{}
         .error {color: red}
