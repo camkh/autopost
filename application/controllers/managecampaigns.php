@@ -2614,11 +2614,7 @@ HTML;
                 $vid = (!empty($matches[1]) ? $matches[1] : '');
                 $from = 'yt';
             } else {
-                    if($log_id == 2) {
-                        $content = $this->getConentFromSite($url);
-                    } else {
-                        $content = array();
-                    }
+                    $content = $this->getConentFromSite($url);
                 if(!empty($content->fromsite)) {
                     $conTenSite = '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
                 } else {
@@ -2631,18 +2627,33 @@ HTML;
                 $from = $content->site;
                 $vid = @$content->vid;
             }
-            $data = array (
-                'picture' => @$content->thumb,
-                'name' => trim ( @$content->title ),
-                'message' => trim ( @$content->title ),
-                'caption' => trim ( @$content->title ),
-                'description' => trim ( @$content->description ),
-                'content' => trim ( @$setConents ),
-                'link' => $url,
-                'vid' => $vid,
-                'label' => @$content->label,
-                'from'=> $from
-            );            
+            if(empty($content->fromsite) && $log_id != 2) {
+                $data = array (
+                    'picture' => @$content->thumb,
+                    'name' => trim ( @$content->title ),
+                    'message' => trim ( @$content->title ),
+                    'caption' => trim ( @$content->title ),
+                    'description' => trim ( @$content->description ),
+                    'content' => '',
+                    'link' => $url,
+                    'vid' => $vid,
+                    'label' => @$content->label,
+                    'from'=> $from
+                );
+            } else {
+                $data = array (
+                    'picture' => @$content->thumb,
+                    'name' => trim ( @$content->title ),
+                    'message' => trim ( @$content->title ),
+                    'caption' => trim ( @$content->title ),
+                    'description' => trim ( @$content->description ),
+                    'content' => trim ( @$setConents ),
+                    'link' => $url,
+                    'vid' => $vid,
+                    'label' => @$content->label,
+                    'from'=> $from
+                ); 
+            }           
             if (! empty ( $data )) {
                 if(!empty($this->input->get('url'))) {
                     echo json_encode($data);
@@ -2721,6 +2732,7 @@ HTML;
     }
     function getConentFromSite($url)
     {
+        $log_id = $this->session->userdata ( 'user_id' );
         $this->load->library ( 'html_dom' );
         $html = file_get_html ( $url );
         $obj = new stdClass();
