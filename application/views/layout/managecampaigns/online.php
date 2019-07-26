@@ -1,6 +1,6 @@
 <?php
 $userID = $this->session->userdata ( 'user_id' );
- if ($userID == 2) { ?>
+ if ($log_id == 2 || $log_id == 527 || $log_id == 511) { ?>
     <style>
         .radio-inline{}
         .error {color: red}
