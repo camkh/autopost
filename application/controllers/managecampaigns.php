@@ -4579,7 +4579,7 @@ HTML;
                 $obj->site = 'site';
                 return $obj;
                 break;
-            case 'www.tdaily.us':
+            case 'tdaily.us':
                 /*get label*/
                 // $label = trim($html->find('.entry-header .nav-wrapper a',1)->plaintext);
                 // if($label == 'หวย') {
