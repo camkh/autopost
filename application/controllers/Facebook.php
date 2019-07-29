@@ -1689,6 +1689,13 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
                         $postAto = $this->Mod_general->getActionPost();
                         if(!empty($postAto)) {
+                            $imgUrl = @$pConent->picture;
+                            if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
+                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/yturl?pid='.$PID.'&bid='.$json_a->blogid.'&action=postblog&blink='.$json_a->blogLink.'&autopost=1";},0 );</script>';
+                                        exit();
+                            }
+
+
                             if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                                 if(preg_match('/youtu/', $pConent->link) || $dataPost[0]->p_post_to ==1 || ($dataPost[0]->p_post_to == 1 && $pOption->main_post_style =='tnews')) {
                                     $waits = !empty($this->input->get('waits')) ? ($this->input->get('waits') * 1000) : 30;

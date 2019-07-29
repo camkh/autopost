@@ -1285,7 +1285,7 @@ class Managecampaigns extends CI_Controller {
                             } 
                         }
 
-                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl) && !preg_match('/maxresdefault/', $imgUrl)) {
+                        if (preg_match("/http/", $imgUrl) && preg_match('/ytimg.com/', $imgUrl)) {
                             @copy($imgUrl, $fileName);      
                             $param = array(
                                 'btnplayer'=>$pOption->btnplayer,
