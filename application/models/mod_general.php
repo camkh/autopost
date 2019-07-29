@@ -1423,13 +1423,13 @@ public function get_video_id($param, $videotype = '')
                 imagedestroy( $src );
                 imagejpeg($newimage,$fileSName);
                 imagedestroy( $newimage );
-                // $imagePositionArr = array(
-                //     'cc',
-                //     'tc',
-                //     'bc',
-                // );
-                // $imagePosition = mt_rand(0, count($imagePositionArr) - 1);
-                \ChipVN\Image::watermark($file_path, $fileSName, 'cc');
+                $imagePositionArr = array(
+                    'cc',
+                    'ct',
+                    'cb',
+                );
+                $imagePosition = mt_rand(0, count($imagePositionArr) - 1);
+                \ChipVN\Image::watermark($file_path, $fileSName, $imagePosition);
                 /*End for big and small image*/
                 @unlink($fileSName);
 
