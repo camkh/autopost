@@ -1442,7 +1442,7 @@
                       }
                       if(obj.from == 'site') {
                         $('#post_' + sid + ' .set_balel').val(obj.label);
-                        $('#post_' + sid + ' .setPrefix').val('ขอแค่ ขอบคุณ');
+                        $('#post_' + sid + ' .setPrefix').val('#ชอบก็ไลค์ #ใช่ก็แชร์');
                         $('#post_' + sid + ' .smpoststyle[value=tnews]').prop('checked', true);
                       }
                       if(obj.from == 'site') {
