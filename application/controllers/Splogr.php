@@ -57,7 +57,6 @@ class Splogr extends CI_Controller
     }
     public function getpost($get='')
     {
-
         $log_id = $this->session->userdata ('user_id');
         /*check link*/
         $where_link = array(
@@ -76,6 +75,7 @@ class Splogr extends CI_Controller
                 $setContent = array('content'=> $contentJson); 
                 $getJsonArray = array_merge($error,$setContent);
             } else {
+                get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
                 $error = array('error'=> 1); 
                 $getJsonArray = array_merge($error,$contentJson);
             }
@@ -187,10 +187,84 @@ class Splogr extends CI_Controller
                 }
 
                 break; 
+            case 'www.alibaba.com':
+                $script = $html->find('script',25)->innertext;
+                $perPages = explode('"total":', $script);
+
+                $perPage = explode(',', $perPages[1]);
+                $totalP = $perPage[0];
+
+                $cPageArr = explode('"current":', $perPages[1]);
+                $cPage = explode(',', $cPageArr[1]);
+                $currentPage = $cPage[0];
+                
+                $nexts = explode('/', $site_url);
+                $last = count($nexts) - 1;
+
+                foreach($html->find('.l-main-content .m-gallery-product-item-wrap') as $e) {
+                    $link = $e->find('.item-info .title a',0)->href;
+                    $where_u = array(
+                        'uid' => $log_id,
+                        'link' => $link,
+                    );
+                    $dataLink = $this->Mod_general->select ('splogr', 'link', $where_u );
+                    if(empty($dataLink)) {
+                        $LinkA = array(
+                            'link'=>$link
+                        );
+                        $dataLink = array(
+                            'uid' => $log_id,
+                            'link' => $link,
+                            'type' => 'link',
+                            'status' => 0,
+                        );  
+                        $this->mod_general->insert('splogr', $dataLink);
+                        $this->fromAlibaba($link);
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
+                
+                $setNextNew = ((int) $currentPage + 1) . '.html';
+                $setNext = str_replace($nexts[$last], $setNextNew, $site_url);
+                $dataLink = array(
+                    'uid' => $log_id,
+                    'link' => $setNext,
+                    'type' => 'next',
+                    'status' => 0,
+                ); 
+                $this->mod_general->insert('splogr', $dataLink);
+                $where_link = array(
+                    'uid' => $log_id,
+                    'link' => $site_url,
+                    'type' => 'next',
+                );
+                $updateLink = array('status' => 1);
+                @$this->Mod_general->update ('splogr', $updateLink, $where_link);
+                break;
             default:
                 # code...
                 break;
         }            
+    }
+
+    public function fromAlibaba($site_url='')
+    {
+        ini_set('max_execution_time', 0);
+        $log_id = $this->session->userdata ('user_id');
+        $this->load->library('html_dom');  
+        $html = file_get_html($site_url);      
+        $title = $html->find ( 'h1.ma-title', 0 )->innertext;
+        $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
+        $pricewrap = $html->find ( '.ma-price-wrap', 0 )->innertext;
+        $dooverview = $html->find ( '.do-overview', 0 )->innertext;
+        $getContent = array('title'=>$title,'content'=>$pricewrap . '<br/>'.$dooverview.'<br/> from: '.$site_url);
+        $contentJson[] = $getContent;
+        $error = array('error'=> 0); 
+        $setContent = array('content'=> $contentJson); 
+        $getJsonArray = array_merge($error,$setContent);
+        echo json_encode($getJsonArray);
     }
 
     public function getconents($site_url='')

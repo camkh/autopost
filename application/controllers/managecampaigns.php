@@ -7711,6 +7711,12 @@ public function imgtest()
         /*End breadcrumb*/
 
         $this->load->view ( 'managecampaigns/test', $data );
+
+        require_once(APPPATH.'controllers/Splogr.php');
+        $aObj = new Splogr(); 
+        $enContent = $aObj->fromAlibaba('https://www.alibaba.com/product-detail/Portable-mini-laser-cutter-tempered-glass_60799139180.html');
+        echo $enContent;
+        die;
     }
 
     function insertAd($content, $ad, $pos = 0){
