@@ -1429,9 +1429,9 @@ public function get_video_id($param, $videotype = '')
                     'cb',
                 );
                 $imagePosition = mt_rand(0, count($imagePositionArr) - 1);
-                \ChipVN\Image::watermark($file_path, $fileSName, $imagePosition);
-                /*End for big and small image*/
+                \ChipVN\Image::watermark($file_path, $fileSName, $imagePositionArr[$imagePosition]);
                 @unlink($fileSName);
+                /*End for big and small image*/
 
 
                 if(!empty($param['filter_brightness'])) {
