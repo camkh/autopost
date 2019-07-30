@@ -66,6 +66,17 @@ class Splogr extends CI_Controller
         );
         $nextLink = $this->Mod_general->select ('splogr', 'link,sp_post', $where_link );
         if(!empty($nextLink[0])) {
+            if(preg_match('/alibaba.com/', $nextLink[0]->link)){
+                get_from_site_id($nextLink[0]->link);
+                $wherelink = array(
+                    'uid' => $log_id,
+                    'link' => $nextLink[0]->link,
+                    'type' => 'link',
+                );
+                $updateLink = array('status' => 1);
+                @$this->Mod_general->update ('splogr', $updateLink, $wherelink);
+                exit();
+            }
             $sp_post = json_decode($nextLink[0]->sp_post);
             //$contentJson = $this->getconents($nextLink[0]->link);
             $getContent = array('title'=>$sp_post->title,'content'=>$sp_post->summary . '<br/> from: '.$nextLink[0]->link);
@@ -129,6 +140,9 @@ class Splogr extends CI_Controller
         /*check link status*/
         //$lurl = $this->get_fcontent($site_url);
         $html = @file_get_html($site_url);
+        if(empty($html)) {
+            $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
+        }
         switch ($parse['host']) {
             case 'ezinearticles.com':
                 foreach($html->find('#page-inner .article') as $e) {
@@ -219,6 +233,9 @@ class Splogr extends CI_Controller
                             'status' => 0,
                         );  
                         $this->mod_general->insert('splogr', $dataLink);
+                        if(strpos($link, "http://") === false) {
+                            $link = 'http:'.$link;
+                        }
                         $this->fromAlibaba($link);
                         break;
                     } else {
