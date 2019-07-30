@@ -67,7 +67,7 @@ class Splogr extends CI_Controller
         $nextLink = $this->Mod_general->select ('splogr', 'link,sp_post', $where_link );
         if(!empty($nextLink[0])) {
             if(preg_match('/alibaba.com/', $nextLink[0]->link)){
-                get_from_site_id($nextLink[0]->link);
+                $this->get_from_site_id($nextLink[0]->link);
                 $wherelink = array(
                     'uid' => $log_id,
                     'link' => $nextLink[0]->link,
@@ -86,7 +86,7 @@ class Splogr extends CI_Controller
                 $setContent = array('content'=> $contentJson); 
                 $getJsonArray = array_merge($error,$setContent);
             } else {
-                get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
+                $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
                 $error = array('error'=> 1); 
                 $getJsonArray = array_merge($error,$contentJson);
             }
@@ -202,7 +202,7 @@ class Splogr extends CI_Controller
 
                 break; 
             case 'www.alibaba.com':
-                $script = $html->find('script',25)->innertext;
+                $script = @$html->find('script',25)->innertext;
                 $perPages = explode('"total":', $script);
 
                 $perPage = explode(',', $perPages[1]);
@@ -275,12 +275,18 @@ class Splogr extends CI_Controller
         $title = $html->find ( 'h1.ma-title', 0 )->innertext;
         $og_image = @$html->find ( 'meta [property=og:image]', 0 )->content;
         $pricewrap = $html->find ( '.ma-price-wrap', 0 )->innertext;
+        $pricewrap = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $pricewrap);
+        $pricewrap = trim(preg_replace('/\s\s+/', ' ', $pricewrap));
         $dooverview = $html->find ( '.do-overview', 0 )->innertext;
+        $dooverview = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $dooverview);
+        $dooverview = trim(preg_replace('/\s\s+/', ' ', $dooverview));
+        $contentJson = [];
         $getContent = array('title'=>$title,'content'=>$pricewrap . '<br/>'.$dooverview.'<br/> from: '.$site_url);
         $contentJson[] = $getContent;
         $error = array('error'=> 0); 
         $setContent = array('content'=> $contentJson); 
         $getJsonArray = array_merge($error,$setContent);
+        error_reporting(0);
         echo json_encode($getJsonArray);
     }
 
