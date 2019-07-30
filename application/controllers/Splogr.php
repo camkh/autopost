@@ -128,13 +128,13 @@ class Splogr extends CI_Controller
 
         /*check link status*/
         //$lurl = $this->get_fcontent($site_url);
-        $html = file_get_html($site_url);
+        $html = @file_get_html($site_url);
         switch ($parse['host']) {
             case 'ezinearticles.com':
                 foreach($html->find('#page-inner .article') as $e) {
-                    $link = $e->find('.article-title-link',0)->href;
-                    $title = $e->find('.article-title-link',0)->innertext;
-                    $summary = $e->find('.article-summary',0)->innertext;
+                    $link = @$e->find('.article-title-link',0)->href;
+                    $title = @$e->find('.article-title-link',0)->innertext;
+                    $summary = @$e->find('.article-summary',0)->innertext;
                     $link = 'http://ezinearticles.com'.$link;
                     $where_u = array(
                         'uid' => $log_id,
