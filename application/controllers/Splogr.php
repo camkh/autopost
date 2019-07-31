@@ -71,7 +71,7 @@ class Splogr extends CI_Controller
                 if(strpos($link, "http://") === false) {
                     $link = 'http:'.$link;
                 }
-                $this->fromAlibaba($link,$get);
+                $getJsonArray = $this->fromAlibaba($link,$get);
                 $wherelink = array(
                     'uid' => $log_id,
                     'link' => $nextLink[0]->link,
@@ -79,7 +79,12 @@ class Splogr extends CI_Controller
                 );
                 $updateLink = array('status' => 1);
                 @$this->Mod_general->update ('splogr', $updateLink, $wherelink);
-                exit();
+                if($get == 1) {
+                    return $getJsonArray;
+                } else {
+                    echo json_encode($getJsonArray);
+                }
+                die;
             }
             $sp_post = json_decode($nextLink[0]->sp_post);
             //$contentJson = $this->getconents($nextLink[0]->link);
@@ -90,9 +95,13 @@ class Splogr extends CI_Controller
                 $setContent = array('content'=> $contentJson); 
                 $getJsonArray = array_merge($error,$setContent);
             } else {
-                $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html',$get);
-                $error = array('error'=> 1); 
-                $getJsonArray = array_merge($error,$contentJson);
+                $getJsonArray = $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html',$get);
+                if($get == 1) {
+                    return $getJsonArray;
+                } else {
+                    echo json_encode($getJsonArray);
+                }
+                die;
             }
             /*update link*/
             if(!empty($getContent)) {
@@ -105,7 +114,7 @@ class Splogr extends CI_Controller
                 @$this->Mod_general->update ('splogr', $updateLink, $wherelink);
             }
             /*End update link*/
-            if(!empty($get)) {
+            if($get == 1) {
                 return $getJsonArray;
             } else {
                 echo json_encode($getJsonArray);
@@ -240,7 +249,7 @@ class Splogr extends CI_Controller
                         if(strpos($link, "http://") === false) {
                             $link = 'http:'.$link;
                         }
-                        $this->fromAlibaba($link,$get);
+                        return $this->fromAlibaba($link,$get);
                         break;
                     } else {
                         continue;
@@ -291,11 +300,7 @@ class Splogr extends CI_Controller
         $setContent = array('content'=> $contentJson); 
         $getJsonArray = array_merge($error,$setContent);
         error_reporting(0);
-        if($get=1) {
-            return $getJsonArray;
-        } else {
-            echo json_encode($getJsonArray);
-        }
+        return $getJsonArray;
     }
 
     public function getconents($site_url='')
