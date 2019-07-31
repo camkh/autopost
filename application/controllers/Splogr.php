@@ -71,7 +71,7 @@ class Splogr extends CI_Controller
                 if(strpos($link, "http://") === false) {
                     $link = 'http:'.$link;
                 }
-                $this->fromAlibaba($link);
+                $this->fromAlibaba($link,$get);
                 $wherelink = array(
                     'uid' => $log_id,
                     'link' => $nextLink[0]->link,
@@ -90,7 +90,7 @@ class Splogr extends CI_Controller
                 $setContent = array('content'=> $contentJson); 
                 $getJsonArray = array_merge($error,$setContent);
             } else {
-                $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
+                $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html',$get);
                 $error = array('error'=> 1); 
                 $getJsonArray = array_merge($error,$contentJson);
             }
@@ -135,7 +135,7 @@ class Splogr extends CI_Controller
         die;
     }
 
-    function get_from_site_id($site_url = '', $post_id = '', $thumb = '', $New_title = '', $New_label = '', $videotype = '') {
+    function get_from_site_id($site_url = '', $get = '') {
         ini_set('max_execution_time', 0);
         $log_id = $this->session->userdata ('user_id');
         $this->load->library('html_dom');        
@@ -145,7 +145,7 @@ class Splogr extends CI_Controller
         //$lurl = $this->get_fcontent($site_url);
         $html = @file_get_html($site_url);
         if(empty($html)) {
-            $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html');
+            $this->get_from_site_id('https://www.alibaba.com/premium/laser_machines/1.html',$get);
         }
         switch ($parse['host']) {
             case 'ezinearticles.com':
@@ -240,7 +240,7 @@ class Splogr extends CI_Controller
                         if(strpos($link, "http://") === false) {
                             $link = 'http:'.$link;
                         }
-                        $this->fromAlibaba($link);
+                        $this->fromAlibaba($link,$get);
                         break;
                     } else {
                         continue;
@@ -270,7 +270,7 @@ class Splogr extends CI_Controller
         }            
     }
 
-    public function fromAlibaba($site_url='')
+    public function fromAlibaba($site_url='',$get='')
     {
         ini_set('max_execution_time', 0);
         $log_id = $this->session->userdata ('user_id');
@@ -291,7 +291,11 @@ class Splogr extends CI_Controller
         $setContent = array('content'=> $contentJson); 
         $getJsonArray = array_merge($error,$setContent);
         error_reporting(0);
-        echo json_encode($getJsonArray);
+        if($get=1) {
+            return $getJsonArray;
+        } else {
+            echo json_encode($getJsonArray);
+        }
     }
 
     public function getconents($site_url='')
