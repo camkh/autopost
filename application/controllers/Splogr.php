@@ -66,8 +66,12 @@ class Splogr extends CI_Controller
         );
         $nextLink = $this->Mod_general->select ('splogr', 'link,sp_post', $where_link );
         if(!empty($nextLink[0])) {
-            if(preg_match('/alibaba.com/', $nextLink[0]->link)){
-                $this->get_from_site_id($nextLink[0]->link);
+            $link = $nextLink[0]->link;
+            if(preg_match('/alibaba.com/', $link)){
+                if(strpos($link, "http://") === false) {
+                    $link = 'http:'.$link;
+                }
+                $this->fromAlibaba($link);
                 $wherelink = array(
                     'uid' => $log_id,
                     'link' => $nextLink[0]->link,
@@ -203,17 +207,17 @@ class Splogr extends CI_Controller
                 break; 
             case 'www.alibaba.com':
                 $script = @$html->find('script',25)->innertext;
-                $perPages = explode('"total":', $script);
+                $perPages = @explode('"total":', $script);
 
-                $perPage = explode(',', $perPages[1]);
-                $totalP = $perPage[0];
+                $perPage = @explode(',', $perPages[1]);
+                $totalP = @$perPage[0];
 
-                $cPageArr = explode('"current":', $perPages[1]);
-                $cPage = explode(',', $cPageArr[1]);
-                $currentPage = $cPage[0];
+                $cPageArr = @explode('"current":', $perPages[1]);
+                $cPage = @explode(',', $cPageArr[1]);
+                $currentPage = @$cPage[0];
                 
-                $nexts = explode('/', $site_url);
-                $last = count($nexts) - 1;
+                $nexts = @explode('/', $site_url);
+                $last = @count($nexts) - 1;
 
                 foreach($html->find('.l-main-content .m-gallery-product-item-wrap') as $e) {
                     $link = $e->find('.item-info .title a',0)->href;
