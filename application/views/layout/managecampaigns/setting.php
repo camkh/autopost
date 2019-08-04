@@ -161,7 +161,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                                 <div class="col-md-9">
                                                     <select name="blogtype" class="select2" style="width: 100%" required>
                                                         <option value="" selected>Select Type one</option>
-                                                        <option value="blogger_id">Blogs Post</option>
+                                                        <option value="blogger_id" <?php echo (@$this->input->get('blog_post') == 1 ? 'selected' :'');?>>Blogs Post</option>
                                                         <option value="blog_linkA">blog link</option>
                                                         <option value="blog_link">blog random link</option>
                                                     </select>             
@@ -170,13 +170,22 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Blog ID:</label>              
                                                 <div class="col-md-9">
-                                                    <input type="text" class="form-control" name="blogID" required />
+                                                    <input type="text" class="form-control" name="blogID" value="<?php echo @$this->input->get('bid');?>" required />
                                                 </div>              
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Blog Name:</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" name="blogTitle" class="form-control"/>
+                                                    <input type="text" name="blogTitle" class="form-control" value="<?php echo @$this->input->get('title');?>"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-4"><input type="text" name="bads" class="form-control" value="<?php echo @$this->input->get('ads');?>" placeholder="ads ID"/></div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="bslot" class="form-control" value="<?php echo @$this->input->get('sl');?>" placeholder="ads slot"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="burl" class="form-control" value="<?php echo @$this->input->get('url');?>" placeholder="URL"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -222,7 +231,7 @@ $btemplate = "D:&bsol;&bsol;PROGRAM&bsol;&bsol;templates&bsol;&bsol;";
                                             <td><span class="label label-success"><?php echo $value->status;?></span></td>
                                             <td>
                                                 <ul class="table-controls">
-                                                    <li><a href="javascript:void(0);" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
+                                                    <li><a href="<?php echo base_url();?>managecampaigns/setting?blog_post=1&bid=<?php echo @$value->bid;?>&title=<?php echo $value->title;?>&ads=<?php echo @$value->bads;?>&sl=<?php echo @$value->bslot;?>&url=<?php echo @$value->burl;?>" class="bs-tooltip" title="" data-original-title="Edit"><i class="icon-pencil"></i></a> </li>
                                                     <li><a href="<?php echo base_url();?>managecampaigns/setting?del=<?php echo $value->bid;?>&type=blogger_id" class="bs-tooltip" title="" data-original-title="Delete"><i class="icon-trash" style="color: red"></i></a> </li>
                                                 </ul>
                                             </td>

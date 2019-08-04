@@ -1410,6 +1410,40 @@ class Managecampaigns extends CI_Controller {
                                 if(!empty($link)) {
                                     if(!empty($blink) && $blink == 1) {
 
+                                        /*check ads from site*/
+                                        $showAds = '';
+                                        $where_blog = array(
+                                            'c_name'      => 'blogger_id',
+                                            'c_key'     => $log_id,
+                                        );
+                                        $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
+                                        if(!empty($query_blog_exist[0])) {
+                                            $bdata = json_decode($query_blog_exist[0]->c_value);
+                                            foreach ($bdata as $key => $bvalue) {
+                                                $pos = strpos($bvalue->bid, $bid);
+                                                if ($pos === false) {
+                                                    $found = false; 
+                                                } else {
+                                                    $bidf = $bvalue->bid;
+                                                    $bads = $bvalue->bads;
+                                                    $bslot = $bvalue->bslot;
+                                                    $burl = $bvalue->burl;
+                                                }
+                                            }
+//                                             $showAds = '<center>
+// <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+// <ins class="adsbygoogle"
+//      style="display:inline-block;width:336px;height:280px"
+//      data-ad-client="ca-pub-'.$bads.'"
+//      data-page-url="'.$burl.'"
+//      data-ad-slot="'.$bslot.'"></ins>
+// <script>
+// (adsbygoogle = window.adsbygoogle || []).push({});
+// </script>
+// </center>';
+                                            $showAds = '<center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></center>'; 
+                                        }
+                                        /*End check ads from site*/
                                         //set blog link by ID
                                         if(!empty($blog_link_id)) {
                                             $blogRand = $blog_link_id;
@@ -1429,7 +1463,7 @@ class Managecampaigns extends CI_Controller {
                                         }
 
                                         if(!empty($blogRand)) {
-                                            $bodytext = '<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'<br/>กดดูได้เลย ข้างล่างนี้ 👇👇👇</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table><!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
+                                            $bodytext = $showAds.'<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table>'.$showAds.'<!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
                                             $title = (string) $title;
                                             $dataMeta = array(
                                                 'title' => $title,
@@ -3432,6 +3466,80 @@ HTML;
                 }
                 $obj->vid = '';
                 $obj->conent = $htmlContent;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.tpolitic.com':
+                /*get label*/
+                $label = [];
+                $last = count($html->find('.breadcrumb li')) - 1;
+                foreach($html->find('.breadcrumb li') as $index => $labels) {
+                    if($index != $last && $index !=0) {
+                        $label[] = $labels->plaintext;
+                    } 
+                }
+                $obj->label = implode(',', $label);
+                /*End get label*/
+                foreach($html->find('.text-left') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.text-center') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.tag') as $item) {
+                    $item->outertext = '';
+                }
+                foreach($html->find('.ads-1') as $item) {
+                    $item->outertext = '';
+                }
+                $html->save();
+                $content = @$html->find ( '.container .col-md-8', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-sizes=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-src=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-recalc-dims=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-large-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-medium-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-meta=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+                $pattern = "/<p[^>]*>&nbsp;<\\/p[^>]*>/"; 
+                $content = preg_replace($pattern, '', $content);
+                $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                preg_match_all( $regex, $content, $matches );
+                $ImgSrc = array_pop($matches);
+                // reversing the matches array
+                if(!empty($ImgSrc)) {
+                    foreach ($ImgSrc as $image) {
+                        $imagedd = strtok($image, "?");
+                        $file_title = basename($imagedd);
+                        $fileName = FCPATH . 'uploads/image/'.$file_title;
+                        @copy($imagedd, $fileName);   
+                        $images = $this->mod_general->uploadtoImgur($fileName);
+                        if(empty($images)) {
+                            $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                            $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                            if($images) {
+                                @unlink($fileName);
+                            }
+                        } else {
+                            $gimage = @$images; 
+                            @unlink($fileName);
+                        }
+                        if(!empty($gimage)) {
+                            $content = str_replace($image,$gimage,$content);
+                        }
+                    }
+                }
+                $obj->vid = '';
+                $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
                 $obj->site = 'site';
                 return $obj;
@@ -6830,6 +6938,9 @@ public function imgtest()
             $blogTitle = trim($this->input->post('blogTitle'));
             $blogID    = trim($this->input->post('blogID'));
             $blogType    = trim($this->input->post('blogtype'));
+            $blogAds    = trim(@$this->input->post('bads'));
+            $blogAdsSlot    = trim(@$this->input->post('bslot'));
+            $blogAdsUrl    = trim(@$this->input->post('burl'));
             if (!empty($blogID)) {
                 switch ($blogType) {
                     case 'blog_linkA':
@@ -6867,6 +6978,9 @@ public function imgtest()
                             $jsondata[] = array(
                                 'bid' => $blogID,
                                 'title' => $blogTitle,
+                                'bads' => $blogAds,
+                                'bslot' => $blogAdsSlot,
+                                'burl' => $blogAdsUrl,
                                 'status' => 1,
                                 'date' => date('Y-m-d H:i:s')
                             );
@@ -6881,22 +6995,28 @@ public function imgtest()
                             $found = false;
                             $jsondata = array();
                             foreach ($bdata as $key => $bvalue) {
-                                $jsondata[] = array(
-                                    'bid' => $bvalue->bid,
-                                    'title' => $bvalue->title,
-                                    'status' => $bvalue->status,
-                                    'date' => $bvalue->date
-                                );
                                 $pos = strpos($bvalue->bid, $blogID);
                                 if ($pos === false) {
+                                    $jsondata[] = array(
+                                        'bid' => $bvalue->bid,
+                                        'title' => $bvalue->title,
+                                        'bads' => @$bvalue->bads,
+                                        'bslot' => @$bvalue->bslot,
+                                        'burl' => @$bvalue->burl,
+                                        'status' => $bvalue->status,
+                                        'date' => $bvalue->date
+                                    );
                                 } else {
-                                   $found = true; 
+                                    $found = true; 
                                 }
                             }          
                             if(empty($found)) {
                                 $jsondataNew[] = array(
                                     'bid' => $blogID,
                                     'title' => $blogTitle,
+                                    'bads' => $blogAds,
+                                    'bslot' => $blogAdsSlot,
+                                    'burl' => $blogAdsUrl,
                                     'status' => 1,
                                     'date' => date('Y-m-d H:i:s')
                                 );
@@ -6909,7 +7029,26 @@ public function imgtest()
                                     'c_name'      => $blogType
                                 );
                                 $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
-                            }                   
+                            } else {
+                                $jsondataUpate[] = array(
+                                    'bid' => $blogID,
+                                    'title' => $blogTitle,
+                                    'bads' => $blogAds,
+                                    'bslot' => $blogAdsSlot,
+                                    'burl' => $blogAdsUrl,
+                                    'status' => 1,
+                                    'date' => date('Y-m-d H:i:s')
+                                );
+                                $dataAdd = array_merge($jsondata, $jsondataUpate);
+                                $data_blog = array(
+                                    'c_value'      => json_encode($dataAdd),
+                                );
+                                $where = array(
+                                    'c_key'     => $log_id,
+                                    'c_name'      => $blogType
+                                );
+                                $lastID = $this->Mod_general->update('au_config', $data_blog,$where);
+                            }                  
                         }
                         /* end check before insert */
                         break;
