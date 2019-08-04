@@ -1424,10 +1424,10 @@ class Managecampaigns extends CI_Controller {
                                                 if ($pos === false) {
                                                     $found = false; 
                                                 } else {
-                                                    $bidf = $bvalue->bid;
-                                                    $bads = $bvalue->bads;
-                                                    $bslot = $bvalue->bslot;
-                                                    $burl = $bvalue->burl;
+                                                    $bidf = @$bvalue->bid;
+                                                    $bads = @$bvalue->bads;
+                                                    $bslot = @$bvalue->bslot;
+                                                    $burl = @$bvalue->burl;
                                                 }
                                             }
 //                                             $showAds = '<center>
