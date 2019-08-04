@@ -1411,38 +1411,39 @@ class Managecampaigns extends CI_Controller {
                                     if(!empty($blink) && $blink == 1) {
 
                                         /*check ads from site*/
-                                        $showAds = '';
-                                        $where_blog = array(
-                                            'c_name'      => 'blogger_id',
-                                            'c_key'     => $log_id,
-                                        );
-                                        $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
-                                        if(!empty($query_blog_exist[0])) {
-                                            $bdata = json_decode($query_blog_exist[0]->c_value);
-                                            foreach ($bdata as $key => $bvalue) {
-                                                $pos = strpos($bvalue->bid, $bid);
-                                                if ($pos === false) {
-                                                    $found = false; 
-                                                } else {
-                                                    $bidf = @$bvalue->bid;
-                                                    $bads = @$bvalue->bads;
-                                                    $bslot = @$bvalue->bslot;
-                                                    $burl = @$bvalue->burl;
-                                                }
-                                            }
-//                                             $showAds = '<center>
-// <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-// <ins class="adsbygoogle"
-//      style="display:inline-block;width:336px;height:280px"
-//      data-ad-client="ca-pub-'.$bads.'"
-//      data-page-url="'.$burl.'"
-//      data-ad-slot="'.$bslot.'"></ins>
-// <script>
-// (adsbygoogle = window.adsbygoogle || []).push({});
-// </script>
-// </center>';
-                                            $showAds = '<center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></center>'; 
-                                        }
+//                                         $showAds = '';
+//                                         $where_blog = array(
+//                                             'c_name'      => 'blogger_id',
+//                                             'c_key'     => $log_id,
+//                                         );
+//                                         $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
+//                                         if(!empty($query_blog_exist[0])) {
+//                                             $bdata = json_decode($query_blog_exist[0]->c_value);
+//                                             foreach ($bdata as $key => $bvalue) {
+//                                                 $pos = strpos($bvalue->bid, $bid);
+//                                                 if ($pos === false) {
+//                                                     $found = false; 
+//                                                 } else {
+//                                                     $bidf = @$bvalue->bid;
+//                                                     $bads = @$bvalue->bads;
+//                                                     $bslot = @$bvalue->bslot;
+//                                                     $burl = @$bvalue->burl;
+//                                                 }
+//                                             }
+// //                                             $showAds = '<center>
+// // <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+// // <ins class="adsbygoogle"
+// //      style="display:inline-block;width:336px;height:280px"
+// //      data-ad-client="ca-pub-'.$bads.'"
+// //      data-page-url="'.$burl.'"
+// //      data-ad-slot="'.$bslot.'"></ins>
+// // <script>
+// // (adsbygoogle = window.adsbygoogle || []).push({});
+// // </script>
+// // </center>';
+                                            
+//                                         }
+                                        $showAds = '<center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></center>'; 
                                         /*End check ads from site*/
                                         //set blog link by ID
                                         if(!empty($blog_link_id)) {
