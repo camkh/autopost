@@ -1400,37 +1400,37 @@ public function get_video_id($param, $videotype = '')
                     }
                 }
 
-                $fileSName = FCPATH . 'uploads/image/'.strtotime("now").basename($imgName);
-                @copy($file_path, $fileSName);
-                List($sWidth, $sHeight) = getimagesize($fileSName);
-                $Sw = 440;
-                $Sh = $sHeight * ($Sw / $sWidth);
-                $src = imagecreatefromstring( file_get_contents( $fileSName ) );
-                $NewImageBase = imagecreatetruecolor($Sw, $Sh);
-                imagecopyresampled($NewImageBase, $src, 0, 0, 0, 0, $Sw, $Sh, $sWidth, $sHeight);
-                imagedestroy( $src );
-                imagejpeg( $NewImageBase, $fileSName ); // adjust format as needed
-                imagedestroy( $NewImageBase );
+                // $fileSName = FCPATH . 'uploads/image/'.strtotime("now").basename($imgName);
+                // @copy($file_path, $fileSName);
+                // List($sWidth, $sHeight) = getimagesize($fileSName);
+                // $Sw = 440;
+                // $Sh = $sHeight * ($Sw / $sWidth);
+                // $src = imagecreatefromstring( file_get_contents( $fileSName ) );
+                // $NewImageBase = imagecreatetruecolor($Sw, $Sh);
+                // imagecopyresampled($NewImageBase, $src, 0, 0, 0, 0, $Sw, $Sh, $sWidth, $sHeight);
+                // imagedestroy( $src );
+                // imagejpeg( $NewImageBase, $fileSName ); // adjust format as needed
+                // imagedestroy( $NewImageBase );
                 
-                $border=10;
-                $img_adj_width=$Sw+(2*$border);
-                $img_adj_height=$Sh+(2*$border);
-                $src = imagecreatefromstring( file_get_contents( $fileSName ) );
-                $newimage=imagecreatetruecolor($img_adj_width,$img_adj_height);
-                $border_color = imagecolorallocate($newimage, 255, 255, 255);
-                imagefilledrectangle($newimage,0,0,$img_adj_width,$img_adj_height,$border_color);
-                imageCopyResized($newimage,$src,$border,$border,0,0,$Sw,$Sh,$Sw,$Sh);
-                imagedestroy( $src );
-                imagejpeg($newimage,$fileSName);
-                imagedestroy( $newimage );
-                $imagePositionArr = array(
-                    'cc',
-                    'ct',
-                    'cb',
-                );
-                $imagePosition = mt_rand(0, count($imagePositionArr) - 1);
-                \ChipVN\Image::watermark($file_path, $fileSName, $imagePositionArr[$imagePosition]);
-                @unlink($fileSName);
+                // $border=10;
+                // $img_adj_width=$Sw+(2*$border);
+                // $img_adj_height=$Sh+(2*$border);
+                // $src = imagecreatefromstring( file_get_contents( $fileSName ) );
+                // $newimage=imagecreatetruecolor($img_adj_width,$img_adj_height);
+                // $border_color = imagecolorallocate($newimage, 255, 255, 255);
+                // imagefilledrectangle($newimage,0,0,$img_adj_width,$img_adj_height,$border_color);
+                // imageCopyResized($newimage,$src,$border,$border,0,0,$Sw,$Sh,$Sw,$Sh);
+                // imagedestroy( $src );
+                // imagejpeg($newimage,$fileSName);
+                // imagedestroy( $newimage );
+                // $imagePositionArr = array(
+                //     'cc',
+                //     'ct',
+                //     'cb',
+                // );
+                // $imagePosition = mt_rand(0, count($imagePositionArr) - 1);
+                // \ChipVN\Image::watermark($file_path, $fileSName, $imagePositionArr[$imagePosition]);
+                // @unlink($fileSName);
                 /*End for big and small image*/
 
 
