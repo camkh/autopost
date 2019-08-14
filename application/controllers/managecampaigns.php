@@ -2645,8 +2645,9 @@ HTML;
         if(!empty($this->input->get('url'))) {
             $url = $this->input->get('url');
         }
+        $oldurl = $this->input->get('old');
         $this->Mod_general->checkUser ();
-        $log_id = $this->session->userdata ( 'user_id' );
+        $log_id = @$this->session->userdata ( 'user_id' );
         /* Sidebar */
         if (! empty ( $url )) {
             preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $matches);
@@ -2658,7 +2659,7 @@ HTML;
             } else {
                     require_once(APPPATH.'controllers/Getcontent.php');
                     $aObj = new Getcontent(); 
-                    $content = $aObj->getConentFromSite($url);
+                    $content = $aObj->getConentFromSite($url,$oldurl);
                 if(!empty($content->fromsite)) {
                     $conTenSite = '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
                 } else {
@@ -2671,6 +2672,7 @@ HTML;
                 $from = $content->site;
                 $vid = @$content->vid;
             }
+
             if(!empty($content->fromsite) && ($log_id == 2 || $log_id == 527 || $log_id == 511)) {
                 $data = array (
                     'picture' => @$content->thumb,
