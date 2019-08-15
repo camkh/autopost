@@ -4736,6 +4736,9 @@ public function imgtest()
                 break;
             case 'post':
                 $pid = @$this->input->get('pid');
+                if(empty($pid)) {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopostfb?action=yt";}, 30 );</script>';
+                }
                 $this->postbloggerByAuto($pid);
                 break;
             case 'fbgroup':
