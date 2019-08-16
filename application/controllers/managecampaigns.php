@@ -362,7 +362,7 @@ class Managecampaigns extends CI_Controller {
             if(!empty($postAto)) {
                 if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
-                   echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopostfb?action=yt";}, 600000 );</script>';
+                   echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     //autogetpost
                 } else {
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
@@ -1379,8 +1379,11 @@ class Managecampaigns extends CI_Controller {
                                             $p_id = $this->input->get('pid');
                                             if(count($postsLoop)>5) {
                                                //echo $showHTHM;
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
-                                                die;
+                                                //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
+                                                sleep(300);
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'";}, 30 );</script>'; 
+                                                //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
+                                                exit();
                                             } else {
                                                 echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
                                                 die;
@@ -1501,8 +1504,11 @@ class Managecampaigns extends CI_Controller {
                                                 //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
                                                 if(count($postsLoop)>5) {
                                                //echo $showHTHM;
-                                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
-                                                    die;
+                                                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                    sleep(300);
+                                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'";}, 30 );</script>'; 
+                                                //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
+                                                    exit();
                                                 } else {
                                                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
                                                     die;
