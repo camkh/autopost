@@ -169,15 +169,18 @@ $glogin = str_replace('autopost;=', 'autopost=', $glogin);
                 success : function (data) {
                     loading = false; //set loading flag off once the content is loaded
                     var totalResults = data.feed.openSearch$totalResults.$t,posturl='';
-                    if(totalResults=='0') {
-                        window.location.href = "<?php echo base_url();?>managecampaigns/ajax?lid=<?php echo @$bLinkID;?>&p=autopostblog";
+                    if(totalResults==0) {
+                        var backto = "<?php echo base_url().'managecampaigns/posttotlogLink?pid='.$this->input->get('pid').'&bid='.$this->input->get('bid');?>";
+                        window.location.href = backto;
                     }
-                    if(data.feed.entry.length>0) {
-                        for (var i = 0; i < data.feed.entry.length; i++) {
-                            var content = data.feed.entry;
-                            for (var j = 0; j < content[i].link.length; j++) {
-                                if (content[i].link[j].rel == "alternate") {
-                                    posturl = content[i].link[j].href;
+                    if(totalResults>0) {
+                        if(data.feed.entry.length>0) {
+                            for (var i = 0; i < data.feed.entry.length; i++) {
+                                var content = data.feed.entry;
+                                for (var j = 0; j < content[i].link.length; j++) {
+                                    if (content[i].link[j].rel == "alternate") {
+                                        posturl = content[i].link[j].href;
+                                    }
                                 }
                             }
                         }
