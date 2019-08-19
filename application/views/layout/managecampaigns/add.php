@@ -263,8 +263,16 @@
                                         <div class="form-group chekimg">
                                             <div class="col-md-8">
                                                 <label class="radio-inline">
-                                                    <input type="checkbox" value="1" name="cimg" <?php if(!empty($data)){ echo ($pSchedule['check_image']=='1' ? 'checked' : '');}?>/>
+                                                    <input type="checkbox" value="1" name="cimg" <?php if(!empty($data)){ echo ($pSchedule['check_image']=='1' ? 'checked' : '');} else {echo 'checked';}?>/>
                                                     <i class="subtopmenu hangmeas khmer">Not check imge / មិនឆែករូបភាពមុនប៉ុស្តិ៍?</i>
+                                                </label>   
+                                            </div>
+                                        </div>
+                                        <div class="form-group chekimg">
+                                            <div class="col-md-8">
+                                                <label class="radio-inline">
+                                                    <input type="checkbox" value="1" name="pprogress" />
+                                                    <i class="subtopmenu hangmeas khmer">Post progross?</i>
                                                 </label>   
                                             </div>
                                         </div>
@@ -280,14 +288,14 @@
                                     <div class="widget-content">
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label class="khmer">អត្ថបទបន្ថែម ពីមុខ / Prefix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីមុខ / Prefix <input style="inline-block" type="checkbox" value="imacros" name="pprefix" checked /></label>
                                                 <textarea rows="1" cols="5" name="Prefix" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['prefix_title'];}?></textarea>
                                                 <span class="khmer">បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label class="khmer">អត្ថបទបន្ថែម ពីក្រោយ / Suffix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីក្រោយ / Suffix <input style="inline-block" type="checkbox" value="imacros" name="psuffix" checked /></label>
                                                 <textarea rows="1" cols="5" name="addtxt" class="form-control" placeholder="1234|1234|1234"><?php if(!empty($data)){ echo $pSchedule['suffix_title'];}?></textarea>
                                                 <span class="khmer">បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
 

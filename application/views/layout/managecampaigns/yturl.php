@@ -700,14 +700,14 @@
                                     <div class="widget-content">
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label class="khmer">អត្ថបទបន្ថែម ពីមុខ / Prefix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីមុខ / Prefix <input style="inline-block" type="checkbox" value="imacros" name="pprefix" checked /></label>
                                                 <textarea rows="1" cols="5" name="Prefix" class="form-control" placeholder="1234|1234|1234"></textarea>
                                                 <span class="khmer">បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <label class="khmer">អត្ថបទបន្ថែម ពីក្រោយ / Suffix</label>
+                                                <label class="khmer">អត្ថបទបន្ថែម ពីក្រោយ / Suffix <input style="inline-block" type="checkbox" value="imacros" name="psuffix" checked /></label>
                                                 <textarea rows="1" cols="5" name="addtxt" class="form-control" placeholder="1234|1234|1234"></textarea>
                                                <span class="khmer"> បើចង់ថែម ឬដាក់ថ្មី សូមដាក់ដូចខាងក្រោមៈ</span><br/>Ex: xxxx|xxxx|xxxx|xxxx
 

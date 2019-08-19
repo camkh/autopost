@@ -362,12 +362,15 @@ class Managecampaigns extends CI_Controller {
             if(!empty($postAto)) {
                 if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
-                   echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
+                   //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     //autogetpost
                 } else {
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                 }
                 //localhost/autopost/managecampaigns/autopost?start=1
+            } else {
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
             }
         }
         /*end check auto post*/
@@ -793,8 +796,13 @@ class Managecampaigns extends CI_Controller {
             $title = $this->input->post ( 'title' );
             $name = $this->input->post ( 'name' );
             $conents = $this->input->post ( 'conents' );
+
             $PrefixTitle = $this->input->post ( 'Prefix' );
+            $pprefixChecked = $this->input->post ( 'pprefix' );
+
             $SuffixTitle = $this->input->post ( 'addtxt' );
+            $psuffixChecked = $this->input->post ( 'psuffix' );
+
             $thumb = $this->input->post ( 'thumb' );
             $message = $this->input->post ( 'message' );
             $caption = $this->input->post ( 'caption' );
@@ -929,7 +937,9 @@ class Managecampaigns extends CI_Controller {
                         'wait_post' => @$ppause,
                         'randomGroup' => @$random,
                         'prefix_title' => @$PrefixTitle,
+                        'prefix_checked' => @$pprefixChecked,
                         'suffix_title' => @$AddSuffixTitle,
+                        'suffix_checked' => @$psuffixChecked,
                         'short_link' => @$short_link,
                         'check_image' => @$checkImage,
                         'imgcolor' => @$imgcolor,
@@ -1871,6 +1881,150 @@ class Managecampaigns extends CI_Controller {
         return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
+
+    /*@get post that set for all facebook need post*/
+    public function postprogress()
+    {
+        $this->Mod_general->checkUser ();
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $sid = $this->session->userdata ( 'sid' );
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Post progress';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('Posts', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Online', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        $whereFb = array(
+            'meta_name'      => 'post_progress',
+            'meta_key'      => $sid,
+        );
+        $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
+        if(!empty($DataPostProgress[0])) {
+            $wPost = array (
+                'p_id' => $DataPostProgress[0]->object_id,
+                'user_id' => $log_id,
+                'p_progress' => 1,
+            );
+            $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+            if(empty($getPost)) {
+                @$this->Mod_general->delete ( 'meta', array (
+                        'object_id' => $DataPostProgress[0]->object_id, 
+                        'meta_name' => 'post_progress', 
+                ) );
+                redirect(base_url().'managecampaigns/postprogress');
+            }
+            if(!empty($getPost[0])) {
+                /* data content */
+                $dataPostInstert = array (
+                        Tbl_posts::name => $getPost[0]->p_name,
+                        Tbl_posts::conent => $getPost[0]->p_conent,
+                        Tbl_posts::p_date => date('Y-m-d H:i:s'),
+                        Tbl_posts::schedule => $getPost[0]->p_schedule,
+                        Tbl_posts::user => $sid,
+                        'user_id' => $log_id,
+                        Tbl_posts::post_to => 0,
+                        'p_status' => 1,
+                        'p_progress' => 0,
+                        Tbl_posts::type => 'Facebook' 
+                );
+                $AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
+                if($AddToPost) {
+                    /*update meta post*/
+                    @$this->Mod_general->delete ( 'meta', array (
+                        'meta_id' => $DataPostProgress[0]->meta_id,
+                    ) );
+                    /*End update meta post*/
+                    /*clean share*/
+                    $this->Mod_general->delete ( Tbl_share::TblName, array (
+                            'p_id' => $AddToPost,
+                            'social_id' => @$sid,
+                    ) );
+                    /*clean share*/
+
+                    /* add data to group of post */
+                    /*if empty groups*/
+                    $fbUserId = $this->session->userdata('fb_user_id');
+                    $tmp_path = './uploads/'.$log_id.'/'. $fbUserId . '_tmp_action.json';
+                    $string = file_get_contents($tmp_path);
+                    $json_a = json_decode($string);
+
+                    /*get group*/
+                    $wGList = array (
+                        'lname' => 'post_progress',
+                        'l_user_id' => $log_id,
+                        'l_sid' => $sid,
+                    );
+                    $geGList = $this->Mod_general->select ( 'group_list', '*', $wGList );
+                    if(!empty($geGList[0])) {
+                        $wGroupType = array (
+                            'gu_grouplist_id' => $geGList[0]->l_id,
+                            'gu_user_id' => $log_id,
+                            'gu_status' => 1
+                        );  
+                    } else {
+                        $wGroupType = array (
+                            'gu_grouplist_id' => $json_a->account_group_type,
+                            'gu_user_id' => $log_id,
+                            'gu_status' => 1
+                        );
+                    }
+
+                    $tablejoin = array('socail_network_group'=>'socail_network_group.sg_id=group_user.gu_idgroups');
+                    $itemGroups = $this->Mod_general->join('group_user', $tablejoin, $fields = '*', $wGroupType);
+
+                    if(!empty($itemGroups)) {
+                        if($json_a->share_schedule == 1) {
+                            $date = DateTime::createFromFormat('m-d-Y H:i:s',$startDate . ' ' . $startTime);
+                            $cPost = $date->format('Y-m-d H:i:s');
+                        } else {
+                            $cPost = date('Y-m-d H:i:s');
+                        }
+                        $ShContent = array (
+                            'userAgent' => @$json_a->userAgent,                            
+                        );                    
+                        foreach($itemGroups as $key => $groups) { 
+                            if(!empty($groups)) {       
+                                $dataGoupInstert = array(
+                                    'p_id' => $AddToPost,
+                                    'sg_page_id' => $groups->sg_id,
+                                    'social_id' => @$sid,
+                                    'sh_social_type' => 'Facebook',
+                                    'sh_type' => $json_a->ptype,
+                                    'c_date' => $cPost,
+                                    'uid' => $log_id,                                    
+                                    'sh_option' => json_encode($ShContent),                                    
+                                );
+                                $AddToGroup = $this->Mod_general->insert(Tbl_share::TblName, $dataGoupInstert);
+                            }
+                        } 
+                    }
+                    /* end add data to group of post */
+                    /*End if empty groups*/
+                    redirect(base_url().'facebook/shareation?post=getpost');
+                }
+                /* end add data to post */
+            }
+        } else {
+            $postAto = $this->Mod_general->getActionPost();
+                if(!empty($postAto)) {
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 0 );</script>';
+                exit();
+            } else {
+                redirect(base_url().'managecampaigns?m=runout_post');
+            }
+        }
+        $this->load->view ( 'managecampaigns/postprogress', $data );
+    }
+
     public function postToBlogger($bid, $vid, $title,$image,$conent='',$blink,$label='')
     {
 
@@ -2183,8 +2337,14 @@ class Managecampaigns extends CI_Controller {
 		/* get form */
 		if ($this->input->post ( 'submit' )) {
             $title = $this->input->post ( 'title' );
+
             $PrefixTitle = $this->input->post ( 'Prefix' );
-			$SuffixTitle = $this->input->post ( 'addtxt' );
+            $pprefixChecked = $this->input->post ( 'pprefix' );
+
+            $SuffixTitle = $this->input->post ( 'addtxt' );
+            $psuffixChecked = $this->input->post ( 'psuffix' );
+
+
 			$thumb = $this->input->post ( 'thumb' );
 			$message = $this->input->post ( 'message' );
 			$caption = $this->input->post ( 'caption' );
@@ -2220,6 +2380,7 @@ class Managecampaigns extends CI_Controller {
             $account_gtype = $this->input->post ( 'groups' );
             $userAgent = $this->input->post ( 'useragent' );
             $checkImage = @$this->input->post ( 'cimg' );
+            $pprogress = @$this->input->post ( 'pprogress' );
 			
 			/* check account type */
 			$s_acount = explode ( '|', $accoung );
@@ -2265,7 +2426,9 @@ class Managecampaigns extends CI_Controller {
 					'wait_post' => @$ppause,
 					'randomGroup' => @$random,
                     'prefix_title' => @$PrefixTitle,
-                    'suffix_title' => @$SuffixTitle,
+                    'prefix_checked' => @$pprefixChecked,
+                    'suffix_title' => @$AddSuffixTitle,
+                    'suffix_checked' => @$psuffixChecked,
                     'short_link' => @$short_link,
                     'check_image' => @$checkImage,
                     'random_link' => @$random_link,
@@ -2275,10 +2438,60 @@ class Managecampaigns extends CI_Controller {
 			);
 			/* end data schedule */  
 			if (!empty($link)) {
-
+                /*facebook accounts*/
+                if(!empty($pprogress)) {
+                    $whereFb = array (
+                            'user_id' => $log_id,
+                            'u_type' => 'Facebook',
+                        );
+                    $dataFacebook = $this->Mod_general->select('users','*', $whereFb);
+                }
+                /*End facebook accounts*/
                 for ($i = 0; $i < count($link); $i++) {
 				/*** add data to post ***/
-                                     
+                    $dataPostS = $this->Mod_general->select ( Tbl_posts::tblName, '*', array(Tbl_posts::id => $postId[$i]) );
+                    $pConent = json_decode($dataPostS[0]->p_conent);                
+                    $pSchedule = json_decode($dataPostS[0]->p_schedule);
+                    $schedule = array (                    
+                        'start_date' => @$startDate,
+                        'start_time' => @$startTime,
+                        'end_date' => @$endDate,
+                        'end_time' => @$endDate,
+                        'loop' => @$looptype,
+                        'loop_every' => @$loopOnEvery,
+                        'loop_on' => @$days,
+                        'wait_group' => @$pause,
+                        'wait_post' => @$ppause,
+                        'randomGroup' => @$random,
+                        'prefix_title' => @$PrefixTitle,
+                        'prefix_checked' => @$pprefixChecked,
+                        'suffix_title' => @$AddSuffixTitle,
+                        'suffix_checked' => @$psuffixChecked,
+                        'short_link' => @$short_link,
+                        'check_image' => @$checkImage,
+                        'random_link' => @$random_link,
+                        'share_type' => @$share_type,
+                        'share_schedule' => @$post_action,
+                        'account_group_type' => @$account_gtype,
+                        'imgcolor' => @$pSchedule->imgcolor,
+                        'btnplayer' => @$pSchedule->btnplayer,
+                        'playerstyle' => @$pSchedule->playerstyle,
+                        'txtadd' => @$pSchedule->txtadd,
+                        'blogid' => @$pSchedule->blogid,
+                        'blogLink' => @$pSchedule->blogLink,
+                        'main_post_style' => @$pSchedule->main_post_style,
+                        'userAgent' => @$pSchedule->userAgent,
+                        'checkImage' => @$pSchedule->checkImage,
+                        'ptype' => @$pSchedule->ptype,
+                        'img_rotate' => @$pSchedule->img_rotate,
+                        'filter_contrast' => @$pSchedule->filter_contrast,
+                        'filter_brightness' => @$pSchedule->filter_brightness,
+                        'post_by_manaul' => @$pSchedule->post_by_manaul,
+                        'foldlink' => @$pSchedule->foldlink,
+                        'gemail' => $this->session->userdata ( 'gemail' ),
+                        'label' => @$pSchedule->label,
+                    );
+
 
                     /* data content */
                     $content = array (
@@ -2302,6 +2515,7 @@ class Managecampaigns extends CI_Controller {
     						'user_id' => $log_id,
                             Tbl_posts::post_to => $postTo,
     						'p_status' => $postTypes,
+                            'p_progress' => @$pprogress,
     						Tbl_posts::type => @$s_acount[1] 
     				);
                     @ob_end_flush();
@@ -2314,6 +2528,22 @@ class Managecampaigns extends CI_Controller {
     					$AddToPost = $this->Mod_general->insert ( Tbl_posts::tblName, $dataPostInstert );
     				}
     				/* end add data to post */
+
+                    /*data post progress*/
+                    if(!empty($pprogress)) {
+                        if(!empty($dataFacebook)) {
+                            foreach ($dataFacebook as $key => $fb) {
+                                $data_blog = array(
+                                    'meta_key'      => $fb->u_id,
+                                    'object_id'      => $AddToPost,
+                                    'meta_value'     => 1,
+                                    'meta_name'     => 'post_progress',
+                                );
+                                $lastID = $this->Mod_general->insert('meta', $data_blog);
+                            }
+                        }
+                    }
+                    /*data post progress*/
     				
     				/* add data to group of post */
     				if(!empty($itemGroups)) {
@@ -2612,6 +2842,10 @@ HTML;
 				$this->Mod_general->delete ( Tbl_posts::tblName, array (
 						Tbl_posts::id => $id 
 				) );
+                @$this->Mod_general->delete ( 'meta', array (
+                        'object_id' => $id, 
+                        'meta_name' => 'post_progress', 
+                ) );
 				redirect ( 'managecampaigns' );
 				break;
 			

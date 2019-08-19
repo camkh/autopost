@@ -2100,46 +2100,49 @@ WHERE gl.`gu_grouplist_id` = {$id}");
 
 
                 /*Show data Prefix*/
-                if(!empty($pSchedule->prefix_title)) {
-                    $prefixArr = explode('|', $pSchedule->prefix_title);
-                    $preRand = $prefixArr[mt_rand(0, count($prefixArr) - 1)];
-                } else {       
-                    $where_pre = array(
-                        'c_name'      => 'prefix_title',
-                        'c_key'     => $log_id,
-                    );
-                    $prefix_title = $this->Mod_general->select('au_config', '*', $where_pre);
-                    if(!empty($prefix_title[0])) {
-                        $prefix = json_decode($prefix_title[0]->c_value);
-                        $prefixArr = explode('|', $prefix);
+                if(!empty($pSchedule->prefix_checked)) {
+                    if(!empty($pSchedule->prefix_title)) {
+                        $prefixArr = explode('|', $pSchedule->prefix_title);
                         $preRand = $prefixArr[mt_rand(0, count($prefixArr) - 1)];
+                    } else {       
+                        $where_pre = array(
+                            'c_name'      => 'prefix_title',
+                            'c_key'     => $log_id,
+                        );
+                        $prefix_title = $this->Mod_general->select('au_config', '*', $where_pre);
+                        if(!empty($prefix_title[0])) {
+                            $prefix = json_decode($prefix_title[0]->c_value);
+                            $prefixArr = explode('|', $prefix);
+                            $preRand = $prefixArr[mt_rand(0, count($prefixArr) - 1)];
+                        }
                     }
                 }
                 /*End Show data Prefix*/
 
                 /*Show data Prefix*/
-                if(!empty($pSchedule->suffix_title)) {
-                    $subFixArr = explode('|', $pSchedule->suffix_title);
-                    $subRand = $subFixArr[mt_rand(0, count($subFixArr) - 1)];
-                } else {
-                    $whereSuf = array(
-                        'c_name'      => 'suffix_title',
-                        'c_key'     => $log_id,
-                    );
-                    $suffix_title = $this->Mod_general->select('au_config', '*', $whereSuf);
-                    if(!empty($suffix_title[0])) {
-                        $subfix = json_decode($suffix_title[0]->c_value);
-                        $subFixArr = explode('|', $subfix);
+                if(!empty($pSchedule->suffix_checked)) {
+                    if(!empty($pSchedule->suffix_title)) {
+                        $subFixArr = explode('|', $pSchedule->suffix_title);
                         $subRand = $subFixArr[mt_rand(0, count($subFixArr) - 1)];
+                    } else {
+                        $whereSuf = array(
+                            'c_name'      => 'suffix_title',
+                            'c_key'     => $log_id,
+                        );
+                        $suffix_title = $this->Mod_general->select('au_config', '*', $whereSuf);
+                        if(!empty($suffix_title[0])) {
+                            $subfix = json_decode($suffix_title[0]->c_value);
+                            $subFixArr = explode('|', $subfix);
+                            $subRand = $subFixArr[mt_rand(0, count($subFixArr) - 1)];
+                        }
                     }
                 }
                 /*End Show data Prefix*/
-                if(!empty($pSchedule->prefix_title)) {
+                if(!empty($preRand)) {
                     $sharePost->title = $preRand . '<br/>' . $sharePost->pTitle . '<br/>' . $subRand;
                 } else {
-                    $sharePost->title = $sharePost->pTitle . '<br/>' . $subRand;
+                    $sharePost->title = $sharePost->pTitle . !empty($subRand)? '<br/>' . $subRand :'';
                 }
-
                 /*count share posts*/
                 $whereCount = array (
                     'p_id' => $pid,
