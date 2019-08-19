@@ -1399,7 +1399,6 @@ public function get_video_id($param, $videotype = '')
                         }
                     }
                 }
-
                 // $fileSName = FCPATH . 'uploads/image/'.strtotime("now").basename($imgName);
                 // @copy($file_path, $fileSName);
                 // List($sWidth, $sHeight) = getimagesize($fileSName);

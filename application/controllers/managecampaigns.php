@@ -1328,12 +1328,8 @@ class Managecampaigns extends CI_Controller {
                                 if(!$images) {
                                     $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
                                     $image = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
-                                    if($image) {
-                                        @unlink($fileName);
-                                    }
                                 } else {
                                     $image = @$images; 
-                                    @unlink($fileName);
                                 }
                             }                          
                         } else {
@@ -1363,7 +1359,6 @@ class Managecampaigns extends CI_Controller {
                             );
                             $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
                             /*End update post*/
-                            @unlink($fileName);
                             if(empty($pOption->post_by_manaul)) {
                                 $imgur = true;
                                 /*End upload photo first*/
@@ -1815,8 +1810,11 @@ class Managecampaigns extends CI_Controller {
 
             $postAto = $this->Mod_general->getActionPost();
             if(!empty($DataBlogLink['error'])) {
+                echo '<div style="text-align:center;color:red;" class="khmer">ដោយមានបញ្ហា សូមមេត្តារង់ចាំ ៣០ វិនាទីសិន កុំបិទផ្ទាំងនេះ</div>';
+                sleep(30);
+                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$pid.'";}, 1 );</script>'; 
                 //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
-                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$postAto.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$pid.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$postAto.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
                 exit();
             }
             $link = $DataBlogLink->url;
