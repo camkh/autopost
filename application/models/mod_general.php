@@ -1378,7 +1378,7 @@ public function get_video_id($param, $videotype = '')
                     $maxDim = 1200;
                     $file_name = $imgName;
                     list($width, $height, $type, $attr) = @getimagesize( $file_name );
-                    if($width<1200) {
+                    if($width < $maxDim) {
                         if ( $width < $maxDim || $height < $maxDim ) {
                             $target_filename = $file_name;
                             $ratio = $width/$height;
@@ -1394,7 +1394,7 @@ public function get_video_id($param, $videotype = '')
                             $dst = imagecreatetruecolor( $new_width, 635 );
                             imagecopyresampled( $dst, $src, 0, 0, 0, 50, $new_width, $new_height, $width, $height );
                             imagedestroy( $src );
-                            imagejpeg( $dst, $target_filename ); // adjust format as needed
+                            imagejpeg( $dst, $imgName ); // adjust format as needed
                             imagedestroy( $dst );
                         }
                     }
@@ -1579,6 +1579,7 @@ public function get_video_id($param, $videotype = '')
         curl_close($ch);
         $reply = json_decode($reply);
         if(!empty($reply->success)) {
+            @unlink($imgName);
             return $reply->data->link;
         } else {
             return false;
@@ -1602,6 +1603,7 @@ public function get_video_id($param, $videotype = '')
             curl_close($ch);
             $reply = json_decode($reply);
             if(!empty($reply->success)) {
+                @unlink($imgName);
                 return $reply->data->image->url;
             } else {
                 return false;
