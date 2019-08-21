@@ -1367,205 +1367,209 @@ class Managecampaigns extends CI_Controller {
                                 Tbl_posts::conent => json_encode ( $content ),
                                 'yid' => $vid,
                             );
-                            $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                            $updatesImg = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
                             /*End update post*/
-                            if(empty($pOption->post_by_manaul)) {
-                                $imgur = true;
-                                /*End upload photo first*/
-                                if(!empty($pOption->foldlink) && !preg_match('/youtu/', $pConent->link) && !empty($pConent->mainlink)) {
-                                    $link = @$pConent->mainlink;
-                                } else {
-                                    if(empty($pConent->mainlink)) {
-                                        $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style,@$pOption->label);
-                                        //$blogData['error'] = true;
-                                        if(!empty($blogData['error'])) {
-                                            //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
-                                            $p_id = $this->input->get('pid');
-                                            if(count($postsLoop)>5) {
-                                               //echo $showHTHM;
-                                                //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
-                                                sleep(300);
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'";}, 30 );</script>'; 
-                                                //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
-                                                exit();
-                                            } else {
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
-                                                die;
-                                            }
-
-
-                                            // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id=";}, 30 );</script>';
-                                            // exit();
-                                        }
-                                        $link = @$blogData->url;
-                                        /*update post*/
-                                        if(!empty($link)) {
-                                            $updateMainLink = array('p_id' => $pid);
-                                            $content = array (
-                                                'name' => $pConent->name,
-                                                'message' => $pConent->message,
-                                                'caption' => $pConent->caption,
-                                                'link' => $pConent->link,
-                                                'mainlink' => $link,
-                                                'picture' => $pConent->picture,                            
-                                                'vid' => $pConent->vid,                            
-                                            );
-                                            $dataPostInstert = array (
-                                                Tbl_posts::conent => json_encode ( $content ),
-                                            );
-                                            $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $updateMainLink);
-                                        }
-                                        /*End update post*/ 
-                                    } else {
+                            sleep(3);
+                            if($updatesImg) {
+                                if(empty($pOption->post_by_manaul)) {
+                                    $imgur = true;
+                                    /*End upload photo first*/
+                                    if(!empty($pOption->foldlink) && !preg_match('/youtu/', $pConent->link) && !empty($pConent->mainlink)) {
                                         $link = @$pConent->mainlink;
-                                    }
-                                }                                
-                                $mainlink = $link; 
-                                /*End Post to Blogger first*/
-
-                                /*blog link*/
-
-                                if(!empty($link)) {
-                                    if(!empty($blink) && $blink == 1) {
-
-                                        /*check ads from site*/
-//                                         $showAds = '';
-//                                         $where_blog = array(
-//                                             'c_name'      => 'blogger_id',
-//                                             'c_key'     => $log_id,
-//                                         );
-//                                         $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
-//                                         if(!empty($query_blog_exist[0])) {
-//                                             $bdata = json_decode($query_blog_exist[0]->c_value);
-//                                             foreach ($bdata as $key => $bvalue) {
-//                                                 $pos = strpos($bvalue->bid, $bid);
-//                                                 if ($pos === false) {
-//                                                     $found = false; 
-//                                                 } else {
-//                                                     $bidf = @$bvalue->bid;
-//                                                     $bads = @$bvalue->bads;
-//                                                     $bslot = @$bvalue->bslot;
-//                                                     $burl = @$bvalue->burl;
-//                                                 }
-//                                             }
-// //                                             $showAds = '<center>
-// // <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-// // <ins class="adsbygoogle"
-// //      style="display:inline-block;width:336px;height:280px"
-// //      data-ad-client="ca-pub-'.$bads.'"
-// //      data-page-url="'.$burl.'"
-// //      data-ad-slot="'.$bslot.'"></ins>
-// // <script>
-// // (adsbygoogle = window.adsbygoogle || []).push({});
-// // </script>
-// // </center>';
-                                            
-//                                         }
-
-                                        /*End check ads from site*/
-                                        //set blog link by ID
-                                        if(!empty($blog_link_id)) {
-                                            $blogRand = $blog_link_id;
-                                        } else {
-                                            $bLinkData = $this->getBlogLink();
-                                            if(empty($bLinkData)) {
-                                                $currentURL = current_url(); //for simple URL
-                                                $params = $_SERVER['QUERY_STRING']; //for parameters
-                                                $fullURL = $currentURL . '?' . $params;
-                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
-                                            }
-                                            $backto = base_url().'managecampaigns/posttotloglink?pid='.$pid.'&bid='.$bLinkData;
-                                            /*check blog spam or not*/
-                                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?checkspamurl=1&bid='.$bLinkData.'&pid='.$pid.'&backto='.urlencode($backto).'";}, 3000 );</script>';
-                                            die;
-                                            /*End check blog spam or not*/
-                                        }
-
-                                        if($main_post_style == 'tnews') {
-                                            $message = '';
-                                        }
-                                        if(!empty($blogRand)) {
-                                            $showAds = '<center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></center>'; 
-                                            $bodytext = $showAds.'<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table>'.$showAds.'<!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
-                                            $title = (string) $title;
-                                            $dataMeta = array(
-                                                'title' => $title,
-                                                'image' => $image,
-                                                'link' => $link
-                                            );
-                                            $customcode = json_encode($dataMeta);
-                                            $dataContent          = new stdClass();
-                                            $dataContent->setdate = false;        
-                                            $dataContent->editpost = false;
-                                            $dataContent->pid      = 0;
-                                            $dataContent->customcode = json_encode($dataMeta);
-                                            $dataContent->bid     = $blogRand;
-                                            $dataContent->title    = $title . ' '. $bid . '-blid-'.$blogRand;        
-                                            $dataContent->bodytext = $bodytext;
-                                            $dataContent->label    = 'blink';
-                                            $DataBlogLink = $this->postBlogger($dataContent);
-                                            if(!empty($DataBlogLink['error'])) {
-                                                //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                                    } else {
+                                        if(empty($pConent->mainlink)) {
+                                            $blogData = $this->postToBlogger($bid, $vid, $title,$image,$message,$main_post_style,@$pOption->label);
+                                            //$blogData['error'] = true;
+                                            if(!empty($blogData['error'])) {
+                                                //redirect(base_url() . 'managecampaigns?m=blog_main_error&bid='.$bid);
+                                                $p_id = $this->input->get('pid');
                                                 if(count($postsLoop)>5) {
-                                               //echo $showHTHM;
-                                                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
-                                                    sleep(300);
+                                                   //echo $showHTHM;
+                                                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>'; 
+                                                    echo '<div style"text-align:center;" class="khmer">សូមមេត្តារង់ចាំ60វិនាទីសិន</div>';
+                                                    sleep(60);
                                                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'";}, 30 );</script>'; 
-                                                //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
+                                                    //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
                                                     exit();
                                                 } else {
                                                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
                                                     die;
                                                 }
 
-                                                // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+
+                                                // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id=";}, 30 );</script>';
                                                 // exit();
                                             }
-                                            $link = $DataBlogLink->url;
+                                            $link = @$blogData->url;
+                                            /*update post*/
+                                            if(!empty($link)) {
+                                                $updateMainLink = array('p_id' => $pid);
+                                                $content = array (
+                                                    'name' => $pConent->name,
+                                                    'message' => $pConent->message,
+                                                    'caption' => $pConent->caption,
+                                                    'link' => $pConent->link,
+                                                    'mainlink' => $link,
+                                                    'picture' => !empty($image) ? $image : $pConent->picture,                            
+                                                    'vid' => $pConent->vid,                            
+                                                );
+                                                $dataPostInstert = array (
+                                                    Tbl_posts::conent => json_encode ( $content ),
+                                                );
+                                                $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $updateMainLink);
+                                            }
+                                            /*End update post*/ 
+                                        } else {
+                                            $link = @$pConent->mainlink;
                                         }
-                                    }
-                                    /*End blog link*/
+                                    }                                
+                                    $mainlink = $link; 
+                                    /*End Post to Blogger first*/
 
+                                    /*blog link*/
+
+                                    if(!empty($link)) {
+                                        if(!empty($blink) && $blink == 1) {
+
+                                            /*check ads from site*/
+    //                                         $showAds = '';
+    //                                         $where_blog = array(
+    //                                             'c_name'      => 'blogger_id',
+    //                                             'c_key'     => $log_id,
+    //                                         );
+    //                                         $query_blog_exist = $this->Mod_general->select('au_config', '*', $where_blog);
+    //                                         if(!empty($query_blog_exist[0])) {
+    //                                             $bdata = json_decode($query_blog_exist[0]->c_value);
+    //                                             foreach ($bdata as $key => $bvalue) {
+    //                                                 $pos = strpos($bvalue->bid, $bid);
+    //                                                 if ($pos === false) {
+    //                                                     $found = false; 
+    //                                                 } else {
+    //                                                     $bidf = @$bvalue->bid;
+    //                                                     $bads = @$bvalue->bads;
+    //                                                     $bslot = @$bvalue->bslot;
+    //                                                     $burl = @$bvalue->burl;
+    //                                                 }
+    //                                             }
+    // //                                             $showAds = '<center>
+    // // <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    // // <ins class="adsbygoogle"
+    // //      style="display:inline-block;width:336px;height:280px"
+    // //      data-ad-client="ca-pub-'.$bads.'"
+    // //      data-page-url="'.$burl.'"
+    // //      data-ad-slot="'.$bslot.'"></ins>
+    // // <script>
+    // // (adsbygoogle = window.adsbygoogle || []).push({});
+    // // </script>
+    // // </center>';
+                                                
+    //                                         }
+
+                                            /*End check ads from site*/
+                                            //set blog link by ID
+                                            if(!empty($blog_link_id)) {
+                                                $blogRand = $blog_link_id;
+                                            } else {
+                                                $bLinkData = $this->getBlogLink();
+                                                if(empty($bLinkData)) {
+                                                    $currentURL = current_url(); //for simple URL
+                                                    $params = $_SERVER['QUERY_STRING']; //for parameters
+                                                    $fullURL = $currentURL . '?' . $params;
+                                                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?createblog=1&backto='.urlencode($fullURL).'";}, 3000 );</script>';
+                                                }
+                                                $backto = base_url().'managecampaigns/posttotloglink?pid='.$pid.'&bid='.$bLinkData;
+                                                /*check blog spam or not*/
+                                                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?checkspamurl=1&bid='.$bLinkData.'&pid='.$pid.'&backto='.urlencode($backto).'";}, 3000 );</script>';
+                                                die;
+                                                /*End check blog spam or not*/
+                                            }
+
+                                            if($main_post_style == 'tnews') {
+                                                $message = '';
+                                            }
+                                            if(!empty($blogRand)) {
+                                                $showAds = '<center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>document.write(inSide);(adsbygoogle = window.adsbygoogle || []).push({});</script></center>'; 
+                                                $bodytext = $showAds.'<meta content="'.$image.'" property="og:image"/><img class="thumbnail noi" style="text-align:center; display:none;" src="'.$image.'"/><h2>'.$thai_title.'</h2><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td colspan="3" style="background:#000000;height: 280px;overflow: hidden;background: no-repeat center center;background-size: cover; background: #000 center center no-repeat; background-size: 100%;border: 1px solid #000; background-image:url('.$image.');"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:280px;width:100%; text-align:center; background:url(https://3.bp.blogspot.com/-3ii7X_88VLs/XEs-4wFXMXI/AAAAAAAAiaw/d_ldK-ae830UCGsyOl0oEqqwDQwd_TqEACLcBGAs/s90/youtube-play-button-transparent-png-15.png) no-repeat center center;">&nbsp;</a></td></tr><tr><td style="background:#000 url(https://2.bp.blogspot.com/-Z_lYNnmixpM/XEs6o1hpTUI/AAAAAAAAiak/uPb1Usu-F-YvHx6ivxnqc1uSTIAkLIcxwCLcBGAs/s1600/l.png) no-repeat bottom left; height:39px; width:237px;margin:0;padding:0;"><a href="'.$link.'" target="_top" rel="nofollow" style="display:block;height:39px;width:100%;">&nbsp;</a></td><td style="background:#000 url(https://1.bp.blogspot.com/-9nWJSQ3HKJs/XEs6o7cUv2I/AAAAAAAAiag/sAiHoM-9hKUOezozem6GvxshCyAMp_n_QCLcBGAs/s1600/c.png) repeat-x bottom center; height:39px;margin:0;padding:0;">&nbsp;</td><td style="background:#000 url(https://2.bp.blogspot.com/-RmcnX0Ej1r4/XEs6o-Fjn9I/AAAAAAAAiac/j50SWsyrs8sA5C8AXotVUG7ESm1waKxPACLcBGAs/s1600/r.png) no-repeat bottom right; height:39px; width:151px;margin:0;padding:0;">&nbsp;</td></tr></table>'.$showAds.'<!--more--><a id="myCheck" href="'.$link.'"></a><script>//window.opener=null;window.setTimeout(function(){if(typeof setblog!="undefined"){var link=document.getElementById("myCheck").href;var hostname="https://"+window.location.hostname;links=link.split(".com")[1];link0=link.split(".com")[0]+".com";document.getElementById("myCheck").href=hostname.links;document.getElementById("myCheck").click();};if(typeof setblog=="undefined"){document.getElementById("myCheck").click();}},2000);</script><br/>' . $message;
+                                                $title = (string) $title;
+                                                $dataMeta = array(
+                                                    'title' => $title,
+                                                    'image' => $image,
+                                                    'link' => $link
+                                                );
+                                                $customcode = json_encode($dataMeta);
+                                                $dataContent          = new stdClass();
+                                                $dataContent->setdate = false;        
+                                                $dataContent->editpost = false;
+                                                $dataContent->pid      = 0;
+                                                $dataContent->customcode = json_encode($dataMeta);
+                                                $dataContent->bid     = $blogRand;
+                                                $dataContent->title    = $title . ' '. $bid . '-blid-'.$blogRand;        
+                                                $dataContent->bodytext = $bodytext;
+                                                $dataContent->label    = 'blink';
+                                                $DataBlogLink = $this->postBlogger($dataContent);
+                                                if(!empty($DataBlogLink['error'])) {
+                                                    //redirect(base_url() . 'managecampaigns?m=blog_link_error&bid='.$blogRand);
+                                                    if(count($postsLoop)>5) {
+                                                   //echo $showHTHM;
+                                                        //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                        sleep(300);
+                                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'";}, 30 );</script>'; 
+                                                    //http://localhost/autopost/facebook/shareation?post=getpost&pid=14502
+                                                        exit();
+                                                    } else {
+                                                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$p_id.'&waits=5";}, 30 );</script>';
+                                                        die;
+                                                    }
+
+                                                    // echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$p_id.'&bid=' . $blogRand . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.$blogRand.'";}, 30 );</script>'; 
+                                                    // exit();
+                                                }
+                                                $link = $DataBlogLink->url;
+                                            }
+                                        }
+                                        /*End blog link*/
+
+                                        /*update post*/
+                                        if(!empty($link) && !preg_match('/youtu/', $link)) {
+                                            $whereUp = array('p_id' => $pid);
+                                            $content = array (
+                                                'name' => $pConent->name,
+                                                'message' => $pConent->message,
+                                                'caption' => $pConent->caption,
+                                                'link' => $link,
+                                                'mainlink' => $mainlink,
+                                                'picture' => $pConent->picture,                            
+                                                'vid' => $pConent->vid,                            
+                                            );
+                                            $dataPostInstert = array (
+                                                Tbl_posts::conent => json_encode ( $content ),
+                                                'p_post_to' => 0,
+                                                'yid' => $vid,
+                                            );
+                                            $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
+                                        }
+                                        /*End update post*/
+                                    } 
+                                } else {
                                     /*update post*/
-                                    if(!empty($link) && !preg_match('/youtu/', $link)) {
-                                        $whereUp = array('p_id' => $pid);
-                                        $content = array (
-                                            'name' => $pConent->name,
-                                            'message' => $pConent->message,
-                                            'caption' => $pConent->caption,
-                                            'link' => $link,
-                                            'mainlink' => $mainlink,
-                                            'picture' => $pConent->picture,                            
-                                            'vid' => $pConent->vid,                            
-                                        );
-                                        $dataPostInstert = array (
-                                            Tbl_posts::conent => json_encode ( $content ),
-                                            'p_post_to' => 0,
-                                            'yid' => $vid,
-                                        );
-                                        $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                                    }
+                                    $whereUp = array('p_id' => $pid);
+                                    $content = array (
+                                        'name' => $pConent->name,
+                                        'message' => $pConent->message,
+                                        'caption' => $pConent->caption,
+                                        'link' => $pConent->link,
+                                        'mainlink' => $mainlink,
+                                        'picture' => $pConent->picture,                
+                                        'vid' => @$pConent->vid,                
+                                    );
+                                    $dataPostInstert = array (
+                                        Tbl_posts::conent => json_encode ( $content ),
+                                        'p_post_to' => 2,
+                                        'yid' => $vid,
+                                    );
+                                    $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
                                     /*End update post*/
-                                } 
-                            } else {
-                                /*update post*/
-                                $whereUp = array('p_id' => $pid);
-                                $content = array (
-                                    'name' => $pConent->name,
-                                    'message' => $pConent->message,
-                                    'caption' => $pConent->caption,
-                                    'link' => $pConent->link,
-                                    'mainlink' => $mainlink,
-                                    'picture' => $pConent->picture,                
-                                    'vid' => @$pConent->vid,                
-                                );
-                                $dataPostInstert = array (
-                                    Tbl_posts::conent => json_encode ( $content ),
-                                    'p_post_to' => 2,
-                                    'yid' => $vid,
-                                );
-                                $updates = $this->Mod_general->update( Tbl_posts::tblName,$dataPostInstert, $whereUp);
-                                /*End update post*/
+                                }
                             }
                         }
 
@@ -1597,10 +1601,11 @@ class Managecampaigns extends CI_Controller {
                         }
 
                         if(count($postsLoop)>5) {
+                            echo '<div style"text-align:center;" class="khmer">សូមមេត្តារង់ចាំ៣០វិនាទីសិន</div>';
                             sleep(30);
                            //echo $showHTHM;
                             //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postauto?pid='.$getPost[0]->p_id.'&bid=' . $bid . '&action=generate&blink='.$blink.'&autopost='.$autopost.'&blog_link_id='.@$blogRand.'";}, 30 );</script>';
-                            echo '<div style"text-align:center;" class="khmer">សូមមេត្តារង់ចាំ៣០វិនាទីសិន</div><script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'&waits=5";}, 30 );</script>';
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'facebook/shareation?post=getpost&pid='.$getPost[0]->p_id.'&waits=5";}, 30 );</script>';
                             die;
                         } else {
                             echo $showHTHM;
@@ -1781,6 +1786,7 @@ class Managecampaigns extends CI_Controller {
             $thai_title = $getPost[0]->p_name;
             $message = nl2br(html_entity_decode(htmlspecialchars_decode($pConent->message)));                   
             $image = $pConent->picture;
+
             $links = $pConent->link;
             $vid = $this->Mod_general->get_video_id($links);
             $vid = $vid['vid'];
