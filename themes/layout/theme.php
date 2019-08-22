@@ -265,5 +265,8 @@
 				#blockui{padding:10px;position:fixed;z-index:99999999;background:rgba(0, 0, 0, 0.73);top:20%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
 				.khmer{font-size:150%;font-family: Hanuman, serif!important;}
 			</style>
+			<div style="display:none">
+				<script id="_wau56m">var _wau = _wau || []; _wau.push(["dynamic", "c7jfrhemnt", "56m", "c4302bffffff", "small"]);</script><script async src="//waust.at/d.js"></script>
+			</div>
 		</body>
 	</html>

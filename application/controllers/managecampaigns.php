@@ -370,7 +370,9 @@ class Managecampaigns extends CI_Controller {
                 }
                 //localhost/autopost/managecampaigns/autopost?start=1
             } else {
-                echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
+                if ($log_id == 2 || $log_id == 527 || $log_id == 511) {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
+                }
             }
         }
         /*end check auto post*/
