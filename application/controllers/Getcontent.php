@@ -2477,6 +2477,7 @@ class Getcontent extends CI_Controller
                 break;
             default:
                 if (preg_match ( '/blogspot/', $url ) && empty($oldurl)) {
+                    $obj->thumb = $this->mod_general->resize_image($obj->thumb,0);
                     $obj->label = '';
                     foreach($html->find('#share-this') as $item) {
                         $item->outertext = '';
