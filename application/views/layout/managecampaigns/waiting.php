@@ -10,7 +10,7 @@
     <div class="page-header">
     </div>
     <div class="row">
-<meta http-equiv="refresh" content="60"/>
+        <meta http-equiv="refresh" content="60"/>
         <div class="col-md-12">
             <div class="widget box">
                 <div class="widget-header">

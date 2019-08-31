@@ -359,10 +359,16 @@ class Managecampaigns extends CI_Controller {
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
+            $arrX = array(20,25, 30,40, 60);
+            $randIndex = array_rand($arrX);
             if(!empty($postAto)) {
-                if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
+                    
+                     
+                    // output the value for the random index
+
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$arrX[$randIndex].' );</script>';
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     //autogetpost
                 } else {
@@ -371,7 +377,11 @@ class Managecampaigns extends CI_Controller {
                 //localhost/autopost/managecampaigns/autopost?start=1
             } else {
                 if ($log_id == 2 || $log_id == 527 || $log_id == 511) {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, 600000 );</script>';
+                    if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$arrX[$randIndex].' );</script>';
+                    } else {
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
+                    }
                 }
             }
         }
@@ -4755,7 +4765,7 @@ public function imgtest()
         $provider = $this->session->userdata ( 'provider' );
         $this->load->theme ( 'layout' );
         $data ['title'] = 'Waiting for post :: Admin Area';
-
+        
         /*breadcrumb*/
         $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
         if($this->uri->segment(1)) {
@@ -4772,10 +4782,16 @@ public function imgtest()
             if(!empty($autoData[0])) {
                 $autopost = json_decode($autoData[0]->c_value);
                 if($autopost->autopost == 1) {
-                    if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
+                    if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 30 );</script>';
                     } 
                     //localhost/autopost/managecampaigns/autopost?start=1
+                } else {
+                    if ($log_id == 2 || $log_id == 527 || $log_id == 511) {
+                        if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
+                            echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$arrX[$randIndex].' );</script>';
+                        }
+                    }
                 }
             }
 
