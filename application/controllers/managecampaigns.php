@@ -367,8 +367,8 @@ class Managecampaigns extends CI_Controller {
                     
                      
                     // output the value for the random index
-
-                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$arrX[$randIndex].' );</script>';
+                    $setTime = $arrX[$randIndex] * 1000;
+                    echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$setTime.' );</script>';
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     //autogetpost
                 } else {
@@ -378,7 +378,8 @@ class Managecampaigns extends CI_Controller {
             } else {
                 if ($log_id == 2 || $log_id == 527 || $log_id == 511) {
                     if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
-                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$arrX[$randIndex].' );</script>';
+                        $setTime = $arrX[$randIndex] * 1000;
+                        echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$setTime.' );</script>';
                     } else {
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
                     }
