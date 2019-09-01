@@ -629,7 +629,7 @@
                         $("#blockuis").hide();
                         var obj = JSON.parse(data);
                         $('#title_' + id).val(obj.name);
-                        $('#image_' + id).val(obj.picture);
+                        //$('#image_' + id).val(obj.picture);
                     }
                   })
                   .fail(function() {
