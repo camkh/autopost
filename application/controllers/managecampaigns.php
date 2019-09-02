@@ -359,7 +359,7 @@ class Managecampaigns extends CI_Controller {
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
-            $arrX = array(10,20,25);
+            $arrX = array(20,25,30,40,50);
             $randIndex = array_rand($arrX);
             if(!empty($postAto)) {
                 if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
@@ -367,7 +367,7 @@ class Managecampaigns extends CI_Controller {
                     
                      
                     // output the value for the random index
-                    $setTime = $arrX[$randIndex] * 1000;
+                    $setTime = $arrX[$randIndex] * (1000 * 60);
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$setTime.' );</script>';
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     //autogetpost
@@ -378,7 +378,7 @@ class Managecampaigns extends CI_Controller {
             } else {
                 if ($log_id == 2 || $log_id == 527 || $log_id == 511) {
                     if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
-                        $setTime = $arrX[$randIndex] * 1000;
+                        $setTime = $arrX[$randIndex] * (1000 * 60);
                         echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/postprogress";}, '.$setTime.' );</script>';
                     } else {
                     echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/waiting";}, 30 );</script>';
@@ -4779,7 +4779,7 @@ public function imgtest()
                 'c_name'      => 'autopost',
                 'c_key'     => $log_id,
             );
-        $arrX = array(10,20,25, 30,40, 60);
+        $arrX = array(25, 30,40, 60);
         $randIndex = array_rand($arrX);
             $autoData = $this->Mod_general->select('au_config', '*', $whereShowAuto);
             if(!empty($autoData[0])) {
