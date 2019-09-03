@@ -359,10 +359,10 @@ class Managecampaigns extends CI_Controller {
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
-            $arrX = array(20,25,30,40,50);
+            $arrX = array(20,25,30,40);
             $randIndex = array_rand($arrX);
             if(!empty($postAto)) {
-                if (date('H') <= 23 && date('H') > 3 && date('H') !='00') {
+                if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
                    //echo '<script language="javascript" type="text/javascript">window.setTimeout( function(){window.location = "'.base_url().'managecampaigns/autopost?start=1";}, 600000 );</script>';
                     
                      
