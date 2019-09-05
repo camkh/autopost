@@ -241,7 +241,7 @@ class Managecampaigns extends CI_Controller {
         }
 		$this->load->theme ( 'layout' );
         if(!empty($this->session->userdata ( 'progress' ))) {
-            $data ['title'] = 'Post in progress';
+            $data ['title'] = 'Progress post';
         } else {
             $data ['title'] = 'Admin Area :: Post list';
         }
