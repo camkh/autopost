@@ -2005,6 +2005,18 @@ class Managecampaigns extends CI_Controller {
             $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
             if(!empty($DataPostProgress[0])) {
                 $pid = $DataPostProgress[0]->object_id;
+                $meta_id = $DataPostProgress[0]->meta_id;
+            }
+        } else {
+            $whereFb = array(
+                'meta_name'      => 'post_progress',
+                'meta_key'      => $sid,
+                'object_id' => $pid, 
+            );
+            $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
+            if(!empty($DataPostProgress[0])) {
+                $pid = $DataPostProgress[0]->object_id;
+                $meta_id = $DataPostProgress[0]->meta_id;
             }
         }
 
@@ -2017,7 +2029,7 @@ class Managecampaigns extends CI_Controller {
             $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
             if(empty($getPost)) {
                 @$this->Mod_general->delete ( 'meta', array (
-                        'object_id' => $DataPostProgress[0]->object_id, 
+                        'object_id' => $pid, 
                         'meta_name' => 'post_progress', 
                 ) );
                 redirect(base_url().'managecampaigns/postprogress');
@@ -2040,7 +2052,7 @@ class Managecampaigns extends CI_Controller {
                 if($AddToPost) {
                     /*update meta post*/
                     @$this->Mod_general->delete ( 'meta', array (
-                        'meta_id' => $DataPostProgress[0]->meta_id,
+                        'meta_id' => $meta_id,
                     ) );
                     /*End update meta post*/
                     /*clean share*/
