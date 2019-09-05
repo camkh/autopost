@@ -483,7 +483,14 @@ class Managecampaigns extends CI_Controller {
                         $pprogress[] = $progress->object_id;
                     }
                 }
-                $where_so['where_in'] = array('user_id' => $log_id,Tbl_posts::id => $pprogress,'p_progress' => 1);
+                if(!empty($pprogress)) {
+                    $where_so['where_in'] = array('user_id' => $log_id,Tbl_posts::id => $pprogress,'p_progress' => 1);
+                } else {
+                    $where_so = array (
+                        'user_id' => $log_id,
+                        'u_id' => $fbUserId,
+                    );
+                }                
             } else {
                 $where_so = array (
                     'user_id' => $log_id,
