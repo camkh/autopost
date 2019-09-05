@@ -1,5 +1,4 @@
 <?php if ($this->session->userdata('user_type') != 4) {
-	$log_id = $this->session->userdata ( 'user_id' );
 /* returns the shortened url */
     function get_bitly_short_url($url, $login, $appkey, $format = 'txt') {
         $connectURL = 'http://api.bit.ly/v3/shorten?login=' . $login . '&apiKey=' . $appkey . '&uri=' . urlencode ( $url ) . '&format=' . $format;
@@ -213,20 +212,6 @@ function parse_query_string(query) {
 								</select>
 								</label>
 							</div>
-							<?php if ($log_id == 2 || $log_id == 527 || $log_id == 511):?>
-							<div class="btn-group">
-								<button class="btn btn-sm dropdown-toggle"
-									data-toggle="dropdown">
-									<i class="icol-cog"></i> <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a
-										href="<?php echo base_url(); ?>managecampaigns?progress=1"><i class="icon-share"></i> Post in progress</a></li>
-									<li><a
-										href="<?php echo base_url(); ?>managecampaigns?progress=clear"><i class="icon-pencil"></i> Post list</a></li>
-								</ul>
-							</div>
-							<?php endif;?>
 						</div>
 						<div class="col-md-6">
 							<div class="dataTables_filter" id="DataTables_Table_0_filter">
@@ -325,14 +310,8 @@ function parse_query_string(query) {
 											<i class="icol-cog"></i> <span class="caret"></span>
 										</button>
 										<ul class="dropdown-menu">
-											<?php if(!empty($this->session->userdata ( 'progress' ))):?>
-												<li><a
-												href="<?php echo base_url(); ?>managecampaigns/postprogress?pid=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-share"></i> Share now</a></li>
-											<?php else:?>
-												<li><a
+											<li><a
 												href="<?php echo base_url(); ?>facebook/shareation?post=getpost&pid=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-share"></i> Share now</a></li>
-											<?php endif;?>
-											
 											<li><a
 												href="<?php echo base_url(); ?>managecampaigns/add?id=<?php echo $value->{Tbl_posts::id}; ?>"><i class="icon-pencil"></i> Edit</a></li>
 											<li><a data-modal="true"

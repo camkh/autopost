@@ -240,7 +240,12 @@ class Managecampaigns extends CI_Controller {
             }
         }
 		$this->load->theme ( 'layout' );
-		$data ['title'] = 'Admin Area :: Manage Campaigns';
+        if(!empty($this->session->userdata ( 'progress' ))) {
+            $data ['title'] = 'Post in progress';
+        } else {
+            $data ['title'] = 'Admin Area :: Post list';
+        }
+		
 
 		/*breadcrumb*/
 		$this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
@@ -458,10 +463,34 @@ class Managecampaigns extends CI_Controller {
                 $this->session->unset_userdata ( 'fb_user_id' );
                 redirect('managecampaigns', 'location');
             }
-            $where_so = array (
-                'user_id' => $log_id,
-                'u_id' => $fbUserId,
-            );
+
+            if(!empty($this->input->get('progress') == 1)) {
+                $this->session->set_userdata('progress', 1);
+            }
+            if(!empty($this->input->get('progress') == 'clear')) {
+                $this->session->unset_userdata('progress');
+                redirect(base_url().'managecampaigns');
+            }
+            if(!empty($this->session->userdata ( 'progress' ))) {
+                $whereFb = array(
+                    'meta_name'      => 'post_progress',
+                    'meta_key'      => $sid,
+                );
+                $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
+                $pprogress = array();
+                if(!empty($DataPostProgress[0])) {
+                    foreach ($DataPostProgress as $progress) {
+                        $pprogress[] = $progress->object_id;
+                    }
+                }
+                $where_so['where_in'] = array('user_id' => $log_id,Tbl_posts::id => $pprogress,'p_progress' => 1);
+            } else {
+                $where_so = array (
+                    'user_id' => $log_id,
+                    'u_id' => $fbUserId,
+                );
+            }
+            
 		
     		$this->load->library ( 'pagination' );
 
@@ -1904,9 +1933,7 @@ class Managecampaigns extends CI_Controller {
         return $this->Mod_general->blogger_post($client,$dataContent);
     }
 
-
-    /*@get post that set for all facebook need post*/
-    public function postprogress()
+    public function progresslist()
     {
         $this->Mod_general->checkUser ();
         $log_id = $this->session->userdata ( 'user_id' );
@@ -1925,15 +1952,65 @@ class Managecampaigns extends CI_Controller {
         $this->breadcrumbs->add('Online', base_url().$this->uri->segment(1));
         $data['breadcrumb'] = $this->breadcrumbs->output();  
         /*End breadcrumb*/
-
         $whereFb = array(
             'meta_name'      => 'post_progress',
             'meta_key'      => $sid,
         );
         $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
         if(!empty($DataPostProgress[0])) {
+            print_r($DataPostProgress);
+            die;
+            foreach ($DataPostProgress as $progress) {
+                $wPost = array (
+                    'p_id' => $DataPostProgress[0]->object_id,
+                    'user_id' => $log_id,
+                    'p_progress' => 1,
+                );
+                $getPost = $this->Mod_general->select ( Tbl_posts::tblName, '*', $wPost );
+                if(empty($getPost)) {
+
+                }
+            }
+        }
+
+        $this->load->view ( 'managecampaigns/progresslist', $data );
+    }
+    /*@get post that set for all facebook need post*/
+    public function postprogress()
+    {
+        $this->Mod_general->checkUser ();
+        $log_id = $this->session->userdata ( 'user_id' );
+        $user = $this->session->userdata ( 'email' );
+        $provider_uid = $this->session->userdata ( 'provider_uid' );
+        $provider = $this->session->userdata ( 'provider' );
+        $sid = $this->session->userdata ( 'sid' );
+        $pid = $this->input->get('pid', TRUE);
+        $this->load->theme ( 'layout' );
+        $data ['title'] = 'Post progress';
+
+        /*breadcrumb*/
+        $this->breadcrumbs->add('<i class="icon-home"></i> Home', base_url());
+        if($this->uri->segment(1)) {
+            $this->breadcrumbs->add('Posts', base_url(). $this->uri->segment(1)); 
+        }
+        $this->breadcrumbs->add('Online', base_url().$this->uri->segment(1));
+        $data['breadcrumb'] = $this->breadcrumbs->output();  
+        /*End breadcrumb*/
+
+        if(empty($pid)) {
+            $whereFb = array(
+                'meta_name'      => 'post_progress',
+                'meta_key'      => $sid,
+            );
+            $DataPostProgress = $this->Mod_general->select('meta', '*', $whereFb);
+            if(!empty($DataPostProgress[0])) {
+                $pid = $DataPostProgress[0]->object_id;
+            }
+        }
+
+        if(!empty($pid)) {
             $wPost = array (
-                'p_id' => $DataPostProgress[0]->object_id,
+                'p_id' => $pid,
                 'user_id' => $log_id,
                 'p_progress' => 1,
             );
@@ -2946,7 +3023,7 @@ HTML;
                     $aObj = new Getcontent(); 
                     $content = $aObj->getConentFromSite($url,$oldurl);
                 if(!empty($content->fromsite)) {
-                    $conTenSite = '<br/><div class="meta-from"> ทีมา: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
+                    $conTenSite = '<br/><div class="meta-from"> ดูข่าวต้นฉบับ: '.'<a href="'.$url.'" target="_blank">'.$content->fromsite.'</a></div>';
                 } else {
                     $conTenSite = '';
                 }
