@@ -6827,6 +6827,9 @@ public function imgtest()
             // $content = preg_replace('/<p>/', '<helper>', $content, $pos + 1);
             // $content = preg_replace('/<helper>/', '<p>', $content, $pos);
             // $content = str_replace('<helper>', $ad . "\n<p>", $content);
+            $content = preg_replace('/<\/iframe>(.*?)/', '$0'.$ad, $content);
+            $content = preg_replace('/<iframe(.*)width="([^"]*)"(.*)>/','<iframe$1width="100%"$3>',$content);
+            $content = preg_replace('/<iframe(.*)height="([^"]*)"(.*)>/','<iframe$1height="250"$3>',$content);
             return $content;
         }
     }
