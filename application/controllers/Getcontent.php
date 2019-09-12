@@ -706,6 +706,69 @@ class Getcontent extends CI_Controller
                 $obj->site = 'site';
                 return $obj;
                 break;
+            case 'muangthainews.com':
+                /*get label*/
+                // $label = $html->find('.cat-links a',0)->plaintext;
+                // $obj->label = $label;
+                // /*End get label*/
+                // foreach($html->find('.sharedaddy') as $item) {
+                //     $item->outertext = '';
+                // }
+                // foreach($html->find('.shared-counts-wrap') as $item) {
+                //     $item->outertext = '';
+                // }
+                // foreach($html->find('.robots-nocontent') as $item) {
+                //     $item->outertext = '';
+                // }
+                $html->save();
+                $content = @$html->find ( '.td-post-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-sizes=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-src=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-recalc-dims=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-large-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-medium-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-meta=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+
+                // $regex = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+                // preg_match_all( $regex, $content, $matches );
+                // $ImgSrc = array_pop($matches);
+                // // reversing the matches array
+                // if(!empty($ImgSrc)) {
+                //     foreach ($ImgSrc as $image) {
+                //         $imagedd = strtok($image, "?");
+                //         $file_title = basename($imagedd);
+                //         $fileName = FCPATH . 'uploads/image/'.$file_title;
+                //         @copy($imagedd, $fileName);   
+                //         $images = $this->mod_general->uploadtoImgur($fileName);
+                //         if(empty($images)) {
+                //             $apiKey = '76e9b194c1bdc616d4f8bb6cf295ce51';
+                //             $images = $this->Mod_general->uploadToImgbb($fileName, $apiKey);
+                //             if($images) {
+                //                 @unlink($fileName);
+                //             }
+                //         } else {
+                //             $gimage = @$images; 
+                //             @unlink($fileName);
+                //         }
+                //         if(!empty($gimage)) {
+                //             $content = str_replace($image,$gimage,$content);
+                //         }
+                //     }
+                // }
+                $obj->vid = '';
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
             case 'www.tnews.co.th':
                 /*get label*/
                 $label = [];
@@ -1013,6 +1076,30 @@ class Getcontent extends CI_Controller
                         }
                     }
                 }
+                $obj->vid = '';
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'www.thaismiletopic.com':
+                /*get label*/
+                $content = @$html->find ( '.hentry .entry-content', 0 )->innertext;
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-sizes=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-src=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-recalc-dims=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-large-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-medium-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-meta=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+
                 $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];
@@ -2503,8 +2590,40 @@ class Getcontent extends CI_Controller
                 $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
                 $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
                 $content = str_replace('--Advertisement--', '', $content);
-                echo $content;
-                die;
+                $obj->vid = '';
+                $obj->conent = $content;
+                $obj->fromsite = $parse['host'];
+                $obj->site = 'site';
+                return $obj;
+                break;
+            case 'sharesod.com':
+                // foreach($html->find('#container #related_container') as $item) {
+                //     $item->outertext = '';
+                // }
+                // foreach($html->find('#container .include-image') as $item) {
+                //     $item->outertext = '';
+                // }
+                // foreach($html->find('#container .bx-share') as $item) {
+                //     $item->outertext = '';
+                // }
+                // $html->save();
+                $content = @$html->find ( '.td-post-content', 0 )->innertext;
+                $content = preg_replace('/<center\b[^>]*>(.*?)<\/center>/is', "", $content);
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $content);
+                $content = preg_replace('/<ins\b[^>]*>(.*?)<\/ins>/is', '<div class="setAds"></div>', $content);
+                $content = preg_replace("/<a(.*?)>/", "<a$1 target=\"_blank\">", $content);
+                $content = preg_replace( '/(<[^>]+) srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-srcset=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-sizes=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-lazy-src=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-recalc-dims=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-large-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-medium-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-meta=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-image-description class=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-orig-file=".*?"/i', "$1", $content );
+                $content = preg_replace( '/(<[^>]+) data-permalink=".*?"/i', "$1", $content );
+                $content = str_replace('--Advertisement--', '', $content);
                 $obj->vid = '';
                 $obj->conent = $content;
                 $obj->fromsite = $parse['host'];

@@ -921,6 +921,10 @@
                                     <input value="1" name="post_by_manaul" type="checkbox">
                                     <i class="subtopmenu hangmeas khmer">Post and get code / ប៉ុស្តិ៍យកកូដផុសដៃ?</i>
                                 </label>
+                                <label class="radio-inline">
+                                    <input value="1" name="post_all" type="checkbox">
+                                    <i class="subtopmenu hangmeas khmer">Publish all Post / ប៉ុស្តិ៍ទាំងអស់?</i>
+                                </label>
                             </div>
                             <div class="col-md-2">
                                 <input name="submit" type="submit" value="Public Content" class="btn btn-primary pull-right" />

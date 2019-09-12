@@ -62,8 +62,20 @@ $log_id = $this->session->userdata ( 'user_id' );
                     </div>
                 </div>
                 <div class="widget-content">
+                    
                     <div class="online">
-<div id="getOnline"></div>
+<div id="getOnline">
+    <div style="clear:both"></div><center><h3>+++++++++ ONLINE +++++++++</h3><div class="form-horizontal row-border" id="setnumber" method="post">';
+    <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="number" id="getnumber" value="30"/>
+                                <label>វិនាទី</label>
+                                <input type="button" id="summitnumber" value="Save"/>
+                            </div>
+                        </div>
+                    </div></center><div style="clear:both"></div>
+                    <div id="setEachOnline"></div>
+</div>
 <div style="clear:both;padding:10px;margin-bottom:20px"></div>
 </div>
 <div style="clear:both;padding:10px;margin-bottom:20px"></div>
@@ -119,16 +131,22 @@ var otherOnline = [
 {"name":"Sandy","online":"wseq7gnntu"},
 ];
 var items = ["FF5647","FF3CAE","EA49FF","5D5BFF","62C0FF","00E08A","00E309","FF8537","FF000F","FD0044","E9A100","7CBA00","40C200","FE3EFF","C78FFF","72D8FF","007F23","00C61A","157200","3A6F00","647A00","D7D900","E37A00","DC3A00","DD0017","DD0067","C2008B","740057","940052","A1001C","9C1400","9D4A00","845D00","5E6400"];
+var setnumbers = document.getElementById("getnumber").value * 1000;
 $(document).ready(function(){
 $( "body" ).mousemove(function( event ) {
     $('.online').css('opacity:', 100);
+    $("#summitnumber").click(function () {
+        $('#getnumber').val($('#getnumber').val());
+        setnumbers = document.getElementById("getnumber").value * 1000;
+    });
 });
 
 setOnline();
 //$('#content').remove();
 setInterval(function(){
+    console.log(setnumbers);
     setOnline();
-}, 300000);
+}, setnumbers);
     
 
      var random = myImages[Math.floor(Math.random() * myImages.length)];
@@ -146,9 +164,8 @@ function randomColor(arg) {
 
 function setOnline(data) {
 //randomColor(items)
-    d = new Date();
-    var online = '';
-    online += '<div style="clear:both"></div><center><h3>+++++++++ ONLINE +++++++++</h3></center><div style="clear:both"></div>';
+    d = new Date();    
+    online = '';
     $.each( otherOnline, function( i, item ) {
         var colorset = getRandomColor();
         online += '<div class="in-online" style="border:1px solid '+colorset+'"><a href="http://whos.amung.us/stats/'+item.online+'" target="_blank"><div class="counter" id="other'+i+'" style="background-color:'+colorset+'"><div style="background:#000;display:block"><img style="height:20px;" src="http://2.bp.blogspot.com/-_nbwr74fDyA/VaECRPkJ9HI/AAAAAAAAKdI/LBRKIEwbVUM/s1600/splash-loader.gif" height="20"/></div></div><span>'+item.name+'</span></a></div>';
@@ -157,7 +174,7 @@ function setOnline(data) {
         });
     });
     
-    $("#getOnline").html(online);
+    $("#setEachOnline").html(online);
 }
 function getonline (id) {
     $.get( "http://hetkar.com/ajaxcheck?id=count&online=" + id, function( data ) {

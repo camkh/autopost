@@ -898,6 +898,7 @@ class Managecampaigns extends CI_Controller {
             $filter_contrast = @$this->input->post ( 'filter_contrast' );
             $img_rotate = @$this->input->post ( 'img_rotate' );
             $post_by_manaul = @$this->input->post ( 'post_by_manaul' );
+            $post_all = @$this->input->post ( 'post_all' );
             $foldlink = @$this->input->post ( 'foldlink' );
             $youtube_link = @$this->input->post ( 'vid' );
 
