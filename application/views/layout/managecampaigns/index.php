@@ -213,7 +213,7 @@ function parse_query_string(query) {
 								</select>
 								</label>
 							</div>
-							<?php if ($log_id == 2 || $log_id == 527 || $log_id == 511):?>
+							<?php if ($log_id == 2 || $log_id == 527 || $log_id == 511 || $log_id == 3):?>
 							<div class="btn-group">
 								<button class="btn btn-sm dropdown-toggle"
 									data-toggle="dropdown">

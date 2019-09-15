@@ -364,7 +364,7 @@ class Managecampaigns extends CI_Controller {
         /*check auto post*/
         if($this->input->get('m') == 'runout_post') {
             $postAto = $this->Mod_general->getActionPost();
-            $arrX = array(20,25,30,40);
+            $arrX = array(5,10,7,6,4,3,8,9);
             $randIndex = array_rand($arrX);
             if(!empty($postAto)) {
                 if (date('H') <= 23 && date('H') > 4 && date('H') !='00') {
@@ -3055,7 +3055,8 @@ HTML;
                 $vid = @$content->vid;
             }
 
-            if(!empty($content->fromsite) && ($log_id == 2 || $log_id == 527 || $log_id == 511)) {
+            $userAction = $this->Mod_general->userrole('uid');
+            if(!empty($content->fromsite) && $userAction) {
                 $data = array (
                     'picture' => @$content->thumb,
                     'name' => trim ( @$content->title ),

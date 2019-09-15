@@ -158,6 +158,23 @@ class Mod_general extends CI_Model
             redirect($account_url . '?continue=' . urlencode(base_url()));
         }
     }
+
+    public function userrole($type='')
+    {
+        $log_id = $this->session->userdata('user_id');
+        $userrole = false;
+        switch ($type) {
+            case 'uid':
+                if ($log_id == 2 || $log_id == 527 || $log_id == 511 || $log_id == 3) {
+                    $userrole = true;
+                }
+                break;
+            default:
+                $userrole = false;
+                break;
+        }
+        return $userrole;
+    }
     
     function getMenuUser() {
         $action = $this->uri->segment(1);
