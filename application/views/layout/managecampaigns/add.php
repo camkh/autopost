@@ -623,7 +623,9 @@
                 oldlink = $("input[name=foldlink]").val();
             }
             if(e!='') {
-                var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
+                var domain = $(e).val().replace('http://','').replace('https://','').split(/[/?#]/)[0];
+                if(domain!='www.facebook.com') {
+                    var jqxhr = $.ajax( "<?php echo base_url();?>managecampaigns/get_from_url?url=" + $(e).val() + "&old=" + oldlink)
                   .done(function(data) {
                     if ( data ) {
                         $("#blockuis").hide();
@@ -638,6 +640,10 @@
                   .always(function() {
                     //alert( "complete" );
                   });
+                }
+                if(domain=='www.facebook.com') {
+                    $("#blockuis").hide();
+                }
             }
         }
         function getattra(e) {
