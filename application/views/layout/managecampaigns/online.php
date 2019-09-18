@@ -74,6 +74,21 @@ $log_id = $this->session->userdata ( 'user_id' );
                             </div>
                         </div>
                     </div></center><div style="clear:both"></div>
+                    <div id="setAnother">
+                         <div id="histats_counter"></div>
+<!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4312325,4,109,150,20,00011111']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4312325&101" alt="web counter" border="0"></a></noscript>
+<!-- Histats.com  END  -->
+                    </div>
                     <div id="setEachOnline"></div>
 </div>
 <div style="clear:both;padding:10px;margin-bottom:20px"></div>
@@ -107,7 +122,7 @@ var otherOnline = [
 {"name":"KHun","online":"egofkf08xp"},
 {"name":"00","online":"awadirz9j2"},
 {"name":"01","online":"x8ywnliba3"},
-{"name":"02","online":"cb7jpx75yv"},
+{"name":"02","online":"em9y9nqjd3"},
 {"name":"03","online":"f1prv1hspg"},
 {"name":"04","online":"6siyjsyhtu"},
 {"name":"05","online":"f9ep0rok78"},
